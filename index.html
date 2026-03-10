@@ -192,9 +192,9 @@ body {
 
   <!-- HEADER -->
   <div style="margin-bottom: 36px;">
-    <div class="page-eyebrow">OEE · Eficiencia Global de Equipos</div>
     <div class="page-title">Ranking OEE — Febrero 2026</div>
-    <div class="page-sub">Ordenado por % Mejora hacia la meta respecto a línea base (Nov–Dic–Ene 2026)</div>
+    <div class="page-sub">Linea Base OEE: Acumulado últimos 3 meses (Kg Producidas / Kg Esperados)</div>
+    <div class="page-sub" style="margin-top:4px;">% Mejora = (Resultado actual − Resultado base) / (Meta − Resultado base)</div>
   </div>
 
   <!-- TOP 3 -->
@@ -204,11 +204,7 @@ body {
   <!-- RANKING COMPLETO -->
   <div class="divider"><h3>Ranking Completo</h3></div>
   <div class="card">
-    <div class="card-header" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-      <div>
-        <h3>Todas las plantas · de mayor a menor % Mejora</h3>
-        <div class="sub">Barra: OEE Feb sobre escala 0–90% · línea blanca = Base · línea cyan = Meta</div>
-      </div>
+    <div class="card-header" style="display:flex;align-items:center;justify-content:flex-start;">
       <div style="display:flex;gap:6px;flex-wrap:wrap;">
         <button class="filter-btn active" onclick="setFiltro('TODOS',this)">Todos</button>
         <button class="filter-btn" onclick="setFiltro('BIANCHI',this)" style="--fc:#f59e0b;--fb:rgba(245,158,11,.12)">BIANCHI</button>
