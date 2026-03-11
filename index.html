@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ranking OEE — Febrero 2026</title>
+<title>Ranking OEE — 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -16,326 +16,663 @@
   --text:    #dde4f0;
   --muted:   #5a6a85;
   --light:   #8899b4;
-  --B:       #f59e0b;
-  --S:       #3b82f6;
-  --T:       #10b981;
   --green:   #10b981;
   --red:     #ef4444;
   --cyan:    #06b6d4;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Figtree', sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-  min-height: 100vh;
-}
+body { background:var(--bg); color:var(--text); font-family:'Figtree',sans-serif; font-size:14px; line-height:1.6; min-height:100vh; }
+.wrap { max-width:940px; margin:0 auto; padding:48px 32px 80px; }
 
-/* ── WRAPPER ── */
-.wrap {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 48px 32px 80px;
+/* HEADER */
+.header-row {
+  display:flex; align-items:flex-start; justify-content:space-between; gap:24px;
+  margin-bottom:36px;
 }
+.header-left {}
+.page-title { font-size:28px; font-weight:900; letter-spacing:-.02em; line-height:1.1; margin-bottom:6px; }
+.page-sub   { font-size:13px; color:var(--light); font-weight:300; }
 
-/* ── HEADER ── */
-.page-eyebrow {
-  font-size: 11px; font-weight: 700; letter-spacing: .12em;
-  text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
-  display: flex; align-items: center; gap: 8px;
+/* DROPDOWN */
+.mes-dropdown-wrap { position:relative; flex-shrink:0; margin-top:4px; }
+.mes-dropdown-btn {
+  display:flex; align-items:center; gap:10px;
+  background:var(--s2); border:1px solid var(--border2);
+  border-radius:10px; padding:10px 16px;
+  cursor:pointer; transition:border-color .15s;
+  min-width:190px;
 }
-.page-eyebrow::before { content:''; display:block; width:20px; height:2px; background:currentColor; }
-.page-title { font-size: 28px; font-weight: 900; letter-spacing: -.02em; line-height: 1.1; margin-bottom: 6px; }
-.page-sub { font-size: 13px; color: var(--light); font-weight: 300; }
+.mes-dropdown-btn:hover { border-color:var(--cyan); }
+.mes-dropdown-btn.open  { border-color:var(--cyan); border-radius:10px 10px 0 0; }
+.mes-icon { font-size:16px; }
+.mes-selected {
+  display:flex; flex-direction:column; flex:1;
+}
+.mes-selected-label { font-size:9px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; line-height:1; }
+.mes-selected-val   { font-size:14px; font-weight:800; color:var(--text); margin-top:2px; }
+.mes-badge-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--muted); flex-shrink:0;
+}
+.mes-badge-dot.real { background:var(--green); box-shadow:0 0 6px var(--green); }
+.mes-badge-dot.sim  { background:var(--cyan);  box-shadow:0 0 6px var(--cyan); }
+.mes-badge-dot.pendiente { background:var(--muted); }
+.mes-chevron { color:var(--muted); font-size:12px; transition:transform .2s; }
+.mes-dropdown-btn.open .mes-chevron { transform:rotate(180deg); }
 
-/* ── DIVIDER ── */
-.divider {
-  display: flex; align-items: center; gap: 14px;
-  margin: 36px 0 20px;
+.mes-menu {
+  display:none; position:absolute; top:100%; left:0; right:0;
+  background:var(--s2); border:1px solid var(--cyan);
+  border-top:none; border-radius:0 0 10px 10px;
+  overflow:hidden; z-index:100;
 }
-.divider h3 { font-size: 16px; font-weight: 800; white-space: nowrap; }
+.mes-menu.open { display:block; }
+.mes-option {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 16px; cursor:pointer; transition:background .12s;
+  font-size:13px; font-weight:600; color:var(--light);
+}
+.mes-option:hover { background:var(--s3); color:var(--text); }
+.mes-option.active { color:var(--cyan); font-weight:800; }
+.mes-option.active .mes-opt-dot { background:var(--green); box-shadow:0 0 5px var(--green); }
+.mes-opt-dot { width:6px; height:6px; border-radius:50%; background:var(--muted); flex-shrink:0; }
+.mes-opt-dot.real { background:var(--green); box-shadow:0 0 5px var(--green); }
+.mes-opt-dot.sim  { background:var(--cyan);  box-shadow:0 0 5px var(--cyan); }
+.mes-opt-name { flex:1; }
+.mes-opt-tag {
+  font-size:9px; font-weight:700; padding:2px 6px; border-radius:4px;
+  letter-spacing:.05em; text-transform:uppercase;
+}
+.tag-real     { background:rgba(16,185,129,.15); color:var(--green); }
+.tag-sim      { background:rgba(6,182,212,.12);  color:var(--cyan); }
+.tag-pendiente{ background:rgba(90,106,133,.12); color:var(--muted); }
+
+/* DIVIDER */
+.divider { display:flex; align-items:center; gap:14px; margin:36px 0 20px; }
+.divider h3 { font-size:16px; font-weight:800; white-space:nowrap; }
 .divider::after { content:''; flex:1; height:1px; background:var(--border); }
 
-/* ── TOP 3 CARDS ── */
-.podio-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px;
-}
+/* PODIO */
+.podio-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
 .podio-card {
-  background: var(--s2);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 22px 20px 20px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color .2s, transform .2s;
+  background:var(--s2); border:1px solid var(--border); border-radius:14px;
+  padding:22px 20px 20px; position:relative; overflow:hidden;
+  transition:border-color .2s, transform .2s;
 }
-.podio-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.podio-card:hover { border-color:var(--border2); transform:translateY(-2px); }
 .podio-top-line { position:absolute; top:0; left:0; right:0; height:3px; border-radius:14px 14px 0 0; }
+.podio-pos { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.08em; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.podio-pos-icon { font-size:18px; line-height:1; }
+.podio-name { font-size:15px; font-weight:900; letter-spacing:-.01em; margin-bottom:2px; }
+.podio-centro { font-size:9px; font-weight:800; padding:1px 7px; border-radius:4px; letter-spacing:.07em; text-transform:uppercase; display:inline-block; margin-bottom:14px; }
+.podio-score { font-size:34px; font-weight:900; font-variant-numeric:tabular-nums; line-height:1; margin-bottom:3px; }
+.podio-score-lbl { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; margin-bottom:14px; }
+.podio-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; padding-top:14px; border-top:1px solid var(--border); }
+.podio-stat-val { font-size:12px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+.podio-stat-lbl { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:2px; }
+.score-row { display:flex; gap:10px; margin-bottom:14px; }
+.score-pill { flex:1; background:var(--s3); border:1px solid var(--border); border-radius:8px; padding:8px 10px; }
+.score-pill-val { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; }
+.score-pill-lbl { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:1px; }
 
-.podio-pos {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; font-weight: 700;
-  letter-spacing: .08em; margin-bottom: 10px;
-  display: flex; align-items: center; gap: 8px;
+/* ESTADO SIN DATOS */
+.no-data {
+  text-align:center; padding:60px 20px;
+  color:var(--muted); font-size:14px;
 }
-.podio-pos-icon { font-size: 18px; line-height: 1; }
+.no-data .no-data-icon { font-size:40px; margin-bottom:12px; }
+.no-data strong { display:block; font-size:16px; font-weight:700; color:var(--light); margin-bottom:6px; }
 
-.podio-name { font-size: 15px; font-weight: 900; letter-spacing: -.01em; margin-bottom: 2px; }
-.podio-centro {
-  font-size: 9px; font-weight: 800; padding: 1px 7px;
-  border-radius: 4px; letter-spacing: .07em;
-  text-transform: uppercase; display: inline-block; margin-bottom: 14px;
-}
+/* CARD */
+.card { background:var(--s2); border:1px solid var(--border); border-radius:14px; padding:22px 22px 20px; overflow:hidden; }
+.tbl { width:100%; border-collapse:collapse; }
+.tbl th { font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:700; padding:9px 12px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; }
+.tbl td { padding:11px 12px; font-size:12px; border-bottom:1px solid rgba(255,255,255,.03); vertical-align:middle; }
+.tbl tr:last-child td { border:none; }
+.tbl tr:hover td { background:rgba(255,255,255,.02); }
+.mono { font-family:'JetBrains Mono',monospace; font-size:11px; }
 
-.podio-mejora {
-  font-size: 34px; font-weight: 900;
-  font-variant-numeric: tabular-nums; line-height: 1; margin-bottom: 3px;
-}
-.podio-mejora-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+/* MINI BAR */
+.mini-track { position:relative; height:6px; background:rgba(255,255,255,.06); border-radius:3px; width:100%; min-width:90px; }
+.mini-fill  { height:100%; border-radius:3px; transition:width 1s cubic-bezier(.4,0,.2,1); }
+.mini-meta  { position:absolute; top:-3px; bottom:-3px; width:1.5px; background:var(--cyan); opacity:.7; border-radius:1px; }
+.mini-base  { position:absolute; top:-2px; bottom:-2px; width:1.5px; background:rgba(255,255,255,.3); border-radius:1px; }
 
-.podio-stats {
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px; margin-top: 16px; padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-.podio-stat-val {
-  font-size: 13px; font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
-}
-.podio-stat-lbl {
-  font-size: 9px; color: var(--muted);
-  text-transform: uppercase; letter-spacing: .06em; margin-top: 2px;
-}
+/* RANK */
+.rank-num { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; width:20px; text-align:center; color:var(--muted); display:inline-block; }
+.rank-num.gold   { color:#f59e0b; }
+.rank-num.silver { color:#94a3b8; }
+.rank-num.bronze { color:#c87941; }
+.mejora-val { font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; }
+.mejora-val.pos { color:var(--green); }
+.mejora-val.neg { color:var(--red); }
 
-/* ── TABLA ── */
-.card {
-  background: var(--s2); border: 1px solid var(--border);
-  border-radius: 14px; padding: 22px 22px 20px; overflow: hidden;
-}
-.card-header { margin-bottom: 16px; }
-.card-header h3 { font-size: 14px; font-weight: 700; }
-.card-header .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+/* FILTERS */
+.filter-btn { font-family:'Figtree',sans-serif; font-size:11px; font-weight:700; padding:5px 12px; border-radius:6px; border:1px solid var(--border2); background:var(--s3); color:var(--muted); cursor:pointer; transition:all .15s; letter-spacing:.04em; }
+.filter-btn:hover { color:var(--text); }
+.filter-btn.active { background:var(--fb,var(--s3)); border-color:var(--fc,var(--border2)); color:var(--fc,var(--text)); }
 
-.tbl { width: 100%; border-collapse: collapse; }
-.tbl th {
-  font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
-  color: var(--muted); font-weight: 700;
-  padding: 9px 12px; text-align: left;
-  border-bottom: 1px solid var(--border); white-space: nowrap;
-}
-.tbl td {
-  padding: 11px 12px; font-size: 12px;
-  border-bottom: 1px solid rgba(255,255,255,.03);
-  vertical-align: middle;
-}
-.tbl tr:last-child td { border: none; }
-.tbl tr:hover td { background: rgba(255,255,255,.02); }
-
-.mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
-.pill { display:inline-block; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:700; }
-.pg { background:rgba(16,185,129,.15);  color:#10b981; }
-.pb { background:rgba(59,130,246,.15);  color:#3b82f6; }
-.pa { background:rgba(245,158,11,.15);  color:#f59e0b; }
-.po { background:rgba(249,115,22,.15);  color:#f97316; }
-.pr { background:rgba(239,68,68,.15);   color:#ef4444; }
-
-/* mini track */
-.mini-track {
-  position: relative; height: 6px;
-  background: rgba(255,255,255,.06);
-  border-radius: 3px; width: 100%; min-width: 100px;
-}
-.mini-fill { height:100%; border-radius:3px; transition: width 1s cubic-bezier(.4,0,.2,1); }
-.mini-meta { position:absolute; top:-3px; bottom:-3px; width:1.5px; background:var(--cyan); opacity:.7; border-radius:1px; }
-.mini-base { position:absolute; top:-2px; bottom:-2px; width:1.5px; background:rgba(255,255,255,.3); border-radius:1px; }
-
-.rank-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; font-weight: 700;
-  width: 20px; text-align: center; color: var(--muted); display:inline-block;
-}
-.rank-num.gold   { color: #f59e0b; }
-.rank-num.silver { color: #94a3b8; }
-.rank-num.bronze { color: #c87941; }
-
-.mejora-val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px; font-weight: 700;
-}
-.mejora-val.pos { color: var(--green); }
-.mejora-val.neg { color: var(--red); }
-
-/* ── FILTER BUTTONS ── */
-.filter-btn {
-  font-family: 'Figtree', sans-serif;
-  font-size: 11px; font-weight: 700;
-  padding: 5px 12px; border-radius: 6px;
-  border: 1px solid var(--border2);
-  background: var(--s3); color: var(--muted);
-  cursor: pointer; transition: all .15s;
-  letter-spacing: .04em;
-}
-.filter-btn:hover { color: var(--text); background: var(--s3); }
-.filter-btn.active {
-  background: var(--fb, var(--s3));
-  border-color: var(--fc, var(--border2));
-  color: var(--fc, var(--text));
-}
+/* TABS */
+.tabs-row { display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:28px; }
+.tab-btn { font-family:'Figtree',sans-serif; font-size:12px; font-weight:700; padding:10px 18px; background:none; border:none; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all .15s; letter-spacing:.03em; }
+.tab-btn:hover { color:var(--text); }
+.tab-btn.active { color:var(--text); border-bottom-color:var(--cyan); }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <!-- HEADER -->
-  <div style="margin-bottom: 36px;">
-    <div class="page-title">Ranking OEE — Febrero 2026</div>
-    <div class="page-sub">Linea Base OEE: Acumulado últimos 3 meses (Kg Producidas / Kg Esperados)</div>
-    <div class="page-sub" style="margin-top:4px;">% Mejora = (Resultado actual − Resultado base) / (Meta − Resultado base)</div>
+  <div class="header-row">
+    <div class="header-left">
+      <div class="page-title">Ranking OEE — 2026</div>
+      <div class="page-sub">Linea Base OEE: Acumulado últimos 3 meses (Kg Producidas / Kg Esperados)</div>
+      <div class="page-sub" style="margin-top:4px;">% Mejora = (Resultado actual − Resultado base) / (Meta − Resultado base)</div>
+    </div>
+
+    <!-- DESPLEGABLE MES -->
+    <div class="mes-dropdown-wrap" id="dropWrap">
+      <div class="mes-dropdown-btn" id="dropBtn" onclick="toggleDrop()">
+        <span class="mes-icon">📅</span>
+        <div class="mes-selected">
+          <span class="mes-selected-label">Período</span>
+          <span class="mes-selected-val" id="dropLabel">Febrero 2026</span>
+        </div>
+        <span class="mes-badge-dot real" id="dropDot"></span>
+        <span class="mes-chevron">▼</span>
+      </div>
+      <div class="mes-menu" id="dropMenu"></div>
+    </div>
   </div>
 
-  <!-- TOP 3 -->
-  <div class="divider"><h3>🏆 Top 3 · Mayor Avance hacia la Meta</h3></div>
-  <div class="podio-grid" id="podio"></div>
+  <!-- TABS -->
+  <div class="tabs-row">
+    <button class="tab-btn active" onclick="setTab('combinado',this)">⚡ Score Combinado</button>
+    <button class="tab-btn" onclick="setTab('oee',this)">📊 OEE</button>
+    <button class="tab-btn" onclick="setTab('kgh',this)">⚖️ Kg/H · Colaborador</button>
+  </div>
 
-  <!-- RANKING COMPLETO -->
-  <div class="divider"><h3>Ranking Completo</h3></div>
-  <div class="card">
-    <div class="card-header" style="display:flex;align-items:center;justify-content:flex-start;">
-      <div style="display:flex;gap:6px;flex-wrap:wrap;">
-        <button class="filter-btn active" onclick="setFiltro('TODOS',this)">Todos</button>
-        <button class="filter-btn" onclick="setFiltro('BIANCHI',this)" style="--fc:#f59e0b;--fb:rgba(245,158,11,.12)">BIANCHI</button>
-        <button class="filter-btn" onclick="setFiltro('SUPER',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">SUPER</button>
-        <button class="filter-btn" onclick="setFiltro('TRULULU',this)" style="--fc:#10b981;--fb:rgba(16,185,129,.12)">TRULULU</button>
+  <!-- TAB COMBINADO -->
+  <div class="tab-panel active" id="tab-combinado">
+    <div class="divider"><h3>🏆 Top 3 · Score Combinado (OEE 60% · Kg/H 40%)</h3></div>
+    <div class="podio-grid" id="podio-combinado"></div>
+    <div class="divider"><h3>Ranking Completo · Score Combinado</h3></div>
+    <div class="card">
+      <div style="display:flex;align-items:center;margin-bottom:16px;">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="filters-combinado">
+          <button class="filter-btn active" onclick="setFiltro('combinado','TODOS',this)">Todos</button>
+          <button class="filter-btn" onclick="setFiltro('combinado','Supercoco',this)" style="--fc:#eab308;--fb:rgba(234,179,8,.12)">Supercoco</button>
+          <button class="filter-btn" onclick="setFiltro('combinado','Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
+          <button class="filter-btn" onclick="setFiltro('combinado','Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
+        </div>
       </div>
+      <table class="tbl">
+        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>OEE % Mejora</th><th>Kg/H % Mejora</th><th style="width:110px">Barra Score</th><th>Score</th></tr></thead>
+        <tbody id="tbody-combinado"></tbody>
+      </table>
     </div>
-    <table class="tbl">
-      <thead><tr>
-        <th>#</th>
-        <th>Planta</th>
-        <th>Centro</th>
-        <th>Línea Base</th>
-        <th>OEE Feb</th>
-        <th>Meta</th>
-        <th style="width:130px">Progreso</th>
-        <th>% Mejora</th>
-      </tr></thead>
-      <tbody id="tbody"></tbody>
-    </table>
+  </div>
+
+  <!-- TAB OEE -->
+  <div class="tab-panel" id="tab-oee">
+    <div class="divider"><h3>🏆 Top 3 · Mayor Avance OEE</h3></div>
+    <div class="podio-grid" id="podio-oee"></div>
+    <div class="divider"><h3>Ranking Completo · OEE</h3></div>
+    <div class="card">
+      <div style="display:flex;align-items:center;margin-bottom:16px;">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="filters-oee">
+          <button class="filter-btn active" onclick="setFiltro('oee','TODOS',this)">Todos</button>
+          <button class="filter-btn" onclick="setFiltro('oee','Supercoco',this)" style="--fc:#eab308;--fb:rgba(234,179,8,.12)">Supercoco</button>
+          <button class="filter-btn" onclick="setFiltro('oee','Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
+          <button class="filter-btn" onclick="setFiltro('oee','Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
+        </div>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>OEE Mes</th><th>Meta</th><th style="width:110px">Progreso</th><th>% Mejora</th></tr></thead>
+        <tbody id="tbody-oee"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB KG/H -->
+  <div class="tab-panel" id="tab-kgh">
+    <div class="divider"><h3>🏆 Top 3 · Mayor Avance Kg/H · Colaborador</h3></div>
+    <div class="podio-grid" id="podio-kgh"></div>
+    <div class="divider"><h3>Ranking Completo · Kg/H · Colaborador</h3></div>
+    <div class="card">
+      <div style="display:flex;align-items:center;margin-bottom:16px;">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="filters-kgh">
+          <button class="filter-btn active" onclick="setFiltro('kgh','TODOS',this)">Todos</button>
+          <button class="filter-btn" onclick="setFiltro('kgh','Supercoco',this)" style="--fc:#eab308;--fb:rgba(234,179,8,.12)">Supercoco</button>
+          <button class="filter-btn" onclick="setFiltro('kgh','Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
+          <button class="filter-btn" onclick="setFiltro('kgh','Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
+        </div>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:110px">Progreso</th><th>% Mejora</th></tr></thead>
+        <tbody id="tbody-kgh"></tbody>
+      </table>
+    </div>
   </div>
 
 </div>
 
 <script>
-const DATA = [
-  {p:'Trululu ST',      c:'TRULULU', cc:'T', linea:.5694, feb:.6069, meta:.5859, mejora:2.2692},
-  {p:'Planta Super 1',  c:'SUPER',   cc:'S', linea:.4488, feb:.5377, meta:.5423, mejora:.9514},
-  {p:'Planta Super 2',  c:'SUPER',   cc:'S', linea:.7101, feb:.7177, meta:.7380, mejora:.2709},
-  {p:'Planta Fabry',    c:'BIANCHI', cc:'B', linea:.5871, feb:.5946, meta:.6199, mejora:.2308},
-  {p:'Trululu 3',       c:'TRULULU', cc:'T', linea:.4787, feb:.4963, meta:.5554, mejora:.2300},
-  {p:'Trululu 2',       c:'TRULULU', cc:'T', linea:.5033, feb:.5159, meta:.5719, mejora:.1838},
-  {p:'Planta Super 3',  c:'SUPER',   cc:'S', linea:.3938, feb:.3994, meta:.5061, mejora:.0504},
-  {p:'Planta Bianchi 1',c:'BIANCHI', cc:'B', linea:.5089, feb:.4687, meta:.5622, mejora:-.7548},
-  {p:'Planta Bianchi 3',c:'BIANCHI', cc:'B', linea:.4091, feb:.3309, meta:.4886, mejora:-.9825},
-  {p:'Trululu 1',       c:'TRULULU', cc:'T', linea:.7192, feb:.6472, meta:.7392, mejora:-3.6173},
-];
-
-const CENTRO = {
-  B: {color:'#f59e0b', bg:'rgba(245,158,11,.15)'},
-  S: {color:'#3b82f6', bg:'rgba(59,130,246,.15)'},
-  T: {color:'#10b981', bg:'rgba(16,185,129,.15)'},
+/* ══════════════════════════════════════════
+   HISTORIAL — agregar un objeto por mes
+   con oee[] y kgh[] cuando lleguen datos
+══════════════════════════════════════════ */
+const HISTORIAL = {
+  "Febrero 2026": {
+    real: true,
+    oee: [
+      {p:"Planta Fabry",    c:"Supercoco",cc:"S",linea:.5871,feb:.6819,meta:.6199,mejora:2.8933},
+      {p:"Trululu ST",      c:"Trululu",  cc:"T",linea:.5694,feb:.6069,meta:.5859,mejora:2.2692},
+      {p:"Planta Super 1",  c:"Supercoco",cc:"S",linea:.4488,feb:.5377,meta:.5423,mejora:.9514},
+      {p:"Planta Super 2",  c:"Supercoco",cc:"S",linea:.7101,feb:.7177,meta:.7380,mejora:.2709},
+      {p:"Trululu 3",       c:"Trululu",  cc:"T",linea:.4787,feb:.4963,meta:.5554,mejora:.2300},
+      {p:"Trululu 2",       c:"Trululu",  cc:"T",linea:.5033,feb:.5159,meta:.5719,mejora:.1838},
+      {p:"Planta Super 3",  c:"Supercoco",cc:"S",linea:.3938,feb:.3994,meta:.5061,mejora:.0504},
+      {p:"Planta Bianchi 1",c:"Bianchi",  cc:"B",linea:.5089,feb:.4687,meta:.5622,mejora:-.7548},
+      {p:"Planta Bianchi 3",c:"Bianchi",  cc:"B",linea:.4091,feb:.3309,meta:.4886,mejora:-.9825},
+      {p:"Trululu 1",       c:"Trululu",  cc:"T",linea:.7192,feb:.6472,meta:.7392,mejora:-3.6173},
+    ],
+    kgh: [
+      {p:"Trululu ST",      c:"Trululu",  cc:"T",linea:1,    feb:1.5,   meta:1.2,   mejora:2.5000},
+      {p:"Trululu 2",       c:"Trululu",  cc:"T",linea:100,  feb:112.78,meta:113.90,mejora:.9197},
+      {p:"Trululu 3",       c:"Trululu",  cc:"T",linea:55,   feb:65.06, meta:72,    mejora:.5916},
+      {p:"Planta Super 2",  c:"Supercoco",cc:"S",linea:25,   feb:28.46, meta:40,    mejora:.2308},
+      {p:"Planta Bianchi 3",c:"Bianchi",  cc:"B",linea:47,   feb:48.81, meta:55,    mejora:.2257},
+      {p:"Trululu 1",       c:"Trululu",  cc:"T",linea:7.10, feb:7.17,  meta:9,     mejora:.0373},
+      {p:"Planta Super 3",  c:"Supercoco",cc:"S",linea:26.51,feb:26.51, meta:26.78, mejora:0},
+      {p:"Planta Bianchi 1",c:"Bianchi",  cc:"B",linea:12.70,feb:12.70, meta:12.95, mejora:0},
+      {p:"Planta Super 1",  c:"Supercoco",cc:"S",linea:24,   feb:21,    meta:27.92, mejora:-.7654},
+      {p:"Planta Fabry",    c:"Supercoco",cc:"S",linea:24,   feb:18,    meta:26.04, mejora:-2.9342},
+    ]
+  }
+  ,"Enero 2026": {
+    real: false,
+    oee: [
+      {p:"Trululu ST",      c:"Trululu",  cc:"T",linea:.5620,feb:.5980,meta:.5800,mejora:2.0000},
+      {p:"Planta Fabry",    c:"Supercoco",cc:"S",linea:.5750,feb:.6150,meta:.6050,mejora:1.3333},
+      {p:"Planta Super 1",  c:"Supercoco",cc:"S",linea:.4380,feb:.4870,meta:.5300,mejora:.5341},
+      {p:"Planta Super 2",  c:"Supercoco",cc:"S",linea:.7020,feb:.7110,meta:.7300,mejora:.3214},
+      {p:"Trululu 3",       c:"Trululu",  cc:"T",linea:.4710,feb:.4830,meta:.5480,mejora:.1558},
+      {p:"Trululu 2",       c:"Trululu",  cc:"T",linea:.4960,feb:.5060,meta:.5680,mejora:.1389},
+      {p:"Planta Super 3",  c:"Supercoco",cc:"S",linea:.3870,feb:.3910,meta:.4980,mejora:.0374},
+      {p:"Planta Bianchi 1",c:"Bianchi",  cc:"B",linea:.5050,feb:.4760,meta:.5580,mejora:-.5366},
+      {p:"Planta Bianchi 3",c:"Bianchi",  cc:"B",linea:.4060,feb:.3520,meta:.4780,mejora:-.7302},
+      {p:"Trululu 1",       c:"Trululu",  cc:"T",linea:.7150,feb:.6700,meta:.7350,mejora:-.6923},
+    ],
+    kgh: [
+      {p:"Trululu ST",      c:"Trululu",  cc:"T",linea:.95, feb:1.35, meta:1.15, mejora:2.0000},
+      {p:"Trululu 2",       c:"Trululu",  cc:"T",linea:98,  feb:109,  meta:112,  mejora:.7857},
+      {p:"Trululu 3",       c:"Trululu",  cc:"T",linea:53,  feb:62,   meta:70,   mejora:.5294},
+      {p:"Planta Super 2",  c:"Supercoco",cc:"S",linea:24,  feb:27.2, meta:38,   mejora:.2286},
+      {p:"Planta Bianchi 3",c:"Bianchi",  cc:"B",linea:46,  feb:48,   meta:54,   mejora:.2500},
+      {p:"Planta Super 3",  c:"Supercoco",cc:"S",linea:26,  feb:26.4, meta:26.8, mejora:.5000},
+      {p:"Trululu 1",       c:"Trululu",  cc:"T",linea:7.0, feb:7.1,  meta:8.8,  mejora:.0556},
+      {p:"Planta Bianchi 1",c:"Bianchi",  cc:"B",linea:12.5,feb:12.6, meta:12.8, mejora:.3333},
+      {p:"Planta Super 1",  c:"Supercoco",cc:"S",linea:23.5,feb:21.5, meta:27.5, mejora:-.5000},
+      {p:"Planta Fabry",    c:"Supercoco",cc:"S",linea:23.5,feb:17.5, meta:25.5, mejora:-3.000},
+    ]
+  },
+  "Marzo 2026": {
+    real: false,
+    oee: [
+      {p:"Trululu ST",      c:"Trululu",  cc:"T",linea:.5750,feb:.6050,meta:.5920,mejora:1.7647},
+      {p:"Planta Super 1",  c:"Supercoco",cc:"S",linea:.4600,feb:.5500,meta:.5550,mejora:.9474},
+      {p:"Planta Fabry",    c:"Supercoco",cc:"S",linea:.5950,feb:.6300,meta:.6250,mejora:-3.500},
+      {p:"Trululu 2",       c:"Trululu",  cc:"T",linea:.5100,feb:.5250,meta:.5780,mejora:.2206},
+      {p:"Planta Super 2",  c:"Supercoco",cc:"S",linea:.7150,feb:.7200,meta:.7420,mejora:.1852},
+      {p:"Trululu 3",       c:"Trululu",  cc:"T",linea:.4850,feb:.4980,meta:.5600,mejora:.1721},
+      {p:"Planta Super 3",  c:"Supercoco",cc:"S",linea:.4000,feb:.4050,meta:.5100,mejora:.0455},
+      {p:"Planta Bianchi 1",c:"Bianchi",  cc:"B",linea:.5100,feb:.4800,meta:.5650,mejora:-.5455},
+      {p:"Planta Bianchi 3",c:"Bianchi",  cc:"B",linea:.4100,feb:.3600,meta:.4900,mejora:-.6250},
+      {p:"Trululu 1",       c:"Trululu",  cc:"T",linea:.7200,feb:.6900,meta:.7400,mejora:-.6000},
+    ],
+    kgh: [
+      {p:"Trululu ST",      c:"Trululu",  cc:"T",linea:1.1, feb:1.6,  meta:1.3,  mejora:2.5000},
+      {p:"Trululu 2",       c:"Trululu",  cc:"T",linea:102, feb:113,  meta:115,  mejora:.8462},
+      {p:"Trululu 3",       c:"Trululu",  cc:"T",linea:56,  feb:66,   meta:74,   mejora:.5556},
+      {p:"Planta Bianchi 3",c:"Bianchi",  cc:"B",linea:48,  feb:50,   meta:57,   mejora:.2222},
+      {p:"Planta Super 2",  c:"Supercoco",cc:"S",linea:26,  feb:29,   meta:42,   mejora:.1875},
+      {p:"Planta Super 3",  c:"Supercoco",cc:"S",linea:27,  feb:27.2, meta:27.5, mejora:.4000},
+      {p:"Trululu 1",       c:"Trululu",  cc:"T",linea:7.2, feb:7.3,  meta:9.2,  mejora:.0500},
+      {p:"Planta Bianchi 1",c:"Bianchi",  cc:"B",linea:12.9,feb:13.0, meta:13.2, mejora:.3333},
+      {p:"Planta Super 1",  c:"Supercoco",cc:"S",linea:24.5,feb:22,   meta:28.5, mejora:-.6250},
+      {p:"Planta Fabry",    c:"Supercoco",cc:"S",linea:24.5,feb:19,   meta:27,   mejora:-2.200},
+    ]
+  },
+  "Abril 2026": {
+    real: false,
+    oee: [
+      {p:"Trululu ST",      c:"Trululu",  cc:"T",linea:.5800,feb:.6100,meta:.5950,mejora:2.0000},
+      {p:"Planta Fabry",    c:"Supercoco",cc:"S",linea:.6000,feb:.6350,meta:.6300,mejora:7.0000},
+      {p:"Planta Bianchi 1",c:"Bianchi",  cc:"B",linea:.5100,feb:.5700,meta:.5700,mejora:1.0000},
+      {p:"Planta Super 1",  c:"Supercoco",cc:"S",linea:.4700,feb:.5250,meta:.5600,mejora:.6111},
+      {p:"Trululu 2",       c:"Trululu",  cc:"T",linea:.5150,feb:.5320,meta:.5820,mejora:.2530},
+      {p:"Planta Super 2",  c:"Supercoco",cc:"S",linea:.7180,feb:.7230,meta:.7450,mejora:.1852},
+      {p:"Trululu 3",       c:"Trululu",  cc:"T",linea:.4900,feb:.5020,meta:.5650,mejora:.1600},
+      {p:"Planta Super 3",  c:"Supercoco",cc:"S",linea:.4050,feb:.4110,meta:.5150,mejora:.0545},
+      {p:"Planta Bianchi 3",c:"Bianchi",  cc:"B",linea:.4150,feb:.3750,meta:.4950,mejora:-.5000},
+      {p:"Trululu 1",       c:"Trululu",  cc:"T",linea:.7220,feb:.7100,meta:.7450,mejora:-.5217},
+    ],
+    kgh: [
+      {p:"Trululu ST",      c:"Trululu",  cc:"T",linea:1.2, feb:1.7,  meta:1.4,  mejora:2.5000},
+      {p:"Planta Bianchi 1",c:"Bianchi",  cc:"B",linea:13,  feb:13.5, meta:13.5, mejora:1.0000},
+      {p:"Trululu 2",       c:"Trululu",  cc:"T",linea:104, feb:114,  meta:117,  mejora:.7692},
+      {p:"Trululu 3",       c:"Trululu",  cc:"T",linea:57,  feb:67,   meta:76,   mejora:.5263},
+      {p:"Planta Bianchi 3",c:"Bianchi",  cc:"B",linea:49,  feb:51,   meta:58,   mejora:.2222},
+      {p:"Planta Super 2",  c:"Supercoco",cc:"S",linea:27,  feb:30,   meta:44,   mejora:.1765},
+      {p:"Planta Super 3",  c:"Supercoco",cc:"S",linea:27.5,feb:27.8, meta:28,   mejora:.6000},
+      {p:"Trululu 1",       c:"Trululu",  cc:"T",linea:7.3, feb:7.4,  meta:9.5,  mejora:.0455},
+      {p:"Planta Super 1",  c:"Supercoco",cc:"S",linea:25,  feb:23,   meta:30,   mejora:-.4000},
+      {p:"Planta Fabry",    c:"Supercoco",cc:"S",linea:25,  feb:21,   meta:28,   mejora:-1.333},
+    ]
+  },
+  "Mayo 2026": {
+    real: false,
+    oee: [
+      {p:"Trululu ST",      c:"Trululu",  cc:"T",linea:.5850,feb:.6150,meta:.5980,mejora:3.2308},
+      {p:"Planta Bianchi 3",c:"Bianchi",  cc:"B",linea:.4200,feb:.5000,meta:.5000,mejora:1.0000},
+      {p:"Planta Fabry",    c:"Supercoco",cc:"S",linea:.6050,feb:.6350,meta:.6350,mejora:1.0000},
+      {p:"Planta Super 1",  c:"Supercoco",cc:"S",linea:.4800,feb:.5350,meta:.5650,mejora:.6471},
+      {p:"Trululu 2",       c:"Trululu",  cc:"T",linea:.5200,feb:.5400,meta:.5900,mejora:.2857},
+      {p:"Planta Super 2",  c:"Supercoco",cc:"S",linea:.7200,feb:.7270,meta:.7480,mejora:.2500},
+      {p:"Trululu 3",       c:"Trululu",  cc:"T",linea:.4950,feb:.5080,meta:.5700,mejora:.1733},
+      {p:"Planta Super 3",  c:"Supercoco",cc:"S",linea:.4100,feb:.4180,meta:.5200,mejora:.0727},
+      {p:"Planta Bianchi 1",c:"Bianchi",  cc:"B",linea:.5200,feb:.5100,meta:.5750,mejora:-.1818},
+      {p:"Trululu 1",       c:"Trululu",  cc:"T",linea:.7250,feb:.7150,meta:.7480,mejora:-.4348},
+    ],
+    kgh: [
+      {p:"Trululu ST",      c:"Trululu",  cc:"T",linea:1.3, feb:1.8,  meta:1.5,  mejora:2.5000},
+      {p:"Planta Bianchi 3",c:"Bianchi",  cc:"B",linea:50,  feb:55,   meta:60,   mejora:1.0000},
+      {p:"Trululu 2",       c:"Trululu",  cc:"T",linea:106, feb:116,  meta:119,  mejora:.7692},
+      {p:"Trululu 3",       c:"Trululu",  cc:"T",linea:58,  feb:68,   meta:78,   mejora:.5000},
+      {p:"Planta Super 2",  c:"Supercoco",cc:"S",linea:28,  feb:32,   meta:46,   mejora:.2222},
+      {p:"Planta Super 3",  c:"Supercoco",cc:"S",linea:28,  feb:28.5, meta:29,   mejora:.5000},
+      {p:"Trululu 1",       c:"Trululu",  cc:"T",linea:7.5, feb:7.6,  meta:9.8,  mejora:.0435},
+      {p:"Planta Bianchi 1",c:"Bianchi",  cc:"B",linea:13.2,feb:13.3, meta:13.6, mejora:.2500},
+      {p:"Planta Super 1",  c:"Supercoco",cc:"S",linea:25.5,feb:24,   meta:31,   mejora:-.2778},
+      {p:"Planta Fabry",    c:"Supercoco",cc:"S",linea:25.5,feb:22,   meta:29,   mejora:-1.000},
+    ]
+  }
+  // ── Aquí se irán agregando los meses siguientes con datos reales ──
 };
 
-const pct = v => (v*100).toFixed(1)+'%';
-const imp = v => (v>=0?'+':'')+(v*100).toFixed(1)+'%';
+/* ── Lista completa de meses 2026 ── */
+const MESES_2026 = [
+  "Enero 2026","Febrero 2026","Marzo 2026","Abril 2026",
+  "Mayo 2026","Junio 2026","Julio 2026","Agosto 2026",
+  "Septiembre 2026","Octubre 2026","Noviembre 2026","Diciembre 2026"
+];
 
-function status(m) {
-  if (m >= 1)   return {cls:'pg', txt:'Excelente'};
-  if (m >= 0.1) return {cls:'pb', txt:'Mejora'};
-  if (m >= 0)   return {cls:'pa', txt:'Estable'};
-  if (m >= -.5) return {cls:'po', txt:'Leve caída'};
-  return               {cls:'pr', txt:'Crítico'};
-}
-
-/* ── PODIO ── */
-const icons  = ['🥇','🥈','🥉'];
-const colors = ['#f59e0b','#94a3b8','#c87941'];
-const labels = ['#1 · ORO','#2 · PLATA','#3 · BRONCE'];
-
-document.getElementById('podio').innerHTML = DATA.slice(0,3).map((d,i) => {
-  const cc = CENTRO[d.cc];
-  return `
-  <div class="podio-card">
-    <div class="podio-top-line" style="background:${colors[i]}"></div>
-    <div class="podio-pos" style="color:${colors[i]}">
-      <span class="podio-pos-icon">${icons[i]}</span>${labels[i]}
-    </div>
-    <div class="podio-name">${d.p}</div>
-    <div class="podio-centro" style="background:${cc.bg};color:${cc.color}">${d.c}</div>
-    <div class="podio-mejora" style="color:${d.mejora>=0?'#10b981':'#ef4444'}">${imp(d.mejora)}</div>
-    <div class="podio-mejora-lbl">% Mejora hacia meta</div>
-    <div class="podio-stats">
-      <div>
-        <div class="podio-stat-val" style="color:var(--light)">${pct(d.linea)}</div>
-        <div class="podio-stat-lbl">Línea Base</div>
-      </div>
-      <div>
-        <div class="podio-stat-val" style="color:${d.feb>=d.linea?'#10b981':'#ef4444'}">${pct(d.feb)}</div>
-        <div class="podio-stat-lbl">OEE Feb</div>
-      </div>
-      <div>
-        <div class="podio-stat-val" style="color:var(--cyan)">${pct(d.meta)}</div>
-        <div class="podio-stat-lbl">Meta</div>
-      </div>
-    </div>
-  </div>`;
-}).join('');
-
-/* ── TABLA ── */
+/* ════ CONSTANTES ════ */
+const CENTRO = {
+  S:{color:'#eab308',bg:'rgba(234,179,8,.15)'},
+  T:{color:'#d946ef',bg:'rgba(217,70,239,.15)'},
+  B:{color:'#3b82f6',bg:'rgba(59,130,246,.15)'},
+};
+const icons   = ['🥇','🥈','🥉'];
+const colors  = ['#f59e0b','#94a3b8','#c87941'];
+const labels  = ['#1 · ORO','#2 · PLATA','#3 · BRONCE'];
 const rankCls = ['gold','silver','bronze'];
+const fmtP    = v => (v*100).toFixed(1)+'%';
+const fmtM    = v => (v>=0?'+':'')+v.toFixed(2);
+const imp     = v => (v>=0?'+':'')+(v*100).toFixed(1)+'%';
+const sgn     = v => v>=0 ? '#10b981' : '#ef4444';
 
-function renderTabla(filtro) {
-  const rows = filtro === 'TODOS' ? DATA : DATA.filter(d => d.c === filtro);
-  document.getElementById('tbody').innerHTML = rows.map((d, i) => {
-    const cc = CENTRO[d.cc];
-    const isPos = d.mejora >= 0;
-    const barW  = Math.min(100, (d.feb  / .9 * 100)).toFixed(1);
-    const baseW = Math.min(100, (d.linea/ .9 * 100)).toFixed(1);
-    const metaW = Math.min(100, (d.meta / .9 * 100)).toFixed(1);
-    return `<tr>
-    <td><span class="rank-num ${rankCls[i]||''}">${i+1}</span></td>
-    <td><strong>${d.p}</strong></td>
-    <td><span style="font-size:9px;font-weight:800;padding:1px 7px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase;background:${cc.bg};color:${cc.color}">${d.c}</span></td>
-    <td class="mono" style="color:var(--light)">${pct(d.linea)}</td>
-    <td class="mono" style="color:${d.feb>=d.linea?'#10b981':'#ef4444'};font-weight:700">${pct(d.feb)}</td>
-    <td class="mono" style="color:var(--cyan)">${pct(d.meta)}</td>
-    <td>
-      <div class="mini-track">
-        <div class="mini-fill" style="width:0%;background:${isPos?'rgba(16,185,129,.65)':'rgba(239,68,68,.65)'}" data-w="${barW}"></div>
-        <div class="mini-base" style="left:${baseW}%"></div>
-        <div class="mini-meta" style="left:${metaW}%"></div>
-      </div>
-    </td>
-    <td><span class="mejora-val ${isPos?'pos':'neg'}">${isPos?'↑':'↓'} ${imp(d.mejora)}</span></td>
-  </tr>`;
+let MES_ACTIVO = "Febrero 2026";
+
+/* ════ HELPERS ════ */
+function pill(d) {
+  const cc = CENTRO[d.cc];
+  return `<span style="font-size:9px;font-weight:800;padding:1px 7px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase;background:${cc.bg};color:${cc.color}">${d.c}</span>`;
+}
+function bc(feb,linea,meta) {
+  return feb>=meta?'rgba(16,185,129,.75)':feb>=linea?'rgba(234,179,8,.75)':'rgba(239,68,68,.75)';
+}
+function miniBar(feb,linea,meta,scale) {
+  return {
+    bw: Math.min(100,(feb/scale*100)).toFixed(1),
+    lw: Math.min(100,(linea/scale*100)).toFixed(1),
+    mw: Math.min(100,(meta/scale*100)).toFixed(1),
+    bc: bc(feb,linea,meta)
+  };
+}
+function animateBars() {
+  setTimeout(()=>{ document.querySelectorAll('.mini-fill[data-w]').forEach(el=>el.style.width=el.dataset.w+'%'); },60);
+}
+function getCombinado(mes) {
+  const {oee,kgh} = HISTORIAL[mes];
+  return oee.map(o=>{
+    const k = kgh.find(k=>k.p===o.p);
+    const score = o.mejora*0.6+(k?k.mejora:0)*0.4;
+    return {p:o.p,c:o.c,cc:o.cc,oee:o.mejora,kgh:k?k.mejora:0,score};
+  }).sort((a,b)=>b.score-a.score);
+}
+
+/* ════ DROPDOWN ════ */
+function buildDropdown() {
+  const menu = document.getElementById('dropMenu');
+  menu.innerHTML = MESES_2026.map(m => {
+    const tiene = !!HISTORIAL[m];
+    const esReal = tiene && HISTORIAL[m].real;
+    const esActivo = m === MES_ACTIVO;
+    const tag = !tiene ? 'Pendiente' : esReal ? 'Real' : 'Simulado';
+    const tagCls = !tiene ? 'tag-pendiente' : esReal ? 'tag-real' : 'tag-sim';
+    const dotCls = !tiene ? 'pendiente' : esReal ? 'real' : 'sim';
+    return `<div class="mes-option ${esActivo?'active':''}"
+      onclick="${tiene?`selectMes('${m}')`:'void(0)'}"
+      style="${!tiene?'opacity:.35;cursor:default;':''}"
+    >
+      <div class="mes-opt-dot ${dotCls}"></div>
+      <span class="mes-opt-name">${m}</span>
+      <span class="mes-opt-tag ${tagCls}">${tag}</span>
+    </div>`;
   }).join('');
-  setTimeout(() => {
-    document.querySelectorAll('.mini-fill[data-w]').forEach(el => {
-      el.style.width = el.dataset.w + '%';
-    });
-  }, 50);
 }
 
-function setFiltro(filtro, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+function toggleDrop() {
+  const btn  = document.getElementById('dropBtn');
+  const menu = document.getElementById('dropMenu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+
+function selectMes(mes) {
+  MES_ACTIVO = mes;
+  document.getElementById('dropLabel').textContent = mes;
+  const dot = document.getElementById('dropDot');
+  const esReal = HISTORIAL[mes]?.real;
+  dot.className = 'mes-badge-dot ' + (esReal ? 'real' : 'sim');
+  // cerrar menú
+  document.getElementById('dropBtn').classList.remove('open');
+  document.getElementById('dropMenu').classList.remove('open');
+  buildDropdown();
+  // reset filtros
+  ['combinado','oee','kgh'].forEach(tab=>{
+    const f = document.getElementById('filters-'+tab);
+    if(f) f.querySelectorAll('.filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  });
+  renderAll();
+}
+
+// Cerrar al click fuera
+document.addEventListener('click', e => {
+  if (!document.getElementById('dropWrap').contains(e.target)) {
+    document.getElementById('dropBtn').classList.remove('open');
+    document.getElementById('dropMenu').classList.remove('open');
+  }
+});
+
+/* ════ NO DATA ════ */
+function noDataHTML(mes) {
+  return `<div class="no-data">
+    <div class="no-data-icon">📭</div>
+    <strong>Sin datos para ${mes}</strong>
+    El mes aún no tiene información cargada. Los datos se agregarán cuando estén disponibles.
+  </div>`;
+}
+
+/* ════ COMBINADO ════ */
+function renderPodioCombinado() {
+  const el = document.getElementById('podio-combinado');
+  if (!HISTORIAL[MES_ACTIVO]) { el.innerHTML = ''; return; }
+  const comb = getCombinado(MES_ACTIVO);
+  el.innerHTML = comb.slice(0,3).map((d,i)=>{
+    const cc = CENTRO[d.cc];
+    return `<div class="podio-card">
+      <div class="podio-top-line" style="background:${colors[i]}"></div>
+      <div class="podio-pos" style="color:${colors[i]}"><span class="podio-pos-icon">${icons[i]}</span>${labels[i]}</div>
+      <div class="podio-name">${d.p}</div>
+      <div class="podio-centro" style="background:${cc.bg};color:${cc.color}">${d.c}</div>
+      <div class="podio-score" style="color:${sgn(d.score)}">${fmtM(d.score)}</div>
+      <div class="podio-score-lbl">Score combinado</div>
+      <div class="score-row">
+        <div class="score-pill"><div class="score-pill-val" style="color:${sgn(d.oee)}">${fmtM(d.oee)}</div><div class="score-pill-lbl">OEE · 60%</div></div>
+        <div class="score-pill"><div class="score-pill-val" style="color:${sgn(d.kgh)}">${fmtM(d.kgh)}</div><div class="score-pill-lbl">Kg/H · 40%</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function renderTablaCombinado(filtro) {
+  const tbody = document.getElementById('tbody-combinado');
+  if (!HISTORIAL[MES_ACTIVO]) { tbody.innerHTML = `<tr><td colspan="7">${noDataHTML(MES_ACTIVO)}</td></tr>`; return; }
+  const comb = getCombinado(MES_ACTIVO);
+  const rows = filtro==='TODOS'?comb:comb.filter(d=>d.c===filtro);
+  const maxS = Math.max(...comb.map(d=>Math.abs(d.score)));
+  tbody.innerHTML = rows.map((d,i)=>{
+    const isPos = d.score>=0;
+    const bw = Math.min(100,(Math.abs(d.score)/maxS*100)).toFixed(1);
+    const bcolor = isPos?'rgba(16,185,129,.75)':'rgba(239,68,68,.75)';
+    return `<tr>
+      <td><span class="rank-num ${rankCls[i]||''}">${i+1}</span></td>
+      <td><strong>${d.p}</strong></td><td>${pill(d)}</td>
+      <td class="mono" style="color:${sgn(d.oee)}">${fmtM(d.oee)}</td>
+      <td class="mono" style="color:${sgn(d.kgh)}">${fmtM(d.kgh)}</td>
+      <td><div class="mini-track"><div class="mini-fill" style="width:0%;background:${bcolor}" data-w="${bw}"></div></div></td>
+      <td><span class="mejora-val ${isPos?'pos':'neg'}">${isPos?'↑':'↓'} ${fmtM(d.score)}</span></td>
+    </tr>`;
+  }).join('');
+  animateBars();
+}
+
+/* ════ OEE ════ */
+function renderPodioOEE() {
+  const el = document.getElementById('podio-oee');
+  if (!HISTORIAL[MES_ACTIVO]) { el.innerHTML = ''; return; }
+  const data = [...HISTORIAL[MES_ACTIVO].oee].sort((a,b)=>b.mejora-a.mejora);
+  el.innerHTML = data.slice(0,3).map((d,i)=>{
+    const cc = CENTRO[d.cc];
+    return `<div class="podio-card">
+      <div class="podio-top-line" style="background:${colors[i]}"></div>
+      <div class="podio-pos" style="color:${colors[i]}"><span class="podio-pos-icon">${icons[i]}</span>${labels[i]}</div>
+      <div class="podio-name">${d.p}</div>
+      <div class="podio-centro" style="background:${cc.bg};color:${cc.color}">${d.c}</div>
+      <div class="podio-score" style="color:${sgn(d.mejora)}">${imp(d.mejora)}</div>
+      <div class="podio-score-lbl">% Mejora OEE hacia meta</div>
+      <div class="podio-stats">
+        <div><div class="podio-stat-val" style="color:var(--light)">${fmtP(d.linea)}</div><div class="podio-stat-lbl">Línea Base</div></div>
+        <div><div class="podio-stat-val" style="color:${sgn(d.feb-d.linea)}">${fmtP(d.feb)}</div><div class="podio-stat-lbl">OEE Mes</div></div>
+        <div><div class="podio-stat-val" style="color:var(--cyan)">${fmtP(d.meta)}</div><div class="podio-stat-lbl">Meta</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function renderTablaOEE(filtro) {
+  const tbody = document.getElementById('tbody-oee');
+  if (!HISTORIAL[MES_ACTIVO]) { tbody.innerHTML = `<tr><td colspan="8">${noDataHTML(MES_ACTIVO)}</td></tr>`; return; }
+  const data = [...HISTORIAL[MES_ACTIVO].oee].sort((a,b)=>b.mejora-a.mejora);
+  const rows = filtro==='TODOS'?data:data.filter(d=>d.c===filtro);
+  tbody.innerHTML = rows.map((d,i)=>{
+    const isPos = d.mejora>=0;
+    const b = miniBar(d.feb,d.linea,d.meta,.9);
+    return `<tr>
+      <td><span class="rank-num ${rankCls[i]||''}">${i+1}</span></td>
+      <td><strong>${d.p}</strong></td><td>${pill(d)}</td>
+      <td class="mono" style="color:var(--light)">${fmtP(d.linea)}</td>
+      <td class="mono" style="color:${sgn(d.feb-d.linea)};font-weight:700">${fmtP(d.feb)}</td>
+      <td class="mono" style="color:var(--cyan)">${fmtP(d.meta)}</td>
+      <td><div class="mini-track"><div class="mini-fill" style="width:0%;background:${b.bc}" data-w="${b.bw}"></div><div class="mini-base" style="left:${b.lw}%"></div><div class="mini-meta" style="left:${b.mw}%"></div></div></td>
+      <td><span class="mejora-val ${isPos?'pos':'neg'}">${isPos?'↑':'↓'} ${imp(d.mejora)}</span></td>
+    </tr>`;
+  }).join('');
+  animateBars();
+}
+
+/* ════ KG/H ════ */
+function renderPodioKGH() {
+  const el = document.getElementById('podio-kgh');
+  if (!HISTORIAL[MES_ACTIVO]) { el.innerHTML = ''; return; }
+  const data = [...HISTORIAL[MES_ACTIVO].kgh].sort((a,b)=>b.mejora-a.mejora);
+  const KGH_MAX = Math.max(...HISTORIAL[MES_ACTIVO].kgh.map(d=>d.meta))*1.15;
+  el.innerHTML = data.slice(0,3).map((d,i)=>{
+    const cc = CENTRO[d.cc];
+    return `<div class="podio-card">
+      <div class="podio-top-line" style="background:${colors[i]}"></div>
+      <div class="podio-pos" style="color:${colors[i]}"><span class="podio-pos-icon">${icons[i]}</span>${labels[i]}</div>
+      <div class="podio-name">${d.p}</div>
+      <div class="podio-centro" style="background:${cc.bg};color:${cc.color}">${d.c}</div>
+      <div class="podio-score" style="color:${sgn(d.mejora)}">${imp(d.mejora)}</div>
+      <div class="podio-score-lbl">% Mejora Kg/H hacia meta</div>
+      <div class="podio-stats">
+        <div><div class="podio-stat-val" style="color:var(--light)">${d.linea.toFixed(1)}</div><div class="podio-stat-lbl">Base kg/h</div></div>
+        <div><div class="podio-stat-val" style="color:${sgn(d.feb-d.linea)}">${d.feb.toFixed(1)}</div><div class="podio-stat-lbl">Mes kg/h</div></div>
+        <div><div class="podio-stat-val" style="color:var(--cyan)">${d.meta.toFixed(1)}</div><div class="podio-stat-lbl">Meta kg/h</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function renderTablaKGH(filtro) {
+  const tbody = document.getElementById('tbody-kgh');
+  if (!HISTORIAL[MES_ACTIVO]) { tbody.innerHTML = `<tr><td colspan="8">${noDataHTML(MES_ACTIVO)}</td></tr>`; return; }
+  const data = [...HISTORIAL[MES_ACTIVO].kgh].sort((a,b)=>b.mejora-a.mejora);
+  const KGH_MAX = Math.max(...HISTORIAL[MES_ACTIVO].kgh.map(d=>d.meta))*1.15;
+  const rows = filtro==='TODOS'?data:data.filter(d=>d.c===filtro);
+  tbody.innerHTML = rows.map((d,i)=>{
+    const isPos = d.mejora>=0;
+    const b = miniBar(d.feb,d.linea,d.meta,KGH_MAX);
+    return `<tr>
+      <td><span class="rank-num ${rankCls[i]||''}">${i+1}</span></td>
+      <td><strong>${d.p}</strong></td><td>${pill(d)}</td>
+      <td class="mono" style="color:var(--light)">${d.linea.toFixed(1)}</td>
+      <td class="mono" style="color:${sgn(d.feb-d.linea)};font-weight:700">${d.feb.toFixed(1)}</td>
+      <td class="mono" style="color:var(--cyan)">${d.meta.toFixed(1)}</td>
+      <td><div class="mini-track"><div class="mini-fill" style="width:0%;background:${b.bc}" data-w="${b.bw}"></div><div class="mini-base" style="left:${b.lw}%"></div><div class="mini-meta" style="left:${b.mw}%"></div></div></td>
+      <td><span class="mejora-val ${isPos?'pos':'neg'}">${isPos?'↑':'↓'} ${imp(d.mejora)}</span></td>
+    </tr>`;
+  }).join('');
+  animateBars();
+}
+
+/* ════ CONTROL ════ */
+function setFiltro(tab, filtro, btn) {
+  document.getElementById('filters-'+tab).querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  renderTabla(filtro);
+  if(tab==='combinado') renderTablaCombinado(filtro);
+  if(tab==='oee')       renderTablaOEE(filtro);
+  if(tab==='kgh')       renderTablaKGH(filtro);
+}
+function setTab(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  animateBars();
+}
+function renderAll() {
+  renderPodioCombinado(); renderTablaCombinado('TODOS');
+  renderPodioOEE();       renderTablaOEE('TODOS');
+  renderPodioKGH();       renderTablaKGH('TODOS');
 }
 
-renderTabla('TODOS');
+/* ════ INIT ════ */
+buildDropdown();
+renderAll();
 </script>
 </body>
 </html>
