@@ -1044,23 +1044,20 @@ const fmtN  = v => v.toFixed(2);
 /* ════ CÁLCULOS ════ */
 function calcLineasBase() {
   const idx = MESES_ORDEN.indexOf(MES_ACTIVO);
-  const meses_back = MESES_ORDEN.slice(Math.max(0, idx - N_MESES), idx);
-  const n_used = meses_back.filter(m => DATOS[m]).length;
+  const meses_back = MESES_ORDEN.slice(Math.max(0, idx - N_MESES), idx)
+                                 .filter(m => DATOS[m]);
 
   return PLANTAS.map((_, pi) => {
-    const oee_vals = meses_back
-      .map(m => DATOS[m] ? DATOS[m].oee[pi][0] / DATOS[m].oee[pi][1] : null)
-      .filter(v => v !== null);
-    const kgh_vals = meses_back
-      .map(m => DATOS[m] ? DATOS[m].kgh[pi][0] : null)
-      .filter(v => v !== null);
+    // OEE base = Σ KgP (N meses) / Σ KgE (N meses)
+    const sum_kgp = meses_back.reduce((a,m) => a + DATOS[m].oee[pi][0], 0);
+    const sum_kge = meses_back.reduce((a,m) => a + DATOS[m].oee[pi][1], 0);
+    const lb_oee  = meses_back.length > 0 && sum_kge > 0 ? sum_kgp / sum_kge : null;
 
-    const lb_oee = oee_vals.length > 0
-      ? oee_vals.reduce((a,b)=>a+b,0) / oee_vals.length : null;
-    const lb_kgh = kgh_vals.length > 0
-      ? kgh_vals.reduce((a,b)=>a+b,0) / kgh_vals.length : null;
+    // Kg/H base = Σ KgH (N meses) / N  — misma lógica acumulada
+    const sum_kgh = meses_back.reduce((a,m) => a + DATOS[m].kgh[pi][0], 0);
+    const lb_kgh  = meses_back.length > 0 ? sum_kgh / meses_back.length : null;
 
-    return {lb_oee, lb_kgh, n: oee_vals.length};
+    return {lb_oee, lb_kgh, n: meses_back.length, meses_back};
   });
 }
 
