@@ -191,7 +191,7 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
 .detalle-body{display:none;padding:20px}
 .detalle-card.open .detalle-body{display:block}
 
-.detalle-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.detalle-grid{display:flex;flex-direction:column;gap:12px}
 .detalle-section{background:var(--s3);border:1px solid var(--border);border-radius:10px;padding:16px}
 .detalle-section-title{
   font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;
@@ -1503,94 +1503,108 @@ function renderDetalle() {
       <div class="detalle-body">
         <div class="detalle-grid">
 
-          <!-- OEE SECTION -->
+          <!-- ── OEE ROW ─────────────────────────────── -->
           <div class="detalle-section">
             <div class="detalle-section-title">📊 OEE — Eficiencia Global</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
 
-            <div class="detalle-row">
-              <span class="detalle-row-label">Kg Producidas (mes)</span>
-              <span class="detalle-row-val" style="color:var(--text)">${pl.kgp.toLocaleString()}</span>
-            </div>
-            <div class="detalle-row">
-              <span class="detalle-row-label">Kg Esperadas (mes)</span>
-              <span class="detalle-row-val" style="color:var(--text)">${pl.kge.toLocaleString()}</span>
-            </div>
-            <div class="detalle-row">
-              <span class="detalle-row-label">OEE del mes = KgP/KgE</span>
-              <span class="detalle-row-val" style="color:var(--cyan)">${fmtP(pl.oee_mes)}</span>
-            </div>
-            <div class="detalle-row">
-              <span class="detalle-row-label">Línea Base (N=${N_MESES})</span>
-              <span class="detalle-row-val" style="color:var(--light)">${pl.lb_oee!==null?fmtP(pl.lb_oee):'—'}</span>
-            </div>
-            <div class="detalle-row">
-              <span class="detalle-row-label">Meta OEE</span>
-              <span class="detalle-row-val" style="color:var(--cyan)">${fmtP(pl.meta_oee)}</span>
-            </div>
-            <div class="detalle-row">
-              <span class="detalle-row-label">% Mejora OEE</span>
-              <span class="detalle-row-val" style="color:${pl.mejora_oee!==null?sgn(pl.mejora_oee):'var(--muted)'}">${pl.mejora_oee!==null?fmtPct(pl.mejora_oee):'—'}</span>
-            </div>
-
-            ${back.length > 0 ? `
-            <div class="detalle-meses">
-              <div class="detalle-mes-row header">
-                <span>Mes base</span><span style="text-align:right">KgP</span><span style="text-align:right">KgE</span><span style="text-align:right">OEE</span><span></span>
+              <!-- OEE valores -->
+              <div>
+                <div class="detalle-row">
+                  <span class="detalle-row-label">Kg Producidas (mes)</span>
+                  <span class="detalle-row-val" style="color:var(--text)">${pl.kgp.toLocaleString()}</span>
+                </div>
+                <div class="detalle-row">
+                  <span class="detalle-row-label">Kg Esperadas (mes)</span>
+                  <span class="detalle-row-val" style="color:var(--text)">${pl.kge.toLocaleString()}</span>
+                </div>
+                <div class="detalle-row">
+                  <span class="detalle-row-label">OEE del mes = KgP/KgE</span>
+                  <span class="detalle-row-val" style="color:var(--cyan)">${fmtP(pl.oee_mes)}</span>
+                </div>
+                <div class="detalle-row">
+                  <span class="detalle-row-label">Línea Base (N=${N_MESES})</span>
+                  <span class="detalle-row-val" style="color:var(--light)">${pl.lb_oee!==null?fmtP(pl.lb_oee):'—'}</span>
+                </div>
+                <div class="detalle-row">
+                  <span class="detalle-row-label">Meta OEE</span>
+                  <span class="detalle-row-val" style="color:var(--cyan)">${fmtP(pl.meta_oee)}</span>
+                </div>
+                <div class="detalle-row">
+                  <span class="detalle-row-label">% Mejora OEE</span>
+                  <span class="detalle-row-val" style="color:${pl.mejora_oee!==null?sgn(pl.mejora_oee):'var(--muted)'}">${pl.mejora_oee!==null?fmtPct(pl.mejora_oee):'—'}</span>
+                </div>
               </div>
-              ${oeeBaseRows}
-            </div>` : ''}
 
-            <div class="detalle-formula-box">
-              <div class="detalle-formula-title">Fórmula paso a paso</div>
-              <div class="detalle-formula-line" style="white-space:pre-line">${oeeFormula}</div>
-              <div class="detalle-formula-result" style="color:${pl.mejora_oee!==null?sgn(pl.mejora_oee):'var(--muted)'}">${pl.mejora_oee!==null?fmtPct(pl.mejora_oee):'—'}</div>
+              <!-- OEE tabla meses + formula -->
+              <div>
+                ${back.length > 0 ? `
+                <div class="detalle-meses">
+                  <div class="detalle-mes-row header">
+                    <span>Mes base</span><span style="text-align:right">KgP</span><span style="text-align:right">KgE</span><span style="text-align:right">OEE</span><span></span>
+                  </div>
+                  ${oeeBaseRows}
+                </div>` : '<div style="font-size:11px;color:var(--muted);padding:8px 0">Sin meses de base previos</div>'}
+                <div class="detalle-formula-box">
+                  <div class="detalle-formula-title">Fórmula paso a paso</div>
+                  <div class="detalle-formula-line" style="white-space:pre-line">${oeeFormula}</div>
+                  <div class="detalle-formula-result" style="color:${pl.mejora_oee!==null?sgn(pl.mejora_oee):'var(--muted)'}">${pl.mejora_oee!==null?fmtPct(pl.mejora_oee):'—'}</div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- KG/H SECTION -->
+          <!-- ── KG/H ROW ───────────────────────────── -->
           <div class="detalle-section">
             <div class="detalle-section-title">⚖️ Kg/H · Colaborador</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
 
-            <div class="detalle-row">
-              <span class="detalle-row-label">Kg/H del mes</span>
-              <span class="detalle-row-val" style="color:var(--text)">${pl.kgh_val.toFixed(2)}</span>
-            </div>
-            <div class="detalle-row">
-              <span class="detalle-row-label">Línea Base Kg/H (N=${N_MESES})</span>
-              <span class="detalle-row-val" style="color:var(--light)">${pl.lb_kgh!==null?pl.lb_kgh.toFixed(4):'—'}</span>
-            </div>
-            <div class="detalle-row">
-              <span class="detalle-row-label">Meta Kg/H</span>
-              <span class="detalle-row-val" style="color:var(--cyan)">${pl.meta_kgh.toFixed(2)}</span>
-            </div>
-            <div class="detalle-row">
-              <span class="detalle-row-label">% Mejora Kg/H</span>
-              <span class="detalle-row-val" style="color:${pl.mejora_kgh!==null?sgn(pl.mejora_kgh):'var(--muted)'}">${pl.mejora_kgh!==null?fmtPct(pl.mejora_kgh):'—'}</span>
-            </div>
-
-            ${back.length > 0 ? `
-            <div class="detalle-meses">
-              <div class="detalle-mes-row header">
-                <span>Mes base</span><span style="text-align:right">Kg/H</span><span></span><span></span><span></span>
+              <!-- Kg/H valores -->
+              <div>
+                <div class="detalle-row">
+                  <span class="detalle-row-label">Kg/H del mes</span>
+                  <span class="detalle-row-val" style="color:var(--text)">${(pl.kgh_val??0).toFixed(2)}</span>
+                </div>
+                <div class="detalle-row">
+                  <span class="detalle-row-label">Línea Base Kg/H (N=${N_MESES})</span>
+                  <span class="detalle-row-val" style="color:var(--light)">${pl.lb_kgh!==null?pl.lb_kgh.toFixed(4):'—'}</span>
+                </div>
+                <div class="detalle-row">
+                  <span class="detalle-row-label">Meta Kg/H</span>
+                  <span class="detalle-row-val" style="color:var(--cyan)">${(pl.meta_kgh??0).toFixed(2)}</span>
+                </div>
+                <div class="detalle-row">
+                  <span class="detalle-row-label">% Mejora Kg/H</span>
+                  <span class="detalle-row-val" style="color:${pl.mejora_kgh!==null?sgn(pl.mejora_kgh):'var(--muted)'}">${pl.mejora_kgh!==null?fmtPct(pl.mejora_kgh):'—'}</span>
+                </div>
               </div>
-              ${kghBaseRows}
-            </div>` : ''}
 
-            <div class="detalle-formula-box">
-              <div class="detalle-formula-title">Fórmula paso a paso</div>
-              <div class="detalle-formula-line" style="white-space:pre-line">${kghFormula}</div>
-              <div class="detalle-formula-result" style="color:${pl.mejora_kgh!==null?sgn(pl.mejora_kgh):'var(--muted)'}">${pl.mejora_kgh!==null?fmtPct(pl.mejora_kgh):'—'}</div>
-            </div>
-
-            <!-- Score final -->
-            <div class="detalle-formula-box" style="margin-top:14px;background:rgba(${scorePos?'16,185,129':'239,68,68'},.06);border-color:rgba(${scorePos?'16,185,129':'239,68,68'},.2)">
-              <div class="detalle-formula-title" style="color:${scoreColor}">⚡ Score Combinado</div>
-              <div class="detalle-formula-line">
-                Score = % Mej. OEE × 60% + % Mej. Kg/H × 40%<br>
-                = ${pl.mejora_oee!==null?fmtPct(pl.mejora_oee):'—'} × 0.60 + ${pl.mejora_kgh!==null?fmtPct(pl.mejora_kgh):'—'} × 0.40
+              <!-- Kg/H tabla meses + formula -->
+              <div>
+                ${back.length > 0 ? `
+                <div class="detalle-meses">
+                  <div class="detalle-mes-row header">
+                    <span>Mes base</span><span style="text-align:right">Kg/H</span><span></span><span></span><span></span>
+                  </div>
+                  ${kghBaseRows}
+                </div>` : '<div style="font-size:11px;color:var(--muted);padding:8px 0">Sin meses de base previos</div>'}
+                <div class="detalle-formula-box">
+                  <div class="detalle-formula-title">Fórmula paso a paso</div>
+                  <div class="detalle-formula-line" style="white-space:pre-line">${kghFormula}</div>
+                  <div class="detalle-formula-result" style="color:${pl.mejora_kgh!==null?sgn(pl.mejora_kgh):'var(--muted)'}">${pl.mejora_kgh!==null?fmtPct(pl.mejora_kgh):'—'}</div>
+                </div>
               </div>
-              <div class="detalle-formula-result" style="color:${scoreColor}">${scoreTxt}</div>
             </div>
+          </div>
+
+          <!-- ── SCORE ROW ──────────────────────────── -->
+          <div class="detalle-formula-box" style="background:rgba(${scorePos?'16,185,129':'239,68,68'},.06);border-color:rgba(${scorePos?'16,185,129':'239,68,68'},.2);margin:0">
+            <div class="detalle-formula-title" style="color:${scoreColor}">⚡ Score Combinado</div>
+            <div class="detalle-formula-line">
+              Score = % Mej. OEE × 60% + % Mej. Kg/H × 40%<br>
+              = ${pl.mejora_oee!==null?fmtPct(pl.mejora_oee):'—'} × 0.60 + ${pl.mejora_kgh!==null?fmtPct(pl.mejora_kgh):'—'} × 0.40
+            </div>
+            <div class="detalle-formula-result" style="color:${scoreColor}">${scoreTxt}</div>
           </div>
 
         </div>
