@@ -246,7 +246,7 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
   <div class="header-row">
     <div>
       <div class="page-title">Ranking OEE — 2025 / 2026</div>
-      <div class="page-sub">OEE = Kg Producidas / Kg Esperadas · Línea Base = promedio de N meses anteriores</div>
+      <div class="page-sub">OEE = Kg Producidas / Kg Esperadas · Línea Base = Σ KgP (N meses) / Σ KgE (N meses)</div>
       <div class="page-sub" style="margin-top:3px">% Mejora = (OEE Mes − Línea Base) / (Meta − Línea Base)</div>
     </div>
 
@@ -1454,8 +1454,12 @@ function renderDetalle() {
       </div>`;
     }).join('');
 
+    const sum_kgp_back = back.reduce((a,m)=>a+DATOS[m].oee[pi][0], 0);
+    const sum_kge_back = back.reduce((a,m)=>a+DATOS[m].oee[pi][1], 0);
     const oeeFormula = pl.lb_oee !== null
-      ? `Base = (${back.map(m=>{const k=DATOS[m].oee[pi]; return fmtP(k[0]/k[1]);}).join(' + ')}) / ${back.length}
+      ? `Base = Σ KgP / Σ KgE
+= (${back.map(m=>DATOS[m].oee[pi][0].toLocaleString()).join(' + ')}) / (${back.map(m=>DATOS[m].oee[pi][1].toLocaleString()).join(' + ')})
+= ${sum_kgp_back.toLocaleString()} / ${sum_kge_back.toLocaleString()}
 = ${fmtP(pl.lb_oee)}
 
 % Mejora = (${fmtP(pl.oee_mes)} − ${fmtP(pl.lb_oee)}) / (${fmtP(pl.meta_oee)} − ${fmtP(pl.lb_oee)})
@@ -1474,8 +1478,11 @@ function renderDetalle() {
       </div>`;
     }).join('');
 
+    const sum_kgh_back = back.reduce((a,m)=>a+DATOS[m].kgh[pi][0], 0);
     const kghFormula = pl.lb_kgh !== null
-      ? `Base = (${back.map(m=>DATOS[m].kgh[pi][0].toFixed(2)).join(' + ')}) / ${back.length}
+      ? `Base = Σ Kg/H / N
+= (${back.map(m=>DATOS[m].kgh[pi][0].toFixed(2)).join(' + ')}) / ${back.length}
+= ${sum_kgh_back.toFixed(2)} / ${back.length}
 = ${pl.lb_kgh.toFixed(4)}
 
 % Mejora = (${pl.kgh_val.toFixed(2)} − ${pl.lb_kgh.toFixed(4)}) / (${pl.meta_kgh.toFixed(2)} − ${pl.lb_kgh.toFixed(4)})
