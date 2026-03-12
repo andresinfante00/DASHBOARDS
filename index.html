@@ -2,188 +2,203 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ranking OEE — 2026</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Ranking OEE — 2025/2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:      #080b12;
-  --s1:      #0e1422;
-  --s2:      #131b2e;
-  --s3:      #192236;
-  --border:  #1e2d45;
-  --border2: #253854;
-  --text:    #dde4f0;
-  --muted:   #5a6a85;
-  --light:   #8899b4;
-  --green:   #10b981;
-  --red:     #ef4444;
-  --cyan:    #06b6d4;
+:root{
+  --bg:#080b12;--s1:#0e1422;--s2:#131b2e;--s3:#192236;
+  --border:#1e2d45;--border2:#253854;
+  --text:#dde4f0;--muted:#5a6a85;--light:#8899b4;
+  --green:#10b981;--red:#ef4444;--cyan:#06b6d4;--yellow:#eab308;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--bg); color:var(--text); font-family:'Figtree',sans-serif; font-size:14px; line-height:1.6; min-height:100vh; }
-.wrap { max-width:940px; margin:0 auto; padding:48px 32px 80px; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;font-size:14px;min-height:100vh}
+.wrap{max-width:980px;margin:0 auto;padding:40px 28px 80px}
 
 /* HEADER */
-.header-row {
-  display:flex; align-items:flex-start; justify-content:space-between; gap:24px;
-  margin-bottom:36px;
-}
-.header-left {}
-.page-title { font-size:28px; font-weight:900; letter-spacing:-.02em; line-height:1.1; margin-bottom:6px; }
-.page-sub   { font-size:13px; color:var(--light); font-weight:300; }
+.header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:32px}
+.page-title{font-size:26px;font-weight:900;letter-spacing:-.02em;line-height:1.1;margin-bottom:5px}
+.page-sub{font-size:12px;color:var(--light);font-weight:300}
 
-/* DROPDOWN */
-.mes-dropdown-wrap { position:relative; flex-shrink:0; margin-top:4px; }
-.mes-dropdown-btn {
-  display:flex; align-items:center; gap:10px;
-  background:var(--s2); border:1px solid var(--border2);
-  border-radius:10px; padding:10px 16px;
-  cursor:pointer; transition:border-color .15s;
-  min-width:190px;
-}
-.mes-dropdown-btn:hover { border-color:var(--cyan); }
-.mes-dropdown-btn.open  { border-color:var(--cyan); border-radius:10px 10px 0 0; }
-.mes-icon { font-size:16px; }
-.mes-selected {
-  display:flex; flex-direction:column; flex:1;
-}
-.mes-selected-label { font-size:9px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; line-height:1; }
-.mes-selected-val   { font-size:14px; font-weight:800; color:var(--text); margin-top:2px; }
-.mes-badge-dot {
-  width:7px; height:7px; border-radius:50%;
-  background:var(--muted); flex-shrink:0;
-}
-.mes-badge-dot.real { background:var(--green); box-shadow:0 0 6px var(--green); }
-.mes-badge-dot.sim  { background:var(--cyan);  box-shadow:0 0 6px var(--cyan); }
-.mes-badge-dot.pendiente { background:var(--muted); }
-.mes-chevron { color:var(--muted); font-size:12px; transition:transform .2s; }
-.mes-dropdown-btn.open .mes-chevron { transform:rotate(180deg); }
+/* CONTROLS WRAP */
+.controls-wrap{display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex-shrink:0}
 
-.mes-menu {
-  display:none; position:absolute; top:100%; left:0; right:0;
-  background:var(--s2); border:1px solid var(--cyan);
-  border-top:none; border-radius:0 0 10px 10px;
-  overflow:hidden; z-index:100;
+/* MES DROPDOWN */
+.mes-dropdown-wrap{position:relative}
+.mes-dropdown-btn{
+  display:flex;align-items:center;gap:10px;
+  background:var(--s2);border:1px solid var(--border2);border-radius:10px;
+  padding:10px 14px;cursor:pointer;transition:border-color .15s;min-width:200px
 }
-.mes-menu.open { display:block; }
-.mes-option {
-  display:flex; align-items:center; gap:10px;
-  padding:10px 16px; cursor:pointer; transition:background .12s;
-  font-size:13px; font-weight:600; color:var(--light);
+.mes-dropdown-btn:hover{border-color:var(--cyan)}
+.mes-dropdown-btn.open{border-color:var(--cyan);border-radius:10px 10px 0 0}
+.mes-icon{font-size:15px}
+.mes-selected{display:flex;flex-direction:column;flex:1}
+.mes-selected-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;line-height:1}
+.mes-selected-val{font-size:14px;font-weight:800;color:var(--text);margin-top:2px}
+.mes-badge-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.mes-badge-dot.real{background:var(--green);box-shadow:0 0 6px var(--green)}
+.mes-badge-dot.sim{background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+.mes-badge-dot.pending{background:var(--muted)}
+.mes-chevron{color:var(--muted);font-size:11px;transition:transform .2s}
+.mes-dropdown-btn.open .mes-chevron{transform:rotate(180deg)}
+.mes-menu{
+  display:none;position:absolute;top:100%;left:0;right:0;z-index:100;
+  background:var(--s2);border:1px solid var(--cyan);border-top:none;
+  border-radius:0 0 10px 10px;overflow-y:auto;max-height:320px
 }
-.mes-option:hover { background:var(--s3); color:var(--text); }
-.mes-option.active { color:var(--cyan); font-weight:800; }
-.mes-option.active .mes-opt-dot { background:var(--green); box-shadow:0 0 5px var(--green); }
-.mes-opt-dot { width:6px; height:6px; border-radius:50%; background:var(--muted); flex-shrink:0; }
-.mes-opt-dot.real { background:var(--green); box-shadow:0 0 5px var(--green); }
-.mes-opt-dot.sim  { background:var(--cyan);  box-shadow:0 0 5px var(--cyan); }
-.mes-opt-name { flex:1; }
-.mes-opt-tag {
-  font-size:9px; font-weight:700; padding:2px 6px; border-radius:4px;
-  letter-spacing:.05em; text-transform:uppercase;
+.mes-menu.open{display:block}
+.mes-group-label{
+  font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.08em;padding:8px 14px 4px;background:var(--s3)
 }
-.tag-real     { background:rgba(16,185,129,.15); color:var(--green); }
-.tag-sim      { background:rgba(6,182,212,.12);  color:var(--cyan); }
-.tag-pendiente{ background:rgba(90,106,133,.12); color:var(--muted); }
+.mes-option{
+  display:flex;align-items:center;gap:9px;padding:8px 14px;
+  cursor:pointer;transition:background .12s;font-size:12px;font-weight:600;color:var(--light)
+}
+.mes-option:hover{background:var(--s3);color:var(--text)}
+.mes-option.active{color:var(--cyan);font-weight:800}
+.mes-opt-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.mes-opt-dot.real{background:var(--green);box-shadow:0 0 4px var(--green)}
+.mes-opt-dot.sim{background:var(--cyan);box-shadow:0 0 4px var(--cyan)}
+.mes-opt-name{flex:1}
+.mes-opt-tag{font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;letter-spacing:.05em;text-transform:uppercase}
+.tag-real{background:rgba(16,185,129,.15);color:var(--green)}
+.tag-sim{background:rgba(6,182,212,.12);color:var(--cyan)}
+
+/* N SELECTOR */
+.n-wrap{
+  display:flex;align-items:center;gap:10px;
+  background:var(--s2);border:1px solid var(--border2);border-radius:10px;
+  padding:8px 14px
+}
+.n-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+.n-pills{display:flex;gap:4px}
+.n-pill{
+  font-family:'Figtree',sans-serif;font-size:11px;font-weight:700;
+  padding:4px 10px;border-radius:6px;border:1px solid var(--border2);
+  background:var(--s3);color:var(--muted);cursor:pointer;transition:all .15s
+}
+.n-pill:hover{color:var(--text);border-color:var(--cyan)}
+.n-pill.active{background:rgba(6,182,212,.15);border-color:var(--cyan);color:var(--cyan)}
+.n-info{font-size:10px;color:var(--muted);font-style:italic;white-space:nowrap}
 
 /* DIVIDER */
-.divider { display:flex; align-items:center; gap:14px; margin:36px 0 20px; }
-.divider h3 { font-size:16px; font-weight:800; white-space:nowrap; }
-.divider::after { content:''; flex:1; height:1px; background:var(--border); }
+.divider{display:flex;align-items:center;gap:12px;margin:32px 0 18px}
+.divider h3{font-size:15px;font-weight:800;white-space:nowrap}
+.divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* PODIO */
-.podio-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
-.podio-card {
-  background:var(--s2); border:1px solid var(--border); border-radius:14px;
-  padding:22px 20px 20px; position:relative; overflow:hidden;
-  transition:border-color .2s, transform .2s;
+.podio-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.podio-card{
+  background:var(--s2);border:1px solid var(--border);border-radius:14px;
+  padding:20px 18px 18px;position:relative;overflow:hidden;
+  transition:border-color .2s,transform .2s
 }
-.podio-card:hover { border-color:var(--border2); transform:translateY(-2px); }
-.podio-top-line { position:absolute; top:0; left:0; right:0; height:3px; border-radius:14px 14px 0 0; }
-.podio-pos { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.08em; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
-.podio-pos-icon { font-size:18px; line-height:1; }
-.podio-name { font-size:15px; font-weight:900; letter-spacing:-.01em; margin-bottom:2px; }
-.podio-centro { font-size:9px; font-weight:800; padding:1px 7px; border-radius:4px; letter-spacing:.07em; text-transform:uppercase; display:inline-block; margin-bottom:14px; }
-.podio-score { font-size:34px; font-weight:900; font-variant-numeric:tabular-nums; line-height:1; margin-bottom:3px; }
-.podio-score-lbl { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; margin-bottom:14px; }
-.podio-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; padding-top:14px; border-top:1px solid var(--border); }
-.podio-stat-val { font-size:12px; font-weight:700; font-family:'JetBrains Mono',monospace; }
-.podio-stat-lbl { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:2px; }
-.score-row { display:flex; gap:10px; margin-bottom:14px; }
-.score-pill { flex:1; background:var(--s3); border:1px solid var(--border); border-radius:8px; padding:8px 10px; }
-.score-pill-val { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; }
-.score-pill-lbl { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:1px; }
+.podio-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.podio-top{position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
+.podio-pos{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.podio-icon{font-size:17px;line-height:1}
+.podio-name{font-size:14px;font-weight:900;letter-spacing:-.01em;margin-bottom:2px}
+.podio-centro{font-size:9px;font-weight:800;padding:1px 6px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase;display:inline-block;margin-bottom:12px}
+.podio-score{font-size:30px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:2px}
+.podio-score-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.podio-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding-top:12px;border-top:1px solid var(--border)}
+.podio-stat-val{font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.podio-stat-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:1px}
+.score-row{display:flex;gap:8px;margin-bottom:12px}
+.score-pill{flex:1;background:var(--s3);border:1px solid var(--border);border-radius:7px;padding:7px 8px}
+.score-pill-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
+.score-pill-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:1px}
 
-/* ESTADO SIN DATOS */
-.no-data {
-  text-align:center; padding:60px 20px;
-  color:var(--muted); font-size:14px;
-}
-.no-data .no-data-icon { font-size:40px; margin-bottom:12px; }
-.no-data strong { display:block; font-size:16px; font-weight:700; color:var(--light); margin-bottom:6px; }
-
-/* CARD */
-.card { background:var(--s2); border:1px solid var(--border); border-radius:14px; padding:22px 22px 20px; overflow:hidden; }
-.tbl { width:100%; border-collapse:collapse; }
-.tbl th { font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:700; padding:9px 12px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; }
-.tbl td { padding:11px 12px; font-size:12px; border-bottom:1px solid rgba(255,255,255,.03); vertical-align:middle; }
-.tbl tr:last-child td { border:none; }
-.tbl tr:hover td { background:rgba(255,255,255,.02); }
-.mono { font-family:'JetBrains Mono',monospace; font-size:11px; }
+/* CARD / TABLE */
+.card{background:var(--s2);border:1px solid var(--border);border-radius:14px;padding:20px 20px 18px;overflow:hidden}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+.tbl td{padding:10px 10px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
+.tbl tr:last-child td{border:none}
+.tbl tr:hover td{background:rgba(255,255,255,.02)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:11px}
 
 /* MINI BAR */
-.mini-track { position:relative; height:6px; background:rgba(255,255,255,.06); border-radius:3px; width:100%; min-width:90px; }
-.mini-fill  { height:100%; border-radius:3px; transition:width 1s cubic-bezier(.4,0,.2,1); }
-.mini-meta  { position:absolute; top:-3px; bottom:-3px; width:1.5px; background:var(--cyan); opacity:.7; border-radius:1px; }
-.mini-base  { position:absolute; top:-2px; bottom:-2px; width:1.5px; background:rgba(255,255,255,.3); border-radius:1px; }
+.mini-track{position:relative;height:6px;background:rgba(255,255,255,.06);border-radius:3px;width:100%;min-width:80px}
+.mini-fill{height:100%;border-radius:3px;transition:width .9s cubic-bezier(.4,0,.2,1)}
+.mini-meta{position:absolute;top:-3px;bottom:-3px;width:1.5px;background:var(--cyan);opacity:.7;border-radius:1px}
+.mini-base{position:absolute;top:-2px;bottom:-2px;width:1.5px;background:rgba(255,255,255,.35);border-radius:1px}
 
 /* RANK */
-.rank-num { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; width:20px; text-align:center; color:var(--muted); display:inline-block; }
-.rank-num.gold   { color:#f59e0b; }
-.rank-num.silver { color:#94a3b8; }
-.rank-num.bronze { color:#c87941; }
-.mejora-val { font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; }
-.mejora-val.pos { color:var(--green); }
-.mejora-val.neg { color:var(--red); }
+.rank-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;width:20px;text-align:center;color:var(--muted);display:inline-block}
+.rank-num.gold{color:#f59e0b}
+.rank-num.silver{color:#94a3b8}
+.rank-num.bronze{color:#c87941}
+.mejora-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
+.mejora-val.pos{color:var(--green)}
+.mejora-val.neg{color:var(--red)}
 
 /* FILTERS */
-.filter-btn { font-family:'Figtree',sans-serif; font-size:11px; font-weight:700; padding:5px 12px; border-radius:6px; border:1px solid var(--border2); background:var(--s3); color:var(--muted); cursor:pointer; transition:all .15s; letter-spacing:.04em; }
-.filter-btn:hover { color:var(--text); }
-.filter-btn.active { background:var(--fb,var(--s3)); border-color:var(--fc,var(--border2)); color:var(--fc,var(--text)); }
+.filter-btn{font-family:'Figtree',sans-serif;font-size:11px;font-weight:700;padding:5px 11px;border-radius:6px;border:1px solid var(--border2);background:var(--s3);color:var(--muted);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.filter-btn:hover{color:var(--text)}
+.filter-btn.active{background:var(--fb,var(--s3));border-color:var(--fc,var(--border2));color:var(--fc,var(--text))}
 
 /* TABS */
-.tabs-row { display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:28px; }
-.tab-btn { font-family:'Figtree',sans-serif; font-size:12px; font-weight:700; padding:10px 18px; background:none; border:none; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all .15s; letter-spacing:.03em; }
-.tab-btn:hover { color:var(--text); }
-.tab-btn.active { color:var(--text); border-bottom-color:var(--cyan); }
-.tab-panel { display:none; }
-.tab-panel.active { display:block; }
+.tabs-row{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:26px}
+.tab-btn{font-family:'Figtree',sans-serif;font-size:12px;font-weight:700;padding:9px 16px;background:none;border:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;letter-spacing:.03em}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--cyan)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* BASE INFO PILL */
+.base-info{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);
+  border-radius:6px;padding:3px 10px;font-size:10px;color:var(--cyan);font-weight:600
+}
+
+/* NO DATA */
+.no-data{text-align:center;padding:50px 20px;color:var(--muted);font-size:13px}
+.no-data .icon{font-size:36px;margin-bottom:10px}
+.no-data strong{display:block;font-size:15px;font-weight:700;color:var(--light);margin-bottom:5px}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <!-- HEADER -->
   <div class="header-row">
-    <div class="header-left">
-      <div class="page-title">Ranking OEE — 2026</div>
-      <div class="page-sub">Linea Base OEE: Acumulado últimos 3 meses (Kg Producidas / Kg Esperados)</div>
-      <div class="page-sub" style="margin-top:4px;">% Mejora = (Resultado actual − Resultado base) / (Meta − Resultado base)</div>
+    <div>
+      <div class="page-title">Ranking OEE — 2025 / 2026</div>
+      <div class="page-sub">OEE = Kg Producidas / Kg Esperadas · Línea Base = promedio de N meses anteriores</div>
+      <div class="page-sub" style="margin-top:3px">% Mejora = (OEE Mes − Línea Base) / (Meta − Línea Base)</div>
     </div>
 
-    <!-- DESPLEGABLE MES -->
-    <div class="mes-dropdown-wrap" id="dropWrap">
-      <div class="mes-dropdown-btn" id="dropBtn" onclick="toggleDrop()">
-        <span class="mes-icon">📅</span>
-        <div class="mes-selected">
-          <span class="mes-selected-label">Período</span>
-          <span class="mes-selected-val" id="dropLabel">Febrero 2026</span>
+    <div class="controls-wrap">
+      <!-- Mes selector -->
+      <div class="mes-dropdown-wrap" id="dropWrap">
+        <div class="mes-dropdown-btn" id="dropBtn" onclick="toggleDrop()">
+          <span class="mes-icon">📅</span>
+          <div class="mes-selected">
+            <span class="mes-selected-label">Período</span>
+            <span class="mes-selected-val" id="dropLabel">Febrero 2026</span>
+          </div>
+          <span class="mes-badge-dot sim" id="dropDot"></span>
+          <span class="mes-chevron">▼</span>
         </div>
-        <span class="mes-badge-dot real" id="dropDot"></span>
-        <span class="mes-chevron">▼</span>
+        <div class="mes-menu" id="dropMenu"></div>
       </div>
-      <div class="mes-menu" id="dropMenu"></div>
+
+      <!-- N meses selector -->
+      <div class="n-wrap">
+        <span class="n-label">Línea Base</span>
+        <div class="n-pills" id="nPills">
+          <button class="n-pill" onclick="setN(1,this)">1m</button>
+          <button class="n-pill" onclick="setN(2,this)">2m</button>
+          <button class="n-pill active" onclick="setN(3,this)">3m</button>
+          <button class="n-pill" onclick="setN(6,this)">6m</button>
+          <button class="n-pill" onclick="setN(12,this)">12m</button>
+        </div>
+        <span class="n-info" id="nInfo">últimos 3 meses</span>
+      </div>
     </div>
   </div>
 
@@ -194,361 +209,1020 @@ body { background:var(--bg); color:var(--text); font-family:'Figtree',sans-serif
     <button class="tab-btn" onclick="setTab('kgh',this)">⚖️ Kg/H · Colaborador</button>
   </div>
 
-  <!-- TAB COMBINADO -->
+  <!-- COMBINADO -->
   <div class="tab-panel active" id="tab-combinado">
     <div class="divider"><h3>🏆 Top 3 · Score Combinado (OEE 60% · Kg/H 40%)</h3></div>
     <div class="podio-grid" id="podio-combinado"></div>
     <div class="divider"><h3>Ranking Completo · Score Combinado</h3></div>
     <div class="card">
-      <div style="display:flex;align-items:center;margin-bottom:16px;">
-        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="filters-combinado">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <div style="display:flex;gap:5px;flex-wrap:wrap" id="filters-combinado">
           <button class="filter-btn active" onclick="setFiltro('combinado','TODOS',this)">Todos</button>
           <button class="filter-btn" onclick="setFiltro('combinado','Supercoco',this)" style="--fc:#eab308;--fb:rgba(234,179,8,.12)">Supercoco</button>
           <button class="filter-btn" onclick="setFiltro('combinado','Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
           <button class="filter-btn" onclick="setFiltro('combinado','Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
         </div>
+        <span class="base-info" id="base-info-combinado">📊 Base: 3 meses</span>
       </div>
       <table class="tbl">
-        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>OEE % Mejora</th><th>Kg/H % Mejora</th><th style="width:110px">Barra Score</th><th>Score</th></tr></thead>
+        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>% Mej. OEE</th><th>% Mej. Kg/H</th><th style="width:100px">Score</th><th>Score</th></tr></thead>
         <tbody id="tbody-combinado"></tbody>
       </table>
     </div>
   </div>
 
-  <!-- TAB OEE -->
+  <!-- OEE -->
   <div class="tab-panel" id="tab-oee">
     <div class="divider"><h3>🏆 Top 3 · Mayor Avance OEE</h3></div>
     <div class="podio-grid" id="podio-oee"></div>
     <div class="divider"><h3>Ranking Completo · OEE</h3></div>
     <div class="card">
-      <div style="display:flex;align-items:center;margin-bottom:16px;">
-        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="filters-oee">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <div style="display:flex;gap:5px;flex-wrap:wrap" id="filters-oee">
           <button class="filter-btn active" onclick="setFiltro('oee','TODOS',this)">Todos</button>
           <button class="filter-btn" onclick="setFiltro('oee','Supercoco',this)" style="--fc:#eab308;--fb:rgba(234,179,8,.12)">Supercoco</button>
           <button class="filter-btn" onclick="setFiltro('oee','Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
           <button class="filter-btn" onclick="setFiltro('oee','Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
         </div>
+        <span class="base-info" id="base-info-oee">📊 Base: 3 meses</span>
       </div>
       <table class="tbl">
-        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>OEE Mes</th><th>Meta</th><th style="width:110px">Progreso</th><th>% Mejora</th></tr></thead>
+        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>OEE Mes</th><th>Meta</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr></thead>
         <tbody id="tbody-oee"></tbody>
       </table>
     </div>
   </div>
 
-  <!-- TAB KG/H -->
+  <!-- KG/H -->
   <div class="tab-panel" id="tab-kgh">
     <div class="divider"><h3>🏆 Top 3 · Mayor Avance Kg/H · Colaborador</h3></div>
     <div class="podio-grid" id="podio-kgh"></div>
     <div class="divider"><h3>Ranking Completo · Kg/H · Colaborador</h3></div>
     <div class="card">
-      <div style="display:flex;align-items:center;margin-bottom:16px;">
-        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="filters-kgh">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <div style="display:flex;gap:5px;flex-wrap:wrap" id="filters-kgh">
           <button class="filter-btn active" onclick="setFiltro('kgh','TODOS',this)">Todos</button>
           <button class="filter-btn" onclick="setFiltro('kgh','Supercoco',this)" style="--fc:#eab308;--fb:rgba(234,179,8,.12)">Supercoco</button>
           <button class="filter-btn" onclick="setFiltro('kgh','Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
           <button class="filter-btn" onclick="setFiltro('kgh','Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
         </div>
+        <span class="base-info" id="base-info-kgh">📊 Base: 3 meses</span>
       </div>
       <table class="tbl">
-        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:110px">Progreso</th><th>% Mejora</th></tr></thead>
+        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr></thead>
         <tbody id="tbody-kgh"></tbody>
       </table>
     </div>
   </div>
 
 </div>
-
 <script>
-/* ══════════════════════════════════════════
-   HISTORIAL — agregar un objeto por mes
-   con oee[] y kgh[] cuando lleguen datos
-══════════════════════════════════════════ */
-const HISTORIAL = {
-  "Febrero 2026": {
-    real: true,
-    oee: [
-      {p:"Planta Fabry",    c:"Supercoco",cc:"S",linea:.5871,feb:.6819,meta:.6199,mejora:2.8933},
-      {p:"Trululu ST",      c:"Trululu",  cc:"T",linea:.5694,feb:.6069,meta:.5859,mejora:2.2692},
-      {p:"Planta Super 1",  c:"Supercoco",cc:"S",linea:.4488,feb:.5377,meta:.5423,mejora:.9514},
-      {p:"Planta Super 2",  c:"Supercoco",cc:"S",linea:.7101,feb:.7177,meta:.7380,mejora:.2709},
-      {p:"Trululu 3",       c:"Trululu",  cc:"T",linea:.4787,feb:.4963,meta:.5554,mejora:.2300},
-      {p:"Trululu 2",       c:"Trululu",  cc:"T",linea:.5033,feb:.5159,meta:.5719,mejora:.1838},
-      {p:"Planta Super 3",  c:"Supercoco",cc:"S",linea:.3938,feb:.3994,meta:.5061,mejora:.0504},
-      {p:"Planta Bianchi 1",c:"Bianchi",  cc:"B",linea:.5089,feb:.4687,meta:.5622,mejora:-.7548},
-      {p:"Planta Bianchi 3",c:"Bianchi",  cc:"B",linea:.4091,feb:.3309,meta:.4886,mejora:-.9825},
-      {p:"Trululu 1",       c:"Trululu",  cc:"T",linea:.7192,feb:.6472,meta:.7392,mejora:-3.6173},
+const PLANTAS = [
+  {p:"Planta Fabry",c:"Supercoco",cc:"S"},
+  {p:"Trululu ST",c:"Trululu",cc:"T"},
+  {p:"Planta Super 1",c:"Supercoco",cc:"S"},
+  {p:"Planta Super 2",c:"Supercoco",cc:"S"},
+  {p:"Trululu 3",c:"Trululu",cc:"T"},
+  {p:"Trululu 2",c:"Trululu",cc:"T"},
+  {p:"Planta Super 3",c:"Supercoco",cc:"S"},
+  {p:"Planta Bianchi 1",c:"Bianchi",cc:"B"},
+  {p:"Planta Bianchi 3",c:"Bianchi",cc:"B"},
+  {p:"Trululu 1",c:"Trululu",cc:"T"},
+];
+const MESES_ORDEN = ["Enero 2025", "Febrero 2025", "Marzo 2025", "Abril 2025", "Mayo 2025", "Junio 2025", "Julio 2025", "Agosto 2025", "Septiembre 2025", "Octubre 2025", "Noviembre 2025", "Diciembre 2025", "Enero 2026", "Febrero 2026", "Marzo 2026", "Abril 2026", "Mayo 2026", "Junio 2026", "Julio 2026", "Agosto 2026", "Septiembre 2026", "Octubre 2026", "Noviembre 2026", "Diciembre 2026"];
+const DATOS = {
+  "Enero 2025":{
+    sim:true,
+    oee:[
+      [16266,28338,0.615],
+      [8360,15128,0.575],
+      [8772,21750,0.535],
+      [23995,34891,0.73],
+      [8207,17641,0.545],
+      [13015,25530,0.565],
+      [4074,12103,0.495],
+      [9316,20056,0.55],
+      [6786,14935,0.475],
+      [27446,41750,0.73],
     ],
-    kgh: [
-      {p:"Trululu ST",      c:"Trululu",  cc:"T",linea:1,    feb:1.5,   meta:1.2,   mejora:2.5000},
-      {p:"Trululu 2",       c:"Trululu",  cc:"T",linea:100,  feb:112.78,meta:113.90,mejora:.9197},
-      {p:"Trululu 3",       c:"Trululu",  cc:"T",linea:55,   feb:65.06, meta:72,    mejora:.5916},
-      {p:"Planta Super 2",  c:"Supercoco",cc:"S",linea:25,   feb:28.46, meta:40,    mejora:.2308},
-      {p:"Planta Bianchi 3",c:"Bianchi",  cc:"B",linea:47,   feb:48.81, meta:55,    mejora:.2257},
-      {p:"Trululu 1",       c:"Trululu",  cc:"T",linea:7.10, feb:7.17,  meta:9,     mejora:.0373},
-      {p:"Planta Super 3",  c:"Supercoco",cc:"S",linea:26.51,feb:26.51, meta:26.78, mejora:0},
-      {p:"Planta Bianchi 1",c:"Bianchi",  cc:"B",linea:12.70,feb:12.70, meta:12.95, mejora:0},
-      {p:"Planta Super 1",  c:"Supercoco",cc:"S",linea:24,   feb:21,    meta:27.92, mejora:-.7654},
-      {p:"Planta Fabry",    c:"Supercoco",cc:"S",linea:24,   feb:18,    meta:26.04, mejora:-2.9342},
+    kgh:[
+      [17.32,24.0],
+      [0.9,1.05],
+      [20.81,23.5],
+      [21.97,35.0],
+      [50.69,66.0],
+      [98.81,108.0],
+      [24.99,26.2],
+      [11.53,12.2],
+      [45.44,51.0],
+      [6.59,8.8],
     ]
-  }
-  // ── Aquí se agregan los meses siguientes con datos reales ──
+  },
+  "Febrero 2025":{
+    sim:true,
+    oee:[
+      [15432,28452,0.616],
+      [8756,15251,0.576],
+      [9399,21965,0.536],
+      [23889,34532,0.7305],
+      [7937,17837,0.546],
+      [12537,25000,0.566],
+      [3944,12023,0.496],
+      [10541,20307,0.551],
+      [5864,14994,0.476],
+      [30834,42938,0.7305],
+    ],
+    kgh:[
+      [19.3,24.09],
+      [0.83,1.06],
+      [20.34,23.62],
+      [24.05,35.15],
+      [52.8,66.3],
+      [92.11,108.45],
+      [25.22,26.22],
+      [11.03,12.24],
+      [43.4,51.25],
+      [6.81,8.86],
+    ]
+  },
+  "Marzo 2025":{
+    sim:true,
+    oee:[
+      [15826,27872,0.617],
+      [8110,14839,0.577],
+      [10056,21696,0.537],
+      [25663,36401,0.731],
+      [7920,17902,0.547],
+      [11962,25136,0.567],
+      [4021,12049,0.497],
+      [10093,19991,0.552],
+      [5595,14748,0.477],
+      [29057,40582,0.731],
+    ],
+    kgh:[
+      [18.85,24.17],
+      [0.91,1.07],
+      [19.44,23.74],
+      [22.6,35.3],
+      [50.29,66.6],
+      [93.15,108.9],
+      [25.01,26.25],
+      [11.44,12.28],
+      [41.39,51.5],
+      [6.77,8.92],
+    ]
+  },
+  "Abril 2025":{
+    sim:true,
+    oee:[
+      [15976,28483,0.618],
+      [8441,15102,0.578],
+      [10395,21657,0.538],
+      [25792,35654,0.7315],
+      [8442,17683,0.548],
+      [12987,25706,0.568],
+      [4479,12009,0.498],
+      [10700,20409,0.553],
+      [5702,15130,0.478],
+      [29010,40722,0.7315],
+    ],
+    kgh:[
+      [17.81,24.25],
+      [0.85,1.08],
+      [19.77,23.86],
+      [24.66,35.45],
+      [46.09,66.9],
+      [95.6,109.35],
+      [25.28,26.27],
+      [11.81,12.32],
+      [43.79,51.75],
+      [6.42,8.98],
+    ]
+  },
+  "Mayo 2025":{
+    sim:true,
+    oee:[
+      [16992,28372,0.619],
+      [8784,15007,0.579],
+      [9152,21591,0.539],
+      [24337,34220,0.732],
+      [8917,17903,0.549],
+      [12149,25085,0.569],
+      [5076,11905,0.499],
+      [9818,19656,0.554],
+      [6022,14511,0.479],
+      [30719,42272,0.732],
+    ],
+    kgh:[
+      [20.0,24.34],
+      [0.79,1.09],
+      [21.57,23.98],
+      [23.21,35.6],
+      [51.68,67.2],
+      [100.77,109.8],
+      [25.21,26.3],
+      [10.52,12.36],
+      [43.36,52.0],
+      [6.48,9.04],
+    ]
+  },
+  "Junio 2025":{
+    sim:true,
+    oee:[
+      [15962,28067,0.62],
+      [8901,15197,0.58],
+      [9386,22450,0.54],
+      [24593,34790,0.7325],
+      [8534,18122,0.55],
+      [12251,25073,0.57],
+      [4332,11976,0.5],
+      [10502,19951,0.555],
+      [5902,15088,0.48],
+      [29080,40843,0.7325],
+    ],
+    kgh:[
+      [21.91,24.43],
+      [0.96,1.09],
+      [22.52,24.1],
+      [24.78,35.75],
+      [54.97,67.5],
+      [95.98,110.25],
+      [25.16,26.32],
+      [11.35,12.4],
+      [44.73,52.25],
+      [6.73,9.1],
+    ]
+  },
+  "Julio 2025":{
+    sim:true,
+    oee:[
+      [15087,28210,0.621],
+      [8906,15085,0.581],
+      [8827,21892,0.541],
+      [25000,35541,0.733],
+      [8371,18181,0.551],
+      [12489,24884,0.571],
+      [4698,12210,0.501],
+      [9471,19739,0.556],
+      [5914,15013,0.481],
+      [29359,42494,0.733],
+    ],
+    kgh:[
+      [20.87,24.51],
+      [0.93,1.1],
+      [18.23,24.22],
+      [25.69,35.9],
+      [51.84,67.8],
+      [100.32,110.7],
+      [25.51,26.35],
+      [11.64,12.44],
+      [45.43,52.5],
+      [6.39,9.16],
+    ]
+  },
+  "Agosto 2025":{
+    sim:true,
+    oee:[
+      [16808,29034,0.622],
+      [8114,14670,0.582],
+      [10232,21601,0.542],
+      [24931,35373,0.7335],
+      [8137,17853,0.552],
+      [12729,24544,0.572],
+      [4775,12147,0.502],
+      [10724,20189,0.557],
+      [6348,14961,0.482],
+      [29095,41930,0.7335],
+    ],
+    kgh:[
+      [21.49,24.59],
+      [1.02,1.11],
+      [22.42,24.34],
+      [25.3,36.05],
+      [55.64,68.1],
+      [97.05,111.15],
+      [25.43,26.38],
+      [11.83,12.48],
+      [43.54,52.75],
+      [6.82,9.22],
+    ]
+  },
+  "Septiembre 2025":{
+    sim:true,
+    oee:[
+      [15396,27636,0.623],
+      [8986,14950,0.583],
+      [10029,22119,0.543],
+      [25241,35091,0.734],
+      [8871,18012,0.553],
+      [12500,24807,0.573],
+      [4891,11935,0.503],
+      [9389,19766,0.558],
+      [6430,14911,0.483],
+      [31665,43282,0.734],
+    ],
+    kgh:[
+      [20.11,24.68],
+      [1.02,1.12],
+      [19.28,24.46],
+      [23.54,36.2],
+      [54.42,68.4],
+      [95.32,111.6],
+      [25.61,26.4],
+      [11.17,12.52],
+      [45.43,53.0],
+      [6.99,9.28],
+    ]
+  },
+  "Octubre 2025":{
+    sim:true,
+    oee:[
+      [15263,27231,0.624],
+      [7874,14582,0.584],
+      [9657,22422,0.544],
+      [24739,34854,0.7345],
+      [9347,17875,0.554],
+      [12976,24660,0.574],
+      [4467,11957,0.504],
+      [10010,20317,0.559],
+      [6377,15079,0.484],
+      [30736,41915,0.7345],
+    ],
+    kgh:[
+      [19.54,24.77],
+      [1.07,1.13],
+      [21.34,24.58],
+      [23.88,36.35],
+      [56.35,68.7],
+      [104.59,112.05],
+      [25.04,26.43],
+      [12.15,12.56],
+      [43.67,53.25],
+      [7.08,9.34],
+    ]
+  },
+  "Noviembre 2025":{
+    sim:true,
+    oee:[
+      [15626,27814,0.625],
+      [8662,14861,0.585],
+      [10767,22292,0.545],
+      [24010,34787,0.735],
+      [8833,18153,0.555],
+      [12579,24709,0.575],
+      [4638,12397,0.505],
+      [9473,19589,0.56],
+      [6651,14935,0.485],
+      [30995,42016,0.735],
+    ],
+    kgh:[
+      [20.09,24.85],
+      [1.02,1.14],
+      [20.22,24.7],
+      [23.87,36.5],
+      [55.75,69.0],
+      [99.79,112.5],
+      [25.04,26.45],
+      [11.59,12.6],
+      [45.26,53.5],
+      [6.92,9.4],
+    ]
+  },
+  "Diciembre 2025":{
+    sim:true,
+    oee:[
+      [16229,27947,0.626],
+      [8809,15333,0.586],
+      [10744,21424,0.546],
+      [25588,36275,0.7355],
+      [9135,18504,0.556],
+      [12805,24662,0.576],
+      [4455,11938,0.506],
+      [9677,20160,0.561],
+      [6900,15392,0.486],
+      [30213,42500,0.7355],
+    ],
+    kgh:[
+      [22.05,24.93],
+      [1.0,1.15],
+      [22.83,24.82],
+      [24.49,36.65],
+      [53.53,69.3],
+      [102.99,112.95],
+      [25.75,26.47],
+      [12.45,12.64],
+      [48.89,53.75],
+      [6.83,9.46],
+    ]
+  },
+  "Enero 2026":{
+    sim:true,
+    oee:[
+      [16285,27425,0.627],
+      [8793,14985,0.587],
+      [9558,20791,0.547],
+      [25235,35403,0.736],
+      [7826,17703,0.557],
+      [13282,24464,0.577],
+      [5034,12180,0.507],
+      [10492,19883,0.562],
+      [6826,15078,0.487],
+      [29734,41791,0.736],
+    ],
+    kgh:[
+      [21.86,25.02],
+      [0.99,1.16],
+      [22.77,24.94],
+      [23.97,36.8],
+      [50.57,69.6],
+      [99.88,113.4],
+      [26.17,26.5],
+      [12.22,12.68],
+      [46.25,54.0],
+      [7.71,9.52],
+    ]
+  },
+  "Febrero 2026":{
+    sim:true,
+    oee:[
+      [15905,28881,0.628],
+      [9270,15307,0.588],
+      [9743,22043,0.548],
+      [25482,36765,0.7365],
+      [9256,18286,0.558],
+      [13560,25403,0.578],
+      [4256,11965,0.508],
+      [10087,19797,0.563],
+      [6417,15127,0.488],
+      [30580,42722,0.7365],
+    ],
+    kgh:[
+      [21.75,25.11],
+      [1.04,1.17],
+      [23.04,25.06],
+      [24.66,36.95],
+      [56.22,69.9],
+      [105.71,113.85],
+      [25.71,26.52],
+      [12.29,12.72],
+      [45.53,54.25],
+      [7.35,9.58],
+    ]
+  },
+  "Marzo 2026":{
+    sim:true,
+    oee:[
+      [16921,27519,0.629],
+      [8897,14875,0.589],
+      [10585,21910,0.549],
+      [24746,34765,0.737],
+      [8754,17943,0.559],
+      [12540,24676,0.579],
+      [4788,11871,0.509],
+      [10530,19679,0.564],
+      [6037,14562,0.489],
+      [30612,42154,0.737],
+    ],
+    kgh:[
+      [20.06,25.19],
+      [1.01,1.18],
+      [19.94,25.18],
+      [24.27,37.1],
+      [55.57,70.2],
+      [101.18,114.3],
+      [25.57,26.55],
+      [12.89,12.76],
+      [45.58,54.5],
+      [7.23,9.64],
+    ]
+  },
+  "Abril 2026":{
+    sim:true,
+    oee:[
+      [16166,27639,0.63],
+      [8576,15072,0.59],
+      [11207,22449,0.55],
+      [24793,34890,0.7375],
+      [8865,18469,0.56],
+      [12938,24809,0.58],
+      [5176,11960,0.51],
+      [10362,19707,0.565],
+      [7011,15049,0.49],
+      [29413,41386,0.7375],
+    ],
+    kgh:[
+      [21.56,25.27],
+      [1.01,1.19],
+      [21.95,25.3],
+      [27.0,37.25],
+      [54.59,70.5],
+      [100.04,114.75],
+      [26.01,26.57],
+      [12.22,12.8],
+      [46.0,54.75],
+      [6.85,9.7],
+    ]
+  },
+  "Mayo 2026":{
+    sim:true,
+    oee:[
+      [17383,27557,0.631],
+      [8614,14852,0.591],
+      [10320,22237,0.551],
+      [25272,35670,0.738],
+      [9120,18243,0.561],
+      [12675,25075,0.581],
+      [5024,11895,0.511],
+      [10576,20425,0.566],
+      [6414,15042,0.491],
+      [30877,41850,0.738],
+    ],
+    kgh:[
+      [22.98,25.36],
+      [1.06,1.19],
+      [24.12,25.42],
+      [25.5,37.4],
+      [54.7,70.8],
+      [98.77,115.2],
+      [26.08,26.6],
+      [12.77,12.84],
+      [47.5,55.0],
+      [8.0,9.76],
+    ]
+  },
+  "Junio 2026":{
+    sim:true,
+    oee:[
+      [17754,28307,0.632],
+      [8924,15166,0.592],
+      [10879,22361,0.552],
+      [24785,34752,0.7385],
+      [8705,17603,0.562],
+      [12956,24949,0.582],
+      [5192,12269,0.512],
+      [10404,20372,0.567],
+      [6313,15175,0.492],
+      [30751,42894,0.7385],
+    ],
+    kgh:[
+      [21.38,25.45],
+      [1.11,1.2],
+      [21.96,25.54],
+      [26.63,37.55],
+      [55.47,71.1],
+      [105.2,115.65],
+      [26.92,26.62],
+      [11.87,12.88],
+      [46.17,55.25],
+      [7.21,9.82],
+    ]
+  },
+  "Julio 2026":{
+    sim:true,
+    oee:[
+      [17567,28111,0.633],
+      [8920,14991,0.593],
+      [10916,22250,0.553],
+      [24857,35035,0.739],
+      [8986,18052,0.563],
+      [12330,24735,0.583],
+      [4920,12197,0.513],
+      [10476,19737,0.568],
+      [6397,15187,0.493],
+      [32219,42255,0.739],
+    ],
+    kgh:[
+      [23.64,25.53],
+      [1.19,1.21],
+      [23.32,25.66],
+      [25.95,37.7],
+      [56.23,71.4],
+      [98.36,116.1],
+      [26.27,26.65],
+      [12.22,12.92],
+      [49.76,55.5],
+      [7.53,9.88],
+    ]
+  },
+  "Agosto 2026":{
+    sim:true,
+    oee:[
+      [17411,29018,0.634],
+      [8639,14921,0.594],
+      [10337,21854,0.554],
+      [24756,34359,0.7395],
+      [8405,17959,0.564],
+      [13808,24521,0.584],
+      [5025,11865,0.514],
+      [10203,19720,0.569],
+      [6885,15233,0.494],
+      [30905,42787,0.7395],
+    ],
+    kgh:[
+      [22.7,25.62],
+      [1.13,1.22],
+      [21.98,25.78],
+      [25.72,37.85],
+      [56.57,71.7],
+      [103.36,116.55],
+      [26.31,26.68],
+      [11.97,12.96],
+      [50.63,55.75],
+      [8.17,9.94],
+    ]
+  },
+  "Septiembre 2026":{
+    sim:true,
+    oee:[
+      [16745,27876,0.635],
+      [8948,15132,0.595],
+      [11093,22235,0.555],
+      [24883,34675,0.74],
+      [9431,18057,0.565],
+      [13496,24530,0.585],
+      [5173,12023,0.515],
+      [10532,19514,0.57],
+      [6792,15165,0.495],
+      [30531,42281,0.74],
+    ],
+    kgh:[
+      [21.75,25.7],
+      [0.99,1.23],
+      [21.81,25.9],
+      [26.05,38.0],
+      [59.29,72.0],
+      [103.73,117.0],
+      [25.71,26.7],
+      [12.56,13.0],
+      [47.89,56.0],
+      [7.81,10.0],
+    ]
+  },
+  "Octubre 2026":{
+    sim:true,
+    oee:[
+      [15989,27663,0.636],
+      [8788,15006,0.596],
+      [11516,22567,0.556],
+      [25526,35160,0.7405],
+      [9731,18699,0.566],
+      [13750,25392,0.586],
+      [4606,12165,0.516],
+      [9191,19778,0.571],
+      [7012,14901,0.496],
+      [31195,41979,0.7405],
+    ],
+    kgh:[
+      [22.35,25.79],
+      [1.1,1.24],
+      [21.89,26.02],
+      [25.54,38.15],
+      [58.15,72.3],
+      [103.75,117.45],
+      [25.78,26.72],
+      [12.11,13.04],
+      [51.47,56.25],
+      [7.7,10.06],
+    ]
+  },
+  "Noviembre 2026":{
+    sim:true,
+    oee:[
+      [18142,28316,0.637],
+      [8977,15151,0.597],
+      [11816,22745,0.557],
+      [25798,35746,0.741],
+      [9706,17754,0.567],
+      [14002,25454,0.587],
+      [5309,11775,0.517],
+      [10500,20103,0.572],
+      [6986,14953,0.497],
+      [30673,42851,0.741],
+    ],
+    kgh:[
+      [21.68,25.87],
+      [1.21,1.25],
+      [23.44,26.14],
+      [25.9,38.3],
+      [57.72,72.6],
+      [104.5,117.9],
+      [25.89,26.75],
+      [11.96,13.08],
+      [46.63,56.5],
+      [7.72,10.12],
+    ]
+  },
+  "Diciembre 2026":{
+    sim:true,
+    oee:[
+      [17105,28286,0.638],
+      [8632,14761,0.598],
+      [10253,21936,0.558],
+      [25966,35682,0.7415],
+      [10237,18261,0.568],
+      [13056,24700,0.588],
+      [4783,12055,0.518],
+      [10632,20094,0.573],
+      [7091,15152,0.498],
+      [32162,41998,0.7415],
+    ],
+    kgh:[
+      [21.75,25.95],
+      [1.24,1.26],
+      [24.05,26.26],
+      [26.54,38.45],
+      [56.55,72.9],
+      [101.8,118.35],
+      [26.86,26.77],
+      [12.74,13.12],
+      [48.6,56.75],
+      [7.86,10.18],
+    ]
+  },
 };
 
-/* ── Lista completa de meses 2026 ── */
-const MESES_2026 = [
-  "Enero 2026","Febrero 2026","Marzo 2026","Abril 2026",
-  "Mayo 2026","Junio 2026","Julio 2026","Agosto 2026",
-  "Septiembre 2026","Octubre 2026","Noviembre 2026","Diciembre 2026"
-];
+/* ════ ESTADO ════ */
+let MES_ACTIVO = "Febrero 2026";
+let N_MESES = 3;
 
-/* ════ CONSTANTES ════ */
+/* ════ CONSTANTES VISUALES ════ */
 const CENTRO = {
   S:{color:'#eab308',bg:'rgba(234,179,8,.15)'},
   T:{color:'#d946ef',bg:'rgba(217,70,239,.15)'},
   B:{color:'#3b82f6',bg:'rgba(59,130,246,.15)'},
 };
-const icons   = ['🥇','🥈','🥉'];
-const colors  = ['#f59e0b','#94a3b8','#c87941'];
-const labels  = ['#1 · ORO','#2 · PLATA','#3 · BRONCE'];
-const rankCls = ['gold','silver','bronze'];
-const fmtP    = v => (v*100).toFixed(1)+'%';
-const fmtM    = v => (v>=0?'+':'')+v.toFixed(2);
-const imp     = v => (v>=0?'+':'')+(v*100).toFixed(1)+'%';
-const sgn     = v => v>=0 ? '#10b981' : '#ef4444';
+const PODIO_COLORS = ['#f59e0b','#94a3b8','#c87941'];
+const PODIO_LABELS = ['#1 · ORO','#2 · PLATA','#3 · BRONCE'];
+const PODIO_ICONS  = ['🥇','🥈','🥉'];
+const RANK_CLS     = ['gold','silver','bronze'];
 
-let MES_ACTIVO = "Febrero 2026";
+const fmtP  = v => (v*100).toFixed(2)+'%';
+const fmtM  = v => (v>=0?'+':'')+v.toFixed(4);
+const fmtPct= v => (v>=0?'+':'')+( v*100).toFixed(1)+'%';
+const sgn   = v => v>=0 ? '#10b981' : '#ef4444';
+const fmtN  = v => v.toFixed(2);
 
-/* ════ HELPERS ════ */
+/* ════ CÁLCULOS ════ */
+function calcLineasBase() {
+  const idx = MESES_ORDEN.indexOf(MES_ACTIVO);
+  const meses_back = MESES_ORDEN.slice(Math.max(0, idx - N_MESES), idx);
+  const n_used = meses_back.filter(m => DATOS[m]).length;
+
+  return PLANTAS.map((_, pi) => {
+    const oee_vals = meses_back
+      .map(m => DATOS[m] ? DATOS[m].oee[pi][0] / DATOS[m].oee[pi][1] : null)
+      .filter(v => v !== null);
+    const kgh_vals = meses_back
+      .map(m => DATOS[m] ? DATOS[m].kgh[pi][0] : null)
+      .filter(v => v !== null);
+
+    const lb_oee = oee_vals.length > 0
+      ? oee_vals.reduce((a,b)=>a+b,0) / oee_vals.length : null;
+    const lb_kgh = kgh_vals.length > 0
+      ? kgh_vals.reduce((a,b)=>a+b,0) / kgh_vals.length : null;
+
+    return {lb_oee, lb_kgh, n: oee_vals.length};
+  });
+}
+
+function calcMejoras() {
+  const d = DATOS[MES_ACTIVO];
+  if (!d) return null;
+  const bases = calcLineasBase();
+
+  return PLANTAS.map((pl, pi) => {
+    const [kgp, kge, meta_oee] = d.oee[pi];
+    const [kgh_val, meta_kgh]  = d.kgh[pi];
+    const oee_mes = kgp / kge;
+    const lb_oee  = bases[pi].lb_oee;
+    const lb_kgh  = bases[pi].lb_kgh;
+    const n_base  = bases[pi].n;
+
+    const mejora_oee = (lb_oee !== null && meta_oee !== lb_oee)
+      ? (oee_mes - lb_oee) / (meta_oee - lb_oee) : null;
+    const mejora_kgh = (lb_kgh !== null && meta_kgh !== lb_kgh)
+      ? (kgh_val - lb_kgh) / (meta_kgh - lb_kgh) : null;
+
+    const score = (mejora_oee !== null && mejora_kgh !== null)
+      ? mejora_oee * 0.6 + mejora_kgh * 0.4 : null;
+
+    return {
+      ...pl,
+      oee_mes, lb_oee, meta_oee, mejora_oee,
+      kgp, kge,
+      kgh_val, lb_kgh, meta_kgh, mejora_kgh,
+      score, n_base
+    };
+  });
+}
+
+/* ════ HELPERS VISUALES ════ */
 function pill(d) {
   const cc = CENTRO[d.cc];
-  return `<span style="font-size:9px;font-weight:800;padding:1px 7px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase;background:${cc.bg};color:${cc.color}">${d.c}</span>`;
-}
-function bc(feb,linea,meta) {
-  return feb>=meta?'rgba(16,185,129,.75)':feb>=linea?'rgba(234,179,8,.75)':'rgba(239,68,68,.75)';
-}
-function miniBar(feb,linea,meta,scale) {
-  return {
-    bw: Math.min(100,(feb/scale*100)).toFixed(1),
-    lw: Math.min(100,(linea/scale*100)).toFixed(1),
-    mw: Math.min(100,(meta/scale*100)).toFixed(1),
-    bc: bc(feb,linea,meta)
-  };
-}
-function animateBars() {
-  setTimeout(()=>{ document.querySelectorAll('.mini-fill[data-w]').forEach(el=>el.style.width=el.dataset.w+'%'); },60);
-}
-function getCombinado(mes) {
-  const {oee,kgh} = HISTORIAL[mes];
-  return oee.map(o=>{
-    const k = kgh.find(k=>k.p===o.p);
-    const score = o.mejora*0.6+(k?k.mejora:0)*0.4;
-    return {p:o.p,c:o.c,cc:o.cc,oee:o.mejora,kgh:k?k.mejora:0,score};
-  }).sort((a,b)=>b.score-a.score);
+  return `<span style="font-size:9px;font-weight:800;padding:1px 6px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase;background:${cc.bg};color:${cc.color}">${d.c}</span>`;
 }
 
-/* ════ DROPDOWN ════ */
-function buildDropdown() {
-  const menu = document.getElementById('dropMenu');
-  menu.innerHTML = MESES_2026.map(m => {
-    const tiene = !!HISTORIAL[m];
-    const esReal = tiene && HISTORIAL[m].real;
-    const esActivo = m === MES_ACTIVO;
-    const tag = !tiene ? 'Pendiente' : esReal ? 'Real' : 'Simulado';
-    const tagCls = !tiene ? 'tag-pendiente' : esReal ? 'tag-real' : 'tag-sim';
-    const dotCls = !tiene ? 'pendiente' : esReal ? 'real' : 'sim';
-    return `<div class="mes-option ${esActivo?'active':''}"
-      onclick="${tiene?`selectMes('${m}')`:'void(0)'}"
-      style="${!tiene?'opacity:.35;cursor:default;':''}"
-    >
-      <div class="mes-opt-dot ${dotCls}"></div>
-      <span class="mes-opt-name">${m}</span>
-      <span class="mes-opt-tag ${tagCls}">${tag}</span>
+function barColor(mes, lb, meta) {
+  if (mes >= meta)  return 'rgba(16,185,129,.8)';
+  if (lb && mes >= lb) return 'rgba(234,179,8,.8)';
+  return 'rgba(239,68,68,.8)';
+}
+
+function miniBar(val, lb, meta, scale) {
+  const bw = Math.min(100, (val/scale*100)).toFixed(1);
+  const lw = lb  ? Math.min(100, (lb /scale*100)).toFixed(1) : null;
+  const mw = Math.min(100, (meta/scale*100)).toFixed(1);
+  return {bw, lw, mw, bc: barColor(val, lb, meta)};
+}
+
+function animateBars() {
+  setTimeout(()=>{
+    document.querySelectorAll('.mini-fill[data-w]')
+      .forEach(el => el.style.width = el.dataset.w+'%');
+  }, 60);
+}
+
+function updateBaseInfo(n) {
+  const label = `📊 Base: ${n} ${n===1?'mes':'meses'}`;
+  ['combinado','oee','kgh'].forEach(tab => {
+    const el = document.getElementById(`base-info-${tab}`);
+    if (el) el.textContent = label;
+  });
+}
+
+/* ════ PODIO ════ */
+function renderPodio(containerId, items) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = items.slice(0,3).map((d, i) => {
+    const cc = CENTRO[d.cc];
+    let scoreVal, scoreLbl, extraHTML, statsHTML;
+
+    if (containerId === 'podio-combinado') {
+      const s = d.score;
+      scoreVal = s !== null ? fmtPct(s) : '—';
+      scoreLbl = 'Score combinado';
+      extraHTML = `<div class="score-row">
+        <div class="score-pill">
+          <div class="score-pill-val" style="color:${d.mejora_oee!==null?sgn(d.mejora_oee):'var(--muted)'}">${d.mejora_oee!==null?fmtPct(d.mejora_oee):'—'}</div>
+          <div class="score-pill-lbl">OEE · 60%</div>
+        </div>
+        <div class="score-pill">
+          <div class="score-pill-val" style="color:${d.mejora_kgh!==null?sgn(d.mejora_kgh):'var(--muted)'}">${d.mejora_kgh!==null?fmtPct(d.mejora_kgh):'—'}</div>
+          <div class="score-pill-lbl">Kg/H · 40%</div>
+        </div>
+      </div>`;
+      statsHTML = '';
+    } else if (containerId === 'podio-oee') {
+      const m = d.mejora_oee;
+      scoreVal = m !== null ? fmtPct(m) : '—';
+      scoreLbl = '% Mejora OEE';
+      extraHTML = '';
+      statsHTML = `<div class="podio-stats">
+        <div><div class="podio-stat-val" style="color:var(--light)">${d.lb_oee!==null?fmtP(d.lb_oee):'—'}</div><div class="podio-stat-lbl">Línea Base</div></div>
+        <div><div class="podio-stat-val" style="color:${sgn(d.oee_mes-(d.lb_oee||d.oee_mes))}">${fmtP(d.oee_mes)}</div><div class="podio-stat-lbl">OEE Mes</div></div>
+        <div><div class="podio-stat-val" style="color:var(--cyan)">${fmtP(d.meta_oee)}</div><div class="podio-stat-lbl">Meta</div></div>
+      </div>`;
+    } else {
+      const m = d.mejora_kgh;
+      scoreVal = m !== null ? fmtPct(m) : '—';
+      scoreLbl = '% Mejora Kg/H';
+      extraHTML = '';
+      statsHTML = `<div class="podio-stats">
+        <div><div class="podio-stat-val" style="color:var(--light)">${d.lb_kgh!==null?fmtN(d.lb_kgh):'—'}</div><div class="podio-stat-lbl">Base kg/h</div></div>
+        <div><div class="podio-stat-val" style="color:${sgn(d.kgh_val-(d.lb_kgh||d.kgh_val))}">${fmtN(d.kgh_val)}</div><div class="podio-stat-lbl">Mes kg/h</div></div>
+        <div><div class="podio-stat-val" style="color:var(--cyan)">${fmtN(d.meta_kgh)}</div><div class="podio-stat-lbl">Meta kg/h</div></div>
+      </div>`;
+    }
+
+    const val = containerId==='podio-combinado'?d.score:containerId==='podio-oee'?d.mejora_oee:d.mejora_kgh;
+    const scoreColor = val !== null ? sgn(val) : 'var(--muted)';
+
+    return `<div class="podio-card">
+      <div class="podio-top" style="background:${PODIO_COLORS[i]}"></div>
+      <div class="podio-pos" style="color:${PODIO_COLORS[i]}"><span class="podio-icon">${PODIO_ICONS[i]}</span>${PODIO_LABELS[i]}</div>
+      <div class="podio-name">${d.p}</div>
+      <div class="podio-centro" style="background:${cc.bg};color:${cc.color}">${d.c}</div>
+      <div class="podio-score" style="color:${scoreColor}">${scoreVal}</div>
+      <div class="podio-score-lbl">${scoreLbl}</div>
+      ${extraHTML}
+      ${statsHTML}
     </div>`;
   }).join('');
 }
 
-function toggleDrop() {
-  const btn  = document.getElementById('dropBtn');
-  const menu = document.getElementById('dropMenu');
-  btn.classList.toggle('open');
-  menu.classList.toggle('open');
+/* ════ RENDERS ════ */
+function renderCombinado(filtro='TODOS') {
+  const datos = calcMejoras();
+  if (!datos) return;
+  const sorted = [...datos].filter(d=>d.score!==null).sort((a,b)=>b.score-a.score);
+  renderPodio('podio-combinado', sorted);
+
+  const rows = filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro);
+  const maxS = Math.max(...sorted.map(d=>Math.abs(d.score)));
+  document.getElementById('tbody-combinado').innerHTML = rows.map((d,i)=>{
+    const bw = maxS>0 ? Math.min(100,(Math.abs(d.score)/maxS*100)).toFixed(1) : '0';
+    const bc = d.score>=0?'rgba(16,185,129,.75)':'rgba(239,68,68,.75)';
+    return `<tr>
+      <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
+      <td><strong>${d.p}</strong></td>
+      <td>${pill(d)}</td>
+      <td class="mono" style="color:${d.mejora_oee!==null?sgn(d.mejora_oee):'var(--muted)'}">${d.mejora_oee!==null?fmtPct(d.mejora_oee):'—'}</td>
+      <td class="mono" style="color:${d.mejora_kgh!==null?sgn(d.mejora_kgh):'var(--muted)'}">${d.mejora_kgh!==null?fmtPct(d.mejora_kgh):'—'}</td>
+      <td><div class="mini-track"><div class="mini-fill" style="width:0%;background:${bc}" data-w="${bw}"></div></div></td>
+      <td><span class="mejora-val ${d.score>=0?'pos':'neg'}">${d.score>=0?'↑':'↓'} ${fmtPct(d.score)}</span></td>
+    </tr>`;
+  }).join('');
+  animateBars();
 }
 
-function selectMes(mes) {
-  MES_ACTIVO = mes;
-  document.getElementById('dropLabel').textContent = mes;
-  const dot = document.getElementById('dropDot');
-  const esReal = HISTORIAL[mes]?.real;
-  dot.className = 'mes-badge-dot ' + (esReal ? 'real' : 'sim');
-  // cerrar menú
-  document.getElementById('dropBtn').classList.remove('open');
-  document.getElementById('dropMenu').classList.remove('open');
-  buildDropdown();
+function renderOEE(filtro='TODOS') {
+  const datos = calcMejoras();
+  if (!datos) return;
+  const sorted = [...datos].filter(d=>d.mejora_oee!==null).sort((a,b)=>b.mejora_oee-a.mejora_oee);
+  renderPodio('podio-oee', sorted);
+
+  const rows = filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro);
+  const scale = 0.90;
+  document.getElementById('tbody-oee').innerHTML = rows.map((d,i)=>{
+    const b = miniBar(d.oee_mes, d.lb_oee, d.meta_oee, scale);
+    const isPos = d.mejora_oee >= 0;
+    return `<tr>
+      <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
+      <td><strong>${d.p}</strong></td>
+      <td>${pill(d)}</td>
+      <td class="mono" style="color:var(--light)">${d.lb_oee!==null?fmtP(d.lb_oee):'—'}</td>
+      <td class="mono" style="color:${sgn(d.oee_mes-(d.lb_oee||d.oee_mes))};font-weight:700">${fmtP(d.oee_mes)}</td>
+      <td class="mono" style="color:var(--cyan)">${fmtP(d.meta_oee)}</td>
+      <td><div class="mini-track">
+        <div class="mini-fill" style="width:0%;background:${b.bc}" data-w="${b.bw}"></div>
+        ${b.lw ? `<div class="mini-base" style="left:${b.lw}%"></div>` : ''}
+        <div class="mini-meta" style="left:${b.mw}%"></div>
+      </div></td>
+      <td><span class="mejora-val ${isPos?'pos':'neg'}">${isPos?'↑':'↓'} ${fmtPct(d.mejora_oee)}</span></td>
+    </tr>`;
+  }).join('');
+  animateBars();
+}
+
+function renderKGH(filtro='TODOS') {
+  const datos = calcMejoras();
+  if (!datos) return;
+  const sorted = [...datos].filter(d=>d.mejora_kgh!==null).sort((a,b)=>b.mejora_kgh-a.mejora_kgh);
+  renderPodio('podio-kgh', sorted);
+
+  const rows = filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro);
+  const scale = Math.max(...datos.map(d=>d.meta_kgh)) * 1.15;
+  document.getElementById('tbody-kgh').innerHTML = rows.map((d,i)=>{
+    const b = miniBar(d.kgh_val, d.lb_kgh, d.meta_kgh, scale);
+    const isPos = d.mejora_kgh >= 0;
+    return `<tr>
+      <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
+      <td><strong>${d.p}</strong></td>
+      <td>${pill(d)}</td>
+      <td class="mono" style="color:var(--light)">${d.lb_kgh!==null?fmtN(d.lb_kgh):'—'}</td>
+      <td class="mono" style="color:${sgn(d.kgh_val-(d.lb_kgh||d.kgh_val))};font-weight:700">${fmtN(d.kgh_val)}</td>
+      <td class="mono" style="color:var(--cyan)">${fmtN(d.meta_kgh)}</td>
+      <td><div class="mini-track">
+        <div class="mini-fill" style="width:0%;background:${b.bc}" data-w="${b.bw}"></div>
+        ${b.lw ? `<div class="mini-base" style="left:${b.lw}%"></div>` : ''}
+        <div class="mini-meta" style="left:${b.mw}%"></div>
+      </div></td>
+      <td><span class="mejora-val ${isPos?'pos':'neg'}">${isPos?'↑':'↓'} ${fmtPct(d.mejora_kgh)}</span></td>
+    </tr>`;
+  }).join('');
+  animateBars();
+}
+
+function renderAll() {
+  renderCombinado('TODOS');
+  renderOEE('TODOS');
+  renderKGH('TODOS');
   // reset filtros
   ['combinado','oee','kgh'].forEach(tab=>{
     const f = document.getElementById('filters-'+tab);
     if(f) f.querySelectorAll('.filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   });
+}
+
+/* ════ CONTROLES ════ */
+function setN(n, btn) {
+  N_MESES = n;
+  document.querySelectorAll('.n-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('nInfo').textContent = `últimos ${n} ${n===1?'mes':'meses'}`;
+  updateBaseInfo(n);
   renderAll();
 }
 
-// Cerrar al click fuera
-document.addEventListener('click', e => {
-  if (!document.getElementById('dropWrap').contains(e.target)) {
-    document.getElementById('dropBtn').classList.remove('open');
-    document.getElementById('dropMenu').classList.remove('open');
-  }
-});
-
-/* ════ NO DATA ════ */
-function noDataHTML(mes) {
-  return `<div class="no-data">
-    <div class="no-data-icon">📭</div>
-    <strong>Sin datos para ${mes}</strong>
-    El mes aún no tiene información cargada. Los datos se agregarán cuando estén disponibles.
-  </div>`;
-}
-
-/* ════ COMBINADO ════ */
-function renderPodioCombinado() {
-  const el = document.getElementById('podio-combinado');
-  if (!HISTORIAL[MES_ACTIVO]) { el.innerHTML = ''; return; }
-  const comb = getCombinado(MES_ACTIVO);
-  el.innerHTML = comb.slice(0,3).map((d,i)=>{
-    const cc = CENTRO[d.cc];
-    return `<div class="podio-card">
-      <div class="podio-top-line" style="background:${colors[i]}"></div>
-      <div class="podio-pos" style="color:${colors[i]}"><span class="podio-pos-icon">${icons[i]}</span>${labels[i]}</div>
-      <div class="podio-name">${d.p}</div>
-      <div class="podio-centro" style="background:${cc.bg};color:${cc.color}">${d.c}</div>
-      <div class="podio-score" style="color:${sgn(d.score)}">${fmtM(d.score)}</div>
-      <div class="podio-score-lbl">Score combinado</div>
-      <div class="score-row">
-        <div class="score-pill"><div class="score-pill-val" style="color:${sgn(d.oee)}">${fmtM(d.oee)}</div><div class="score-pill-lbl">OEE · 60%</div></div>
-        <div class="score-pill"><div class="score-pill-val" style="color:${sgn(d.kgh)}">${fmtM(d.kgh)}</div><div class="score-pill-lbl">Kg/H · 40%</div></div>
-      </div>
-    </div>`;
-  }).join('');
-}
-function renderTablaCombinado(filtro) {
-  const tbody = document.getElementById('tbody-combinado');
-  if (!HISTORIAL[MES_ACTIVO]) { tbody.innerHTML = `<tr><td colspan="7">${noDataHTML(MES_ACTIVO)}</td></tr>`; return; }
-  const comb = getCombinado(MES_ACTIVO);
-  const rows = filtro==='TODOS'?comb:comb.filter(d=>d.c===filtro);
-  const maxS = Math.max(...comb.map(d=>Math.abs(d.score)));
-  tbody.innerHTML = rows.map((d,i)=>{
-    const isPos = d.score>=0;
-    const bw = Math.min(100,(Math.abs(d.score)/maxS*100)).toFixed(1);
-    const bcolor = isPos?'rgba(16,185,129,.75)':'rgba(239,68,68,.75)';
-    return `<tr>
-      <td><span class="rank-num ${rankCls[i]||''}">${i+1}</span></td>
-      <td><strong>${d.p}</strong></td><td>${pill(d)}</td>
-      <td class="mono" style="color:${sgn(d.oee)}">${fmtM(d.oee)}</td>
-      <td class="mono" style="color:${sgn(d.kgh)}">${fmtM(d.kgh)}</td>
-      <td><div class="mini-track"><div class="mini-fill" style="width:0%;background:${bcolor}" data-w="${bw}"></div></div></td>
-      <td><span class="mejora-val ${isPos?'pos':'neg'}">${isPos?'↑':'↓'} ${fmtM(d.score)}</span></td>
-    </tr>`;
-  }).join('');
-  animateBars();
-}
-
-/* ════ OEE ════ */
-function renderPodioOEE() {
-  const el = document.getElementById('podio-oee');
-  if (!HISTORIAL[MES_ACTIVO]) { el.innerHTML = ''; return; }
-  const data = [...HISTORIAL[MES_ACTIVO].oee].sort((a,b)=>b.mejora-a.mejora);
-  el.innerHTML = data.slice(0,3).map((d,i)=>{
-    const cc = CENTRO[d.cc];
-    return `<div class="podio-card">
-      <div class="podio-top-line" style="background:${colors[i]}"></div>
-      <div class="podio-pos" style="color:${colors[i]}"><span class="podio-pos-icon">${icons[i]}</span>${labels[i]}</div>
-      <div class="podio-name">${d.p}</div>
-      <div class="podio-centro" style="background:${cc.bg};color:${cc.color}">${d.c}</div>
-      <div class="podio-score" style="color:${sgn(d.mejora)}">${imp(d.mejora)}</div>
-      <div class="podio-score-lbl">% Mejora OEE hacia meta</div>
-      <div class="podio-stats">
-        <div><div class="podio-stat-val" style="color:var(--light)">${fmtP(d.linea)}</div><div class="podio-stat-lbl">Línea Base</div></div>
-        <div><div class="podio-stat-val" style="color:${sgn(d.feb-d.linea)}">${fmtP(d.feb)}</div><div class="podio-stat-lbl">OEE Mes</div></div>
-        <div><div class="podio-stat-val" style="color:var(--cyan)">${fmtP(d.meta)}</div><div class="podio-stat-lbl">Meta</div></div>
-      </div>
-    </div>`;
-  }).join('');
-}
-function renderTablaOEE(filtro) {
-  const tbody = document.getElementById('tbody-oee');
-  if (!HISTORIAL[MES_ACTIVO]) { tbody.innerHTML = `<tr><td colspan="8">${noDataHTML(MES_ACTIVO)}</td></tr>`; return; }
-  const data = [...HISTORIAL[MES_ACTIVO].oee].sort((a,b)=>b.mejora-a.mejora);
-  const rows = filtro==='TODOS'?data:data.filter(d=>d.c===filtro);
-  tbody.innerHTML = rows.map((d,i)=>{
-    const isPos = d.mejora>=0;
-    const b = miniBar(d.feb,d.linea,d.meta,.9);
-    return `<tr>
-      <td><span class="rank-num ${rankCls[i]||''}">${i+1}</span></td>
-      <td><strong>${d.p}</strong></td><td>${pill(d)}</td>
-      <td class="mono" style="color:var(--light)">${fmtP(d.linea)}</td>
-      <td class="mono" style="color:${sgn(d.feb-d.linea)};font-weight:700">${fmtP(d.feb)}</td>
-      <td class="mono" style="color:var(--cyan)">${fmtP(d.meta)}</td>
-      <td><div class="mini-track"><div class="mini-fill" style="width:0%;background:${b.bc}" data-w="${b.bw}"></div><div class="mini-base" style="left:${b.lw}%"></div><div class="mini-meta" style="left:${b.mw}%"></div></div></td>
-      <td><span class="mejora-val ${isPos?'pos':'neg'}">${isPos?'↑':'↓'} ${imp(d.mejora)}</span></td>
-    </tr>`;
-  }).join('');
-  animateBars();
-}
-
-/* ════ KG/H ════ */
-function renderPodioKGH() {
-  const el = document.getElementById('podio-kgh');
-  if (!HISTORIAL[MES_ACTIVO]) { el.innerHTML = ''; return; }
-  const data = [...HISTORIAL[MES_ACTIVO].kgh].sort((a,b)=>b.mejora-a.mejora);
-  const KGH_MAX = Math.max(...HISTORIAL[MES_ACTIVO].kgh.map(d=>d.meta))*1.15;
-  el.innerHTML = data.slice(0,3).map((d,i)=>{
-    const cc = CENTRO[d.cc];
-    return `<div class="podio-card">
-      <div class="podio-top-line" style="background:${colors[i]}"></div>
-      <div class="podio-pos" style="color:${colors[i]}"><span class="podio-pos-icon">${icons[i]}</span>${labels[i]}</div>
-      <div class="podio-name">${d.p}</div>
-      <div class="podio-centro" style="background:${cc.bg};color:${cc.color}">${d.c}</div>
-      <div class="podio-score" style="color:${sgn(d.mejora)}">${imp(d.mejora)}</div>
-      <div class="podio-score-lbl">% Mejora Kg/H hacia meta</div>
-      <div class="podio-stats">
-        <div><div class="podio-stat-val" style="color:var(--light)">${d.linea.toFixed(1)}</div><div class="podio-stat-lbl">Base kg/h</div></div>
-        <div><div class="podio-stat-val" style="color:${sgn(d.feb-d.linea)}">${d.feb.toFixed(1)}</div><div class="podio-stat-lbl">Mes kg/h</div></div>
-        <div><div class="podio-stat-val" style="color:var(--cyan)">${d.meta.toFixed(1)}</div><div class="podio-stat-lbl">Meta kg/h</div></div>
-      </div>
-    </div>`;
-  }).join('');
-}
-function renderTablaKGH(filtro) {
-  const tbody = document.getElementById('tbody-kgh');
-  if (!HISTORIAL[MES_ACTIVO]) { tbody.innerHTML = `<tr><td colspan="8">${noDataHTML(MES_ACTIVO)}</td></tr>`; return; }
-  const data = [...HISTORIAL[MES_ACTIVO].kgh].sort((a,b)=>b.mejora-a.mejora);
-  const KGH_MAX = Math.max(...HISTORIAL[MES_ACTIVO].kgh.map(d=>d.meta))*1.15;
-  const rows = filtro==='TODOS'?data:data.filter(d=>d.c===filtro);
-  tbody.innerHTML = rows.map((d,i)=>{
-    const isPos = d.mejora>=0;
-    const b = miniBar(d.feb,d.linea,d.meta,KGH_MAX);
-    return `<tr>
-      <td><span class="rank-num ${rankCls[i]||''}">${i+1}</span></td>
-      <td><strong>${d.p}</strong></td><td>${pill(d)}</td>
-      <td class="mono" style="color:var(--light)">${d.linea.toFixed(1)}</td>
-      <td class="mono" style="color:${sgn(d.feb-d.linea)};font-weight:700">${d.feb.toFixed(1)}</td>
-      <td class="mono" style="color:var(--cyan)">${d.meta.toFixed(1)}</td>
-      <td><div class="mini-track"><div class="mini-fill" style="width:0%;background:${b.bc}" data-w="${b.bw}"></div><div class="mini-base" style="left:${b.lw}%"></div><div class="mini-meta" style="left:${b.mw}%"></div></div></td>
-      <td><span class="mejora-val ${isPos?'pos':'neg'}">${isPos?'↑':'↓'} ${imp(d.mejora)}</span></td>
-    </tr>`;
-  }).join('');
-  animateBars();
-}
-
-/* ════ CONTROL ════ */
 function setFiltro(tab, filtro, btn) {
-  document.getElementById('filters-'+tab).querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('filters-'+tab).querySelectorAll('.filter-btn')
+    .forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if(tab==='combinado') renderTablaCombinado(filtro);
-  if(tab==='oee')       renderTablaOEE(filtro);
-  if(tab==='kgh')       renderTablaKGH(filtro);
+  if(tab==='combinado') renderCombinado(filtro);
+  if(tab==='oee')       renderOEE(filtro);
+  if(tab==='kgh')       renderKGH(filtro);
 }
+
 function setTab(id, btn) {
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -556,14 +1230,56 @@ function setTab(id, btn) {
   document.getElementById('tab-'+id).classList.add('active');
   animateBars();
 }
-function renderAll() {
-  renderPodioCombinado(); renderTablaCombinado('TODOS');
-  renderPodioOEE();       renderTablaOEE('TODOS');
-  renderPodioKGH();       renderTablaKGH('TODOS');
+
+/* ════ DROPDOWN ════ */
+function buildDropdown() {
+  const menu = document.getElementById('dropMenu');
+  const años = ['2025','2026'];
+  menu.innerHTML = años.map(año => {
+    const meses = MESES_ORDEN.filter(m=>m.includes(año));
+    return `<div class="mes-group-label">${año}</div>` +
+      meses.map(m => {
+        const d = DATOS[m];
+        const isActivo = m === MES_ACTIVO;
+        const tag = d?.sim===false ? 'Real' : d ? 'Simulado' : 'Pendiente';
+        const tagCls = d?.sim===false ? 'tag-real' : d ? 'tag-sim' : 'tag-pending';
+        const dotCls = d?.sim===false ? 'real' : d ? 'sim' : 'pending';
+        return `<div class="mes-option ${isActivo?'active':''}" onclick="${d?`selectMes('${m}')`:'void(0)'}" style="${!d?'opacity:.35;cursor:default':''}">
+          <div class="mes-opt-dot ${dotCls}"></div>
+          <span class="mes-opt-name">${m}</span>
+          <span class="mes-opt-tag ${tagCls}">${tag}</span>
+        </div>`;
+      }).join('');
+  }).join('');
 }
+
+function toggleDrop() {
+  document.getElementById('dropBtn').classList.toggle('open');
+  document.getElementById('dropMenu').classList.toggle('open');
+}
+
+function selectMes(mes) {
+  MES_ACTIVO = mes;
+  document.getElementById('dropLabel').textContent = mes;
+  const d = DATOS[mes];
+  const dot = document.getElementById('dropDot');
+  dot.className = 'mes-badge-dot ' + (d?.sim===false ? 'real' : d ? 'sim' : 'pending');
+  document.getElementById('dropBtn').classList.remove('open');
+  document.getElementById('dropMenu').classList.remove('open');
+  buildDropdown();
+  renderAll();
+}
+
+document.addEventListener('click', e => {
+  if (!document.getElementById('dropWrap').contains(e.target)) {
+    document.getElementById('dropBtn').classList.remove('open');
+    document.getElementById('dropMenu').classList.remove('open');
+  }
+});
 
 /* ════ INIT ════ */
 buildDropdown();
+updateBaseInfo(3);
 renderAll();
 </script>
 </body>
