@@ -160,6 +160,84 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
 .no-data{text-align:center;padding:50px 20px;color:var(--muted);font-size:13px}
 .no-data .icon{font-size:36px;margin-bottom:10px}
 .no-data strong{display:block;font-size:15px;font-weight:700;color:var(--light);margin-bottom:5px}
+
+/* DETALLE CARDS */
+.detalle-card{
+  background:var(--s2);border:1px solid var(--border);border-radius:14px;
+  margin-bottom:16px;overflow:hidden
+}
+.detalle-card-header{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 20px;border-bottom:1px solid var(--border);
+  cursor:pointer;user-select:none;transition:background .15s
+}
+.detalle-card-header:hover{background:rgba(255,255,255,.02)}
+.detalle-rank{
+  font-family:'JetBrains Mono',monospace;font-size:18px;
+  font-weight:700;width:32px;text-align:center;flex-shrink:0
+}
+.detalle-plant-name{font-size:15px;font-weight:900;flex:1}
+.detalle-centro{
+  font-size:9px;font-weight:800;padding:2px 8px;border-radius:4px;
+  letter-spacing:.07em;text-transform:uppercase;flex-shrink:0
+}
+.detalle-score-badge{
+  font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;
+  padding:4px 12px;border-radius:8px;flex-shrink:0
+}
+.detalle-chevron{color:var(--muted);font-size:12px;transition:transform .25s;flex-shrink:0}
+.detalle-card.open .detalle-chevron{transform:rotate(180deg)}
+
+.detalle-body{display:none;padding:20px}
+.detalle-card.open .detalle-body{display:block}
+
+.detalle-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.detalle-section{background:var(--s3);border:1px solid var(--border);border-radius:10px;padding:16px}
+.detalle-section-title{
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)
+}
+
+.detalle-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.detalle-row:last-child{border:none}
+.detalle-row-label{font-size:11px;color:var(--light)}
+.detalle-row-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
+
+.detalle-meses{margin-top:12px}
+.detalle-mes-row{
+  display:grid;grid-template-columns:140px 1fr 1fr 1fr 1fr;
+  gap:0;align-items:center;
+  padding:6px 10px;border-radius:6px;margin-bottom:4px;
+  background:rgba(255,255,255,.03);font-size:11px
+}
+.detalle-mes-row.header{
+  background:rgba(255,255,255,.06);
+  font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--muted)
+}
+.detalle-mes-name{font-weight:700;color:var(--text)}
+.detalle-mes-val{font-family:'JetBrains Mono',monospace;font-size:11px;text-align:right;color:var(--light)}
+
+.detalle-formula-box{
+  margin-top:14px;background:rgba(6,182,212,.06);
+  border:1px solid rgba(6,182,212,.15);border-radius:8px;padding:12px 14px
+}
+.detalle-formula-title{font-size:9px;font-weight:800;color:var(--cyan);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.detalle-formula-line{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--light);line-height:1.8}
+.detalle-formula-result{font-size:16px;font-weight:900;font-family:'JetBrains Mono',monospace;margin-top:6px}
+
+.planta-pill{
+  font-family:'Figtree',sans-serif;font-size:11px;font-weight:700;
+  padding:4px 11px;border-radius:6px;border:1px solid var(--border2);
+  background:var(--s3);color:var(--muted);cursor:pointer;transition:all .15s
+}
+.planta-pill:hover{color:var(--text)}
+.planta-pill.active{background:rgba(6,182,212,.12);border-color:var(--cyan);color:var(--cyan)}
+
+.ctx-tag{
+  font-size:10px;font-weight:700;padding:3px 10px;border-radius:5px;
+  background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);color:var(--cyan)
+}
 </style>
 </head>
 <body>
@@ -207,6 +285,7 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
     <button class="tab-btn active" onclick="setTab('combinado',this)">⚡ Score Combinado</button>
     <button class="tab-btn" onclick="setTab('oee',this)">📊 OEE</button>
     <button class="tab-btn" onclick="setTab('kgh',this)">⚖️ Kg/H · Colaborador</button>
+    <button class="tab-btn" onclick="setTab('detalle',this)">🔍 Detalle de Cálculo</button>
   </div>
 
   <!-- COMBINADO -->
@@ -253,26 +332,26 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
     </div>
   </div>
 
-  <!-- KG/H -->
-  <div class="tab-panel" id="tab-kgh">
-    <div class="divider"><h3>🏆 Top 3 · Mayor Avance Kg/H · Colaborador</h3></div>
-    <div class="podio-grid" id="podio-kgh"></div>
-    <div class="divider"><h3>Ranking Completo · Kg/H · Colaborador</h3></div>
-    <div class="card">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-        <div style="display:flex;gap:5px;flex-wrap:wrap" id="filters-kgh">
-          <button class="filter-btn active" onclick="setFiltro('kgh','TODOS',this)">Todos</button>
-          <button class="filter-btn" onclick="setFiltro('kgh','Supercoco',this)" style="--fc:#eab308;--fb:rgba(234,179,8,.12)">Supercoco</button>
-          <button class="filter-btn" onclick="setFiltro('kgh','Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
-          <button class="filter-btn" onclick="setFiltro('kgh','Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
-        </div>
-        <span class="base-info" id="base-info-kgh">📊 Base: 3 meses</span>
+  <!-- DETALLE -->
+  <div class="tab-panel" id="tab-detalle">
+    <div class="divider"><h3>🔍 Detalle de Cálculo</h3></div>
+
+    <!-- Filtros + info contextual -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+      <div style="display:flex;gap:5px;flex-wrap:wrap" id="filters-detalle">
+        <button class="filter-btn active" onclick="setFiltroDetalle('TODOS',this)">Todos</button>
+        <button class="filter-btn" onclick="setFiltroDetalle('Supercoco',this)" style="--fc:#eab308;--fb:rgba(234,179,8,.12)">Supercoco</button>
+        <button class="filter-btn" onclick="setFiltroDetalle('Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
+        <button class="filter-btn" onclick="setFiltroDetalle('Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
       </div>
-      <table class="tbl">
-        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr></thead>
-        <tbody id="tbody-kgh"></tbody>
-      </table>
+      <div id="detalle-context" style="display:flex;gap:6px;flex-wrap:wrap"></div>
     </div>
+
+    <!-- Planta selector pills -->
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:20px" id="planta-pills"></div>
+
+    <!-- Cards de detalle -->
+    <div id="detalle-cards"></div>
   </div>
 
 </div>
@@ -1197,11 +1276,15 @@ function renderAll() {
   renderCombinado('TODOS');
   renderOEE('TODOS');
   renderKGH('TODOS');
+  renderDetalle();
   // reset filtros
   ['combinado','oee','kgh'].forEach(tab=>{
     const f = document.getElementById('filters-'+tab);
     if(f) f.querySelectorAll('.filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   });
+  FILTRO_DETALLE='TODOS'; FILTRO_PLANTA='TODAS';
+  const fd=document.getElementById('filters-detalle');
+  if(fd) fd.querySelectorAll('.filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
 }
 
 /* ════ CONTROLES ════ */
@@ -1277,8 +1360,241 @@ document.addEventListener('click', e => {
   }
 });
 
-/* ════ INIT ════ */
-buildDropdown();
+/* ════ DETALLE ════ */
+let FILTRO_DETALLE  = 'TODOS';
+let FILTRO_PLANTA   = 'TODAS';
+
+function setFiltroDetalle(filtro, btn) {
+  FILTRO_DETALLE = filtro;
+  FILTRO_PLANTA  = 'TODAS';
+  document.getElementById('filters-detalle')
+    .querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDetalle();
+}
+
+function setFiltroPlanta(planta, btn) {
+  FILTRO_PLANTA = planta;
+  document.getElementById('planta-pills')
+    .querySelectorAll('.planta-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDetalle();
+}
+
+function toggleCard(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+function renderDetalle() {
+  const d = DATOS[MES_ACTIVO];
+  if (!d) {
+    document.getElementById('detalle-cards').innerHTML =
+      `<div class="no-data"><div class="icon">📭</div><strong>Sin datos para ${MES_ACTIVO}</strong></div>`;
+    return;
+  }
+
+  const idx   = MESES_ORDEN.indexOf(MES_ACTIVO);
+  const back  = MESES_ORDEN.slice(Math.max(0, idx - N_MESES), idx).filter(m => DATOS[m]);
+  const mejoras = calcMejoras();
+
+  // Context pills
+  const backLabel = back.length > 0
+    ? back.map(m => m.replace(' 20', "'")).join(' · ')
+    : 'Sin meses previos';
+  document.getElementById('detalle-context').innerHTML =
+    `<span class="ctx-tag">📅 ${MES_ACTIVO}</span>
+     <span class="ctx-tag">🔢 N = ${N_MESES} ${N_MESES===1?'mes':'meses'}</span>
+     <span class="ctx-tag">📊 Base: ${backLabel}</span>`;
+
+  // Filter plants
+  let plantas_filtradas = mejoras;
+  if (FILTRO_DETALLE !== 'TODOS')
+    plantas_filtradas = plantas_filtradas.filter(pl => pl.c === FILTRO_DETALLE);
+
+  // Planta sub-pills
+  const pill_container = document.getElementById('planta-pills');
+  pill_container.innerHTML =
+    `<button class="planta-pill ${FILTRO_PLANTA==='TODAS'?'active':''}" onclick="setFiltroPlanta('TODAS',this)">Todas las plantas</button>` +
+    plantas_filtradas.map(pl =>
+      `<button class="planta-pill ${FILTRO_PLANTA===pl.p?'active':''}" onclick="setFiltroPlanta('${pl.p}',this)">${pl.p}</button>`
+    ).join('');
+
+  if (FILTRO_PLANTA !== 'TODAS')
+    plantas_filtradas = plantas_filtradas.filter(pl => pl.p === FILTRO_PLANTA);
+
+  // Sort by score desc
+  const sorted = [...plantas_filtradas].sort((a,b) =>
+    (b.score??-9999) - (a.score??-9999));
+
+  const rankIcons = ['🥇','🥈','🥉'];
+  const rankCls2  = ['gold','silver','bronze'];
+
+  document.getElementById('detalle-cards').innerHTML = sorted.map((pl, gi) => {
+    const pi   = PLANTAS.findIndex(p => p.p === pl.p);
+    const cc   = CENTRO[pl.cc];
+    const globalRank = mejoras.slice().sort((a,b)=>(b.score??-9999)-(a.score??-9999)).findIndex(x=>x.p===pl.p);
+    const rankIcon = rankIcons[globalRank] ?? (globalRank+1);
+    const rankCl   = rankCls2[globalRank] ?? '';
+
+    const scorePos = pl.score !== null && pl.score >= 0;
+    const scoreTxt = pl.score !== null ? fmtPct(pl.score) : '—';
+    const scoreColor = pl.score !== null ? sgn(pl.score) : 'var(--muted)';
+    const scoreBg    = pl.score !== null
+      ? (scorePos ? 'rgba(16,185,129,.12)' : 'rgba(239,68,68,.12)') : 'rgba(255,255,255,.05)';
+
+    // Build base month rows for OEE
+    const oeeBaseRows = back.map(m => {
+      const kgp = DATOS[m].oee[pi][0];
+      const kge = DATOS[m].oee[pi][1];
+      const oee = kgp/kge;
+      return `<div class="detalle-mes-row">
+        <span class="detalle-mes-name">${m.replace(' 20',"'")}</span>
+        <span class="detalle-mes-val">${kgp.toLocaleString()}</span>
+        <span class="detalle-mes-val">${kge.toLocaleString()}</span>
+        <span class="detalle-mes-val">${fmtP(oee)}</span>
+        <span class="detalle-mes-val" style="color:var(--cyan)"></span>
+      </div>`;
+    }).join('');
+
+    const oeeFormula = pl.lb_oee !== null
+      ? `Base = (${back.map(m=>{const k=DATOS[m].oee[pi]; return fmtP(k[0]/k[1]);}).join(' + ')}) / ${back.length}
+= ${fmtP(pl.lb_oee)}
+
+% Mejora = (${fmtP(pl.oee_mes)} − ${fmtP(pl.lb_oee)}) / (${fmtP(pl.meta_oee)} − ${fmtP(pl.lb_oee)})
+= ${pl.mejora_oee !== null ? fmtPct(pl.mejora_oee) : '—'}`
+      : 'Sin meses de base disponibles';
+
+    // Build base month rows for Kg/H
+    const kghBaseRows = back.map(m => {
+      const kgh = DATOS[m].kgh[pi][0];
+      return `<div class="detalle-mes-row">
+        <span class="detalle-mes-name">${m.replace(' 20',"'")}</span>
+        <span class="detalle-mes-val" style="color:var(--light)">${kgh.toFixed(2)}</span>
+        <span class="detalle-mes-val"></span>
+        <span class="detalle-mes-val"></span>
+        <span class="detalle-mes-val"></span>
+      </div>`;
+    }).join('');
+
+    const kghFormula = pl.lb_kgh !== null
+      ? `Base = (${back.map(m=>DATOS[m].kgh[pi][0].toFixed(2)).join(' + ')}) / ${back.length}
+= ${pl.lb_kgh.toFixed(4)}
+
+% Mejora = (${pl.kgh_val.toFixed(2)} − ${pl.lb_kgh.toFixed(4)}) / (${pl.meta_kgh.toFixed(2)} − ${pl.lb_kgh.toFixed(4)})
+= ${pl.mejora_kgh !== null ? fmtPct(pl.mejora_kgh) : '—'}`
+      : 'Sin meses de base disponibles';
+
+    const cardId = `dcard-${pi}`;
+
+    return `<div class="detalle-card open" id="${cardId}">
+      <div class="detalle-card-header" onclick="toggleCard('${cardId}')">
+        <span class="detalle-rank rank-num ${rankCl}">${rankIcon}</span>
+        <span class="detalle-plant-name">${pl.p}</span>
+        <span class="detalle-centro" style="background:${cc.bg};color:${cc.color}">${pl.c}</span>
+        <span class="detalle-score-badge" style="background:${scoreBg};color:${scoreColor}">Score: ${scoreTxt}</span>
+        <span class="detalle-chevron">▲</span>
+      </div>
+
+      <div class="detalle-body">
+        <div class="detalle-grid">
+
+          <!-- OEE SECTION -->
+          <div class="detalle-section">
+            <div class="detalle-section-title">📊 OEE — Eficiencia Global</div>
+
+            <div class="detalle-row">
+              <span class="detalle-row-label">Kg Producidas (mes)</span>
+              <span class="detalle-row-val" style="color:var(--text)">${pl.kgp.toLocaleString()}</span>
+            </div>
+            <div class="detalle-row">
+              <span class="detalle-row-label">Kg Esperadas (mes)</span>
+              <span class="detalle-row-val" style="color:var(--text)">${pl.kge.toLocaleString()}</span>
+            </div>
+            <div class="detalle-row">
+              <span class="detalle-row-label">OEE del mes = KgP/KgE</span>
+              <span class="detalle-row-val" style="color:var(--cyan)">${fmtP(pl.oee_mes)}</span>
+            </div>
+            <div class="detalle-row">
+              <span class="detalle-row-label">Línea Base (N=${N_MESES})</span>
+              <span class="detalle-row-val" style="color:var(--light)">${pl.lb_oee!==null?fmtP(pl.lb_oee):'—'}</span>
+            </div>
+            <div class="detalle-row">
+              <span class="detalle-row-label">Meta OEE</span>
+              <span class="detalle-row-val" style="color:var(--cyan)">${fmtP(pl.meta_oee)}</span>
+            </div>
+            <div class="detalle-row">
+              <span class="detalle-row-label">% Mejora OEE</span>
+              <span class="detalle-row-val" style="color:${pl.mejora_oee!==null?sgn(pl.mejora_oee):'var(--muted)'}">${pl.mejora_oee!==null?fmtPct(pl.mejora_oee):'—'}</span>
+            </div>
+
+            ${back.length > 0 ? `
+            <div class="detalle-meses">
+              <div class="detalle-mes-row header">
+                <span>Mes base</span><span style="text-align:right">KgP</span><span style="text-align:right">KgE</span><span style="text-align:right">OEE</span><span></span>
+              </div>
+              ${oeeBaseRows}
+            </div>` : ''}
+
+            <div class="detalle-formula-box">
+              <div class="detalle-formula-title">Fórmula paso a paso</div>
+              <div class="detalle-formula-line" style="white-space:pre-line">${oeeFormula}</div>
+              <div class="detalle-formula-result" style="color:${pl.mejora_oee!==null?sgn(pl.mejora_oee):'var(--muted)'}">${pl.mejora_oee!==null?fmtPct(pl.mejora_oee):'—'}</div>
+            </div>
+          </div>
+
+          <!-- KG/H SECTION -->
+          <div class="detalle-section">
+            <div class="detalle-section-title">⚖️ Kg/H · Colaborador</div>
+
+            <div class="detalle-row">
+              <span class="detalle-row-label">Kg/H del mes</span>
+              <span class="detalle-row-val" style="color:var(--text)">${pl.kgh_val.toFixed(2)}</span>
+            </div>
+            <div class="detalle-row">
+              <span class="detalle-row-label">Línea Base Kg/H (N=${N_MESES})</span>
+              <span class="detalle-row-val" style="color:var(--light)">${pl.lb_kgh!==null?pl.lb_kgh.toFixed(4):'—'}</span>
+            </div>
+            <div class="detalle-row">
+              <span class="detalle-row-label">Meta Kg/H</span>
+              <span class="detalle-row-val" style="color:var(--cyan)">${pl.meta_kgh.toFixed(2)}</span>
+            </div>
+            <div class="detalle-row">
+              <span class="detalle-row-label">% Mejora Kg/H</span>
+              <span class="detalle-row-val" style="color:${pl.mejora_kgh!==null?sgn(pl.mejora_kgh):'var(--muted)'}">${pl.mejora_kgh!==null?fmtPct(pl.mejora_kgh):'—'}</span>
+            </div>
+
+            ${back.length > 0 ? `
+            <div class="detalle-meses">
+              <div class="detalle-mes-row header">
+                <span>Mes base</span><span style="text-align:right">Kg/H</span><span></span><span></span><span></span>
+              </div>
+              ${kghBaseRows}
+            </div>` : ''}
+
+            <div class="detalle-formula-box">
+              <div class="detalle-formula-title">Fórmula paso a paso</div>
+              <div class="detalle-formula-line" style="white-space:pre-line">${kghFormula}</div>
+              <div class="detalle-formula-result" style="color:${pl.mejora_kgh!==null?sgn(pl.mejora_kgh):'var(--muted)'}">${pl.mejora_kgh!==null?fmtPct(pl.mejora_kgh):'—'}</div>
+            </div>
+
+            <!-- Score final -->
+            <div class="detalle-formula-box" style="margin-top:14px;background:rgba(${scorePos?'16,185,129':'239,68,68'},.06);border-color:rgba(${scorePos?'16,185,129':'239,68,68'},.2)">
+              <div class="detalle-formula-title" style="color:${scoreColor}">⚡ Score Combinado</div>
+              <div class="detalle-formula-line">
+                Score = % Mej. OEE × 60% + % Mej. Kg/H × 40%<br>
+                = ${pl.mejora_oee!==null?fmtPct(pl.mejora_oee):'—'} × 0.60 + ${pl.mejora_kgh!==null?fmtPct(pl.mejora_kgh):'—'} × 0.40
+              </div>
+              <div class="detalle-formula-result" style="color:${scoreColor}">${scoreTxt}</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 updateBaseInfo(3);
 renderAll();
 </script>
