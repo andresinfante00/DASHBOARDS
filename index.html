@@ -238,6 +238,31 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
   font-size:10px;font-weight:700;padding:3px 10px;border-radius:5px;
   background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);color:var(--cyan)
 }
+
+/* ── Modal planta ─────────────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:#0e1422;border:1px solid #253854;border-radius:18px;width:min(780px,95vw);max-height:88vh;overflow-y:auto;padding:28px 28px 32px;position:relative;transform:translateY(20px);transition:transform .25s}
+.modal-overlay.open .modal-box{transform:translateY(0)}
+.modal-close{position:absolute;top:16px;right:18px;font-size:18px;color:var(--muted);cursor:pointer;background:none;border:none;line-height:1}
+.modal-close:hover{color:var(--text)}
+.modal-title{font-size:18px;font-weight:900;letter-spacing:-.01em;margin-bottom:4px}
+.modal-sub{font-size:11px;color:var(--muted);margin-bottom:20px}
+.modal-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+.modal-kpi{background:#131b2e;border:1px solid #1e2d45;border-radius:10px;padding:12px 14px}
+.modal-kpi-val{font-size:17px;font-weight:800;font-family:'JetBrains Mono',monospace;margin-bottom:2px}
+.modal-kpi-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.modal-chart-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.modal-chart-wrap{background:#080b12;border:1px solid #1e2d45;border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.chart-svg{width:100%;overflow:visible}
+/* Filtro sincronizado highlight */
+.filter-btn.synced{box-shadow:0 0 0 1px var(--fc,var(--cyan))}
+/* Fila tabla clicable */
+.tbl tbody tr{cursor:pointer}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.03)}
+.tbl tbody tr td .plant-link{color:var(--text);text-decoration:none;font-weight:700}
+.tbl tbody tr td .plant-link:hover{color:var(--cyan);text-decoration:underline}
+
 </style>
 </head>
 <body>
@@ -380,6 +405,25 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
     <!-- Cards de detalle -->
     <div id="detalle-cards"></div>
   </div>
+
+
+<!-- MODAL PLANTA -->
+<div class="modal-overlay" id="plantaModal" onclick="closePlantaModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('plantaModal').classList.remove('open')">✕</button>
+    <div class="modal-title" id="modal-nombre"></div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div class="modal-kpis" id="modal-kpis"></div>
+    <div class="modal-chart-wrap">
+      <div class="modal-chart-title">OEE mensual — % Eficiencia Global</div>
+      <svg class="chart-svg" id="chart-oee" height="80"></svg>
+    </div>
+    <div class="modal-chart-wrap">
+      <div class="modal-chart-title">Kg/H Colaborador mensual</div>
+      <svg class="chart-svg" id="chart-kgh" height="80"></svg>
+    </div>
+  </div>
+</div>
 
 </div>
 <script>
@@ -938,7 +982,7 @@ function renderOEE(filtro='TODOS') {
     const isPos = d.mejora_oee >= 0;
     return `<tr>
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
-      <td><strong>${d.p}</strong></td>
+      <td><span class="plant-link" onclick="openPlantaModal('${d.p}')">${d.p}</span></td>
       <td>${pill(d)}</td>
       <td class="mono" style="color:var(--light)">${d.lb_oee!==null?fmtP(d.lb_oee):'—'}</td>
       <td class="mono" style="color:${sgn(d.oee_mes-(d.lb_oee||d.oee_mes))};font-weight:700">${fmtP(d.oee_mes)}</td>
@@ -967,7 +1011,7 @@ function renderKGH(filtro='TODOS') {
     const isPos = d.mejora_kgh >= 0;
     return `<tr>
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
-      <td><strong>${d.p}</strong></td>
+      <td><span class="plant-link" onclick="openPlantaModal('${d.p}')">${d.p}</span></td>
       <td>${pill(d)}</td>
       <td class="mono" style="color:var(--light)">${d.lb_kgh!==null?fmtN(d.lb_kgh):'—'}</td>
       <td class="mono" style="color:${sgn(d.kgh_val-(d.lb_kgh||d.kgh_val))};font-weight:700">${fmtN(d.kgh_val)}</td>
@@ -984,14 +1028,18 @@ function renderKGH(filtro='TODOS') {
 }
 
 function renderAll() {
-  renderCombinado('TODOS');
-  renderOEE('TODOS');
-  renderKGH('TODOS');
+  renderCombinado(FILTRO_GLOBAL);
+  renderOEE(FILTRO_GLOBAL);
+  renderKGH(FILTRO_GLOBAL);
   renderDetalle();
-  // reset filtros
+  // sync filter buttons
   ['combinado','oee','kgh'].forEach(tab=>{
     const f = document.getElementById('filters-'+tab);
-    if(f) f.querySelectorAll('.filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+    if (!f) return;
+    f.querySelectorAll('.filter-btn').forEach(b => {
+      const bFiltro = b.getAttribute('onclick').match(/'([^']+)',this/)?.[1] ?? '';
+      b.classList.toggle('active', bFiltro === FILTRO_GLOBAL);
+    });
   });
   FILTRO_DETALLE='TODOS'; FILTRO_PLANTA='TODAS';
   const fd=document.getElementById('filters-detalle');
@@ -1008,13 +1056,22 @@ function setN(n, btn) {
   renderAll();
 }
 
+let FILTRO_GLOBAL = 'TODOS';
+
 function setFiltro(tab, filtro, btn) {
-  document.getElementById('filters-'+tab).querySelectorAll('.filter-btn')
-    .forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  if(tab==='combinado') renderCombinado(filtro);
-  if(tab==='oee')       renderOEE(filtro);
-  if(tab==='kgh')       renderKGH(filtro);
+  FILTRO_GLOBAL = filtro;
+  // Sync all tab filter buttons
+  ['combinado','oee','kgh'].forEach(t => {
+    const container = document.getElementById('filters-'+t);
+    if (!container) return;
+    container.querySelectorAll('.filter-btn').forEach(b => {
+      const bFiltro = b.getAttribute('onclick').match(/'([^']+)',this/)?.[1] ?? '';
+      b.classList.toggle('active', bFiltro === filtro);
+    });
+  });
+  renderCombinado(filtro);
+  renderOEE(filtro);
+  renderKGH(filtro);
 }
 
 function setTab(id, btn) {
@@ -1328,6 +1385,109 @@ function renderDetalle() {
 }
 
 updateBaseInfo(3);
+/* ════ MODAL PLANTA ════ */
+function openPlantaModal(plantaNombre) {
+  const pi = PLANTAS.findIndex(p => p.p === plantaNombre);
+  if (pi < 0) return;
+  const pl = PLANTAS[pi];
+  const cc = CENTRO[pl.cc];
+  const mejoras = calcMejoras();
+  const d = mejoras[pi];
+
+  document.getElementById('modal-nombre').textContent = plantaNombre;
+  document.getElementById('modal-sub').textContent = pl.c + ' · Mes activo: ' + MES_ACTIVO;
+
+  const fmtMejora = v => v !== null ? (v>=0?'↑ ':'↓ ') + fmtPct(v) : '—';
+  const colorMejora = v => v !== null ? sgn(v) : 'var(--muted)';
+
+  document.getElementById('modal-kpis').innerHTML = `
+    <div class="modal-kpi">
+      <div class="modal-kpi-val" style="color:var(--cyan)">${fmtP(d.oee_mes)}</div>
+      <div class="modal-kpi-lbl">OEE del mes</div>
+    </div>
+    <div class="modal-kpi">
+      <div class="modal-kpi-val" style="color:var(--light)">${d.lb_oee!==null?fmtP(d.lb_oee):'—'}</div>
+      <div class="modal-kpi-lbl">Línea Base OEE</div>
+    </div>
+    <div class="modal-kpi">
+      <div class="modal-kpi-val" style="color:${colorMejora(d.mejora_oee)}">${fmtMejora(d.mejora_oee)}</div>
+      <div class="modal-kpi-lbl">Mejora OEE</div>
+    </div>
+    <div class="modal-kpi">
+      <div class="modal-kpi-val" style="color:${d.score!==null?sgn(d.score):'var(--muted)'}">${d.score!==null?fmtPct(d.score):'—'}</div>
+      <div class="modal-kpi-lbl">Score combinado</div>
+    </div>
+    <div class="modal-kpi">
+      <div class="modal-kpi-val" style="color:var(--cyan)">${fmtN(d.kgh_val)}</div>
+      <div class="modal-kpi-lbl">Kg/H del mes</div>
+    </div>
+    <div class="modal-kpi">
+      <div class="modal-kpi-val" style="color:var(--light)">${d.lb_kgh!==null?fmtN(d.lb_kgh):'—'}</div>
+      <div class="modal-kpi-lbl">Línea Base Kg/H</div>
+    </div>
+    <div class="modal-kpi">
+      <div class="modal-kpi-val" style="color:${colorMejora(d.mejora_kgh)}">${fmtMejora(d.mejora_kgh)}</div>
+      <div class="modal-kpi-lbl">Mejora Kg/H</div>
+    </div>
+    <div class="modal-kpi">
+      <div class="modal-kpi-val" style="color:var(--cyan)">${fmtP(d.meta_oee)}</div>
+      <div class="modal-kpi-lbl">Meta OEE</div>
+    </div>`;
+
+  // Build OEE sparkline
+  const mesesConDatos = MESES_ORDEN.filter(m => DATOS[m]);
+  const oeeVals = mesesConDatos.map(m => {
+    const [kgp,kge] = DATOS[m].oee[pi];
+    return kge > 0 ? kgp/kge : null;
+  }).filter(v => v !== null);
+  const kghVals = mesesConDatos.map(m => DATOS[m].kgh[pi][0]).filter(v => v > 0);
+
+  drawSparkline('chart-oee', mesesConDatos.filter((_,i) => {
+    const [kgp,kge] = DATOS[mesesConDatos[i]].oee[pi];
+    return kge > 0;
+  }), oeeVals, cc.color, '%', v => (v*100).toFixed(1)+'%');
+
+  drawSparkline('chart-kgh', mesesConDatos.filter(m => DATOS[m].kgh[pi][0] > 0),
+    kghVals, '#06b6d4', '', v => v.toFixed(1));
+
+  document.getElementById('plantaModal').classList.add('open');
+}
+
+function drawSparkline(svgId, labels, vals, color, unit, fmt) {
+  const svg = document.getElementById(svgId);
+  if (!vals.length) { svg.innerHTML = '<text x="10" y="40" fill="#5a6a85" font-size="11">Sin datos</text>'; return; }
+  const W = svg.parentElement.clientWidth - 32 || 680;
+  const H = 80;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const min = Math.min(...vals) * 0.92;
+  const max = Math.max(...vals) * 1.08;
+  const n = vals.length;
+  const px = i => (i / (n-1||1)) * (W - 40) + 20;
+  const py = v => H - 14 - ((v - min) / (max - min || 1)) * (H - 28);
+  const pts = vals.map((v,i) => `${px(i)},${py(v)}`).join(' ');
+  const fillPts = `${px(0)},${H} ` + pts + ` ${px(n-1)},${H}`;
+  const gradId = svgId + '-grad';
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${color}" stop-opacity=".25"/>
+        <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <polygon points="${fillPts}" fill="url(#${gradId})"/>
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>
+    ${vals.map((v,i) => `
+      <circle cx="${px(i)}" cy="${py(v)}" r="3" fill="${color}"/>
+      <text x="${px(i)}" y="${py(v)-7}" text-anchor="middle" font-size="9" fill="${color}" font-family="JetBrains Mono,monospace">${fmt(v)}</text>
+      <text x="${px(i)}" y="${H-2}" text-anchor="middle" font-size="8" fill="#5a6a85">${labels[i]?.replace(' 20',"'")??''}</text>
+    `).join('')}`;
+}
+
+function closePlantaModal(e) {
+  if (e.target === document.getElementById('plantaModal'))
+    document.getElementById('plantaModal').classList.remove('open');
+}
+
 renderAll();
 </script>
 </body>
