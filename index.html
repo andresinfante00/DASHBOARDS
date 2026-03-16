@@ -335,6 +335,28 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
     </div>
   </div>
 
+  <!-- KG/H COLABORADOR -->
+  <div class="tab-panel" id="tab-kgh">
+    <div class="divider"><h3>🏆 Top 3 · Mayor Avance Kg/H Colaborador</h3></div>
+    <div class="podio-grid" id="podio-kgh"></div>
+    <div class="divider"><h3>Ranking Completo · Kg/H Colaborador</h3></div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <div style="display:flex;gap:5px;flex-wrap:wrap" id="filters-kgh">
+          <button class="filter-btn active" onclick="setFiltro('kgh','TODOS',this)">Todos</button>
+          <button class="filter-btn" onclick="setFiltro('kgh','Supercoco',this)" style="--fc:#eab308;--fb:rgba(234,179,8,.12)">Supercoco</button>
+          <button class="filter-btn" onclick="setFiltro('kgh','Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
+          <button class="filter-btn" onclick="setFiltro('kgh','Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
+        </div>
+        <span class="base-info" id="base-info-kgh">📊 Base: 3 meses</span>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr></thead>
+        <tbody id="tbody-kgh"></tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- DETALLE -->
   <div class="tab-panel" id="tab-detalle">
     <div class="divider"><h3>🔍 Detalle de Cálculo</h3></div>
