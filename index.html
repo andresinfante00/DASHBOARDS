@@ -956,9 +956,9 @@ function renderCombinado(filtro='TODOS') {
   document.getElementById('tbody-combinado').innerHTML = rows.map((d,i)=>{
     const bw = maxS>0 ? Math.min(100,(Math.abs(d.score)/maxS*100)).toFixed(1) : '0';
     const bc = d.score>=0?'rgba(16,185,129,.75)':'rgba(239,68,68,.75)';
-    return `<tr>
+    return `<tr onclick="openPlantaModal('${d.p}')" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
-      <td><strong>${d.p}</strong></td>
+      <td><span class="plant-link" onclick="openPlantaModal('${d.p}')">${d.p}</span></td>
       <td>${pill(d)}</td>
       <td class="mono" style="color:${d.mejora_oee!==null?sgn(d.mejora_oee):'var(--muted)'}">${d.mejora_oee!==null?fmtPct(d.mejora_oee):'—'}</td>
       <td class="mono" style="color:${d.mejora_kgh!==null?sgn(d.mejora_kgh):'var(--muted)'}">${d.mejora_kgh!==null?fmtPct(d.mejora_kgh):'—'}</td>
@@ -980,9 +980,9 @@ function renderOEE(filtro='TODOS') {
   document.getElementById('tbody-oee').innerHTML = rows.map((d,i)=>{
     const b = miniBar(d.oee_mes, d.lb_oee, d.meta_oee, scale);
     const isPos = d.mejora_oee >= 0;
-    return `<tr>
+    return `<tr onclick="openPlantaModal('${d.p}')" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
-      <td><span class="plant-link" onclick="openPlantaModal('${d.p}')">${d.p}</span></td>
+      <td><strong>${d.p}</strong></td>
       <td>${pill(d)}</td>
       <td class="mono" style="color:var(--light)">${d.lb_oee!==null?fmtP(d.lb_oee):'—'}</td>
       <td class="mono" style="color:${sgn(d.oee_mes-(d.lb_oee||d.oee_mes))};font-weight:700">${fmtP(d.oee_mes)}</td>
@@ -1009,9 +1009,9 @@ function renderKGH(filtro='TODOS') {
   document.getElementById('tbody-kgh').innerHTML = rows.map((d,i)=>{
     const b = miniBar(d.kgh_val, d.lb_kgh, d.meta_kgh, scale);
     const isPos = d.mejora_kgh >= 0;
-    return `<tr>
+    return `<tr onclick="openPlantaModal('${d.p}')" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
-      <td><span class="plant-link" onclick="openPlantaModal('${d.p}')">${d.p}</span></td>
+      <td><strong>${d.p}</strong></td>
       <td>${pill(d)}</td>
       <td class="mono" style="color:var(--light)">${d.lb_kgh!==null?fmtN(d.lb_kgh):'—'}</td>
       <td class="mono" style="color:${sgn(d.kgh_val-(d.lb_kgh||d.kgh_val))};font-weight:700">${fmtN(d.kgh_val)}</td>
