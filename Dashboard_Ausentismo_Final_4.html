@@ -18,9 +18,9 @@
   --text:    #dde4f0;
   --muted:   #5a6a85;
   --light:   #8899b4;
-  --B:       #f59e0b;   /* BIANCHI  */
-  --S:       #3b82f6;   /* SUPER    */
-  --T:       #10b981;   /* TRULULU  */
+  --B:       #3b82f6;   /* BIANCHI  */
+  --S:       #FFD700;   /* SUPER    */
+  --T:       #EC4899;   /* TRULULU  */
   --red:     #ef4444;
   --orange:  #f97316;
   --amber:   #f59e0b;
@@ -316,13 +316,16 @@ aside{
   .ph-side{width:100%;padding-left:0;padding-top:16px;flex-direction:row;gap:24px;}
 }
 
-/* ── Horas Mes ── */
 .hm-btn{padding:6px 14px;border-radius:8px;border:1px solid var(--border);
   background:var(--s2);color:var(--light);cursor:pointer;
   font-family:'Figtree',sans-serif;font-size:12px;font-weight:700;
   transition:all .15s;letter-spacing:.02em;}
 .hm-btn:hover{border-color:var(--border2);color:var(--text);}
 .hm-btn-active{background:var(--s3);border-color:#06b6d4;color:#06b6d4;}
+
+/* ── Cross-filter cursors ── */
+canvas { cursor: pointer; }
+.centro-card { transition: opacity .2s, transform .25s !important; }
 </style>
 </head>
 <body>
@@ -333,7 +336,7 @@ aside{
 ══════════════════════════════════════ -->
 <aside>
   <div class="aside-logo">
-    <div class="brand">Producción 2025</div>
+    <div class="brand">Producción 2025 - 2026</div>
     <h2>Ausentismo<br>Centros & Plantas</h2>
   </div>
 
@@ -347,11 +350,11 @@ aside{
   </div>
 
   <div class="nav-group" id="nav-bianchi-group">
-    <div class="nav-group-label" style="color:var(--B)">● BIANCHI · 7.21%</div>
+    <div class="nav-group-label" style="color:var(--B)">● BIANCHI · 6.69%</div>
     <button class="nav-item" onclick="goPage('centro-BIANCHI',this)" id="nav-centro-BIANCHI">
       <span class="nav-dot" style="background:var(--B)"></span>
       Resumen Centro
-      <span class="nav-badge" style="background:rgba(245,158,11,.15);color:var(--B)">7.21%</span>
+      <span class="nav-badge" style="background:rgba(59,130,246,.15);color:var(--B)">6.69%</span>
     </button>
     <div class="nav-sub" id="nav-sub-BIANCHI"></div>
   </div>
@@ -361,17 +364,17 @@ aside{
     <button class="nav-item" onclick="goPage('centro-SUPER',this)" id="nav-centro-SUPER">
       <span class="nav-dot" style="background:var(--S)"></span>
       Resumen Centro
-      <span class="nav-badge" style="background:rgba(59,130,246,.15);color:var(--S)">6.32%</span>
+      <span class="nav-badge" style="background:rgba(255,215,0,.15);color:var(--S)">5.94%</span>
     </button>
     <div class="nav-sub" id="nav-sub-SUPER"></div>
   </div>
 
   <div class="nav-group" id="nav-trululu-group">
-    <div class="nav-group-label" style="color:var(--T)">● TRULULU · 7.69%</div>
+    <div class="nav-group-label" style="color:var(--T)">● TRULULU · 7.11%</div>
     <button class="nav-item" onclick="goPage('centro-TRULULU',this)" id="nav-centro-TRULULU">
       <span class="nav-dot" style="background:var(--T)"></span>
       Resumen Centro
-      <span class="nav-badge" style="background:rgba(16,185,129,.15);color:var(--T)">7.69%</span>
+      <span class="nav-badge" style="background:rgba(236,72,153,.15);color:var(--T)">7.11%</span>
     </button>
     <div class="nav-sub" id="nav-sub-TRULULU"></div>
   </div>
@@ -392,7 +395,6 @@ aside{
       <span class="nav-badge" style="background:rgba(139,92,246,.15);color:#8b5cf6">4 rangos</span>
     </button>
   </div>
-
   <div class="nav-group">
     <div class="nav-group-label" style="color:#06b6d4">● Horas Laboradas</div>
     <button class="nav-item" onclick="goPage('horas-mes',this)" id="nav-horas-mes">
@@ -401,15 +403,6 @@ aside{
       <span class="nav-badge" style="background:rgba(6,182,212,.15);color:#06b6d4">14 meses</span>
     </button>
   </div>
-
-    <div class="nav-group">
-    <button class="nav-item" onclick="goPage('glosario',this)" id="nav-glosario">
-      <span class="nav-dot" style="background:#94a3b8"></span>
-      Glosario de Métricas
-      <span class="nav-badge" style="background:rgba(148,163,184,.15);color:#94a3b8">18 indicadores</span>
-    </button>
-  </div>
-
   <div class="nav-group">
     <div class="nav-group-label" style="color:#e879f9">● Procesos</div>
     <button class="nav-item" onclick="goPage('mogul',this)" id="nav-mogul">
@@ -442,6 +435,10 @@ aside{
   <div class="page-header">
     <div class="page-eyebrow" style="color:var(--muted)"></div>
     <div class="page-title">Comparación de los 3 Centros Productivos</div>
+    <div id="ov-filter-bar" style="display:none;margin-top:10px;padding:8px 14px;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);border-radius:8px;font-size:12px;color:#dde4f0;display:flex;align-items:center;gap:10px;">
+      <span id="ov-filter-txt">Filtrando por centro</span>
+      <button onclick="ovClearFilter()" style="padding:3px 10px;border-radius:5px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#dde4f0;font-size:11px;cursor:pointer;font-family:Figtree;">✕ Quitar filtro</button>
+    </div>
     
   </div>
 
@@ -548,6 +545,16 @@ aside{
   
 
 
+  <!-- Índice mensual compañía + centros -->
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>📉 Índice de Ausentismo Mensual — Compañía & Centros</h3>
+      <div class="sub">Evolución mes a mes Ene 2025–Feb 2026 · línea punteada = índice global empresa (6.49%)</div>
+    </div>
+    <div class="chart-wrap" style="height:300px"><canvas id="ov-ind-mensual"></canvas></div>
+  </div>
+
+
   <div class="divider"><h3>👤 Detalle Individual de Colaboradores con Ausentismo</h3></div>
   <div class="card">
     <div class="card-header">
@@ -562,6 +569,638 @@ aside{
 <div id="dynamic-pages"></div>
 
 
+
+
+
+
+
+
+
+
+<!-- ══ PÁGINA: PROC-PERIFERICOS ══ -->
+<div id="page-proc-PERIFERICOS" class="page">
+  <div class="page-header">
+    <div class="page-eyebrow" style="color:#f97316">Ausentismo por Proceso</div>
+    <div class="page-title">🔩 Periféricos</div>
+    <div class="page-sub">Período Ene 2025–Feb 2026 · Índice de ausentismo, causas principales y comportamiento mensual</div>
+    <div id="proc-filter-PERIFERICOS" style="margin-top:10px;font-size:12px;color:#5a6a85;font-style:italic;">💡 Clic en una línea del gráfico mensual para resaltar ese centro en todos los gráficos</div>
+  </div>
+
+  <div class="kpi-grid g4" style="margin-bottom:24px">
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">4.70%</div>
+      <div class="kpi-label">Índice Ausentismo</div>
+      <div class="kpi-sub">✓ Bajo promedio empresa · 0.72× empresa</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#f97316"></div>
+      <div class="kpi-val" style="color:var(--text);font-size:28px">2,117</div>
+      <div class="kpi-label">Días Perdidos</div>
+      <div class="kpi-sub">Total período</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#3b82f6"></div>
+      <div class="kpi-val" style="color:#3b82f6;font-size:28px">325</div>
+      <div class="kpi-label">Personas con Ausentismo</div>
+      <div class="kpi-sub">60.1% del proceso</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">6.5</div>
+      <div class="kpi-label">Días Prom / Persona</div>
+      <div class="kpi-sub">Promedio de ausencia individual</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-header">
+        <h3>📈 Índice Mensual de Ausentismo</h3>
+        <div class="sub">Evolución mes a mes por centro · línea = empresa 6.49%</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-ind-PERIFERICOS"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>🔍 Causas de Ausentismo</h3>
+        <div class="sub">Distribución de 2,117 días perdidos por motivo</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-causas-PERIFERICOS"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>📊 Días Perdidos por Mes — por Centro</h3>
+      <div class="sub">Barras apiladas · SUPERCOCO, BIANCHI y TRULULU</div>
+    </div>
+    <div class="chart-wrap" style="height:260px"><canvas id="proc-aus-PERIFERICOS"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>🏢 Comparativo por Centro</h3>
+      <div class="sub">Indicadores de ausentismo desagregados por centro productivo</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th>Centro</th><th>Colaboradores</th><th>Días Perdidos</th>
+          <th>Días Trabajados</th><th>Índice</th><th>Prom Días/Pers</th>
+        </tr></thead>
+        <tbody><tr><td><strong style="color:#FFD700">SUPERCOCO</strong></td><td class="mono">214</td><td class="mono" style="color:#ef4444">685</td><td class="mono">18,115</td><td><span class="pill pg">3.78%</span></td><td class="mono">5.5</td></tr><tr><td><strong style="color:#3b82f6">BIANCHI</strong></td><td class="mono">168</td><td class="mono" style="color:#ef4444">606</td><td class="mono">12,830</td><td><span class="pill pg">4.72%</span></td><td class="mono">6.7</td></tr><tr><td><strong style="color:#ec4899">TRULULU</strong></td><td class="mono">170</td><td class="mono" style="color:#ef4444">826</td><td class="mono">14,117</td><td><span class="pill pg">5.85%</span></td><td class="mono">7.4</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PÁGINA: PROC-UNIPLAST ══ -->
+<div id="page-proc-UNIPLAST" class="page">
+  <div class="page-header">
+    <div class="page-eyebrow" style="color:#3b82f6">Ausentismo por Proceso</div>
+    <div class="page-title">⚙️ Uniplast</div>
+    <div class="page-sub">Período Ene 2025–Feb 2026 · Índice de ausentismo, causas principales y comportamiento mensual</div>
+    <div id="proc-filter-UNIPLAST" style="margin-top:10px;font-size:12px;color:#5a6a85;font-style:italic;">💡 Clic en una línea del gráfico mensual para resaltar ese centro en todos los gráficos</div>
+  </div>
+
+  <div class="kpi-grid g4" style="margin-bottom:24px">
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">4.81%</div>
+      <div class="kpi-label">Índice Ausentismo</div>
+      <div class="kpi-sub">✓ Bajo promedio empresa · 0.74× empresa</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#3b82f6"></div>
+      <div class="kpi-val" style="color:var(--text);font-size:28px">1,930</div>
+      <div class="kpi-label">Días Perdidos</div>
+      <div class="kpi-sub">Total período</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#3b82f6"></div>
+      <div class="kpi-val" style="color:#3b82f6;font-size:28px">292</div>
+      <div class="kpi-label">Personas con Ausentismo</div>
+      <div class="kpi-sub">58.3% del proceso</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">6.6</div>
+      <div class="kpi-label">Días Prom / Persona</div>
+      <div class="kpi-sub">Promedio de ausencia individual</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-header">
+        <h3>📈 Índice Mensual de Ausentismo</h3>
+        <div class="sub">Evolución mes a mes por centro · línea = empresa 6.49%</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-ind-UNIPLAST"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>🔍 Causas de Ausentismo</h3>
+        <div class="sub">Distribución de 1,930 días perdidos por motivo</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-causas-UNIPLAST"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>📊 Días Perdidos por Mes — por Centro</h3>
+      <div class="sub">Barras apiladas · SUPERCOCO, BIANCHI y TRULULU</div>
+    </div>
+    <div class="chart-wrap" style="height:260px"><canvas id="proc-aus-UNIPLAST"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>🏢 Comparativo por Centro</h3>
+      <div class="sub">Indicadores de ausentismo desagregados por centro productivo</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th>Centro</th><th>Colaboradores</th><th>Días Perdidos</th>
+          <th>Días Trabajados</th><th>Índice</th><th>Prom Días/Pers</th>
+        </tr></thead>
+        <tbody><tr><td><strong style="color:#FFD700">SUPERCOCO</strong></td><td class="mono">424</td><td class="mono" style="color:#ef4444">1,571</td><td class="mono">31,367</td><td><span class="pill pg">5.01%</span></td><td class="mono">6.5</td></tr><tr><td><strong style="color:#3b82f6">BIANCHI</strong></td><td class="mono">81</td><td class="mono" style="color:#ef4444">359</td><td class="mono">8,751</td><td><span class="pill pg">4.10%</span></td><td class="mono">6.6</td></tr><tr><td><strong style="color:#ec4899">TRULULU</strong></td><td class="mono">0</td><td class="mono" style="color:#ef4444">0</td><td class="mono">0</td><td><span class="pill pg">0.00%</span></td><td class="mono">0</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PÁGINA: PROC-BARRAS ══ -->
+<div id="page-proc-BARRAS" class="page">
+  <div class="page-header">
+    <div class="page-eyebrow" style="color:#f59e0b">Ausentismo por Proceso</div>
+    <div class="page-title">🍫 Barras</div>
+    <div class="page-sub">Período Ene 2025–Feb 2026 · Índice de ausentismo, causas principales y comportamiento mensual</div>
+    <div id="proc-filter-BARRAS" style="margin-top:10px;font-size:12px;color:#5a6a85;font-style:italic;">💡 Clic en una línea del gráfico mensual para resaltar ese centro en todos los gráficos</div>
+  </div>
+
+  <div class="kpi-grid g4" style="margin-bottom:24px">
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">3.62%</div>
+      <div class="kpi-label">Índice Ausentismo</div>
+      <div class="kpi-sub">✓ Bajo promedio empresa · 0.56× empresa</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#f59e0b"></div>
+      <div class="kpi-val" style="color:var(--text);font-size:28px">1,075</div>
+      <div class="kpi-label">Días Perdidos</div>
+      <div class="kpi-sub">Total período</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#3b82f6"></div>
+      <div class="kpi-val" style="color:#3b82f6;font-size:28px">221</div>
+      <div class="kpi-label">Personas con Ausentismo</div>
+      <div class="kpi-sub">53.5% del proceso</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">4.9</div>
+      <div class="kpi-label">Días Prom / Persona</div>
+      <div class="kpi-sub">Promedio de ausencia individual</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-header">
+        <h3>📈 Índice Mensual de Ausentismo</h3>
+        <div class="sub">Evolución mes a mes por centro · línea = empresa 6.49%</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-ind-BARRAS"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>🔍 Causas de Ausentismo</h3>
+        <div class="sub">Distribución de 1,075 días perdidos por motivo</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-causas-BARRAS"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>📊 Días Perdidos por Mes — por Centro</h3>
+      <div class="sub">Barras apiladas · SUPERCOCO, BIANCHI y TRULULU</div>
+    </div>
+    <div class="chart-wrap" style="height:260px"><canvas id="proc-aus-BARRAS"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>🏢 Comparativo por Centro</h3>
+      <div class="sub">Indicadores de ausentismo desagregados por centro productivo</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th>Centro</th><th>Colaboradores</th><th>Días Perdidos</th>
+          <th>Días Trabajados</th><th>Índice</th><th>Prom Días/Pers</th>
+        </tr></thead>
+        <tbody><tr><td><strong style="color:#FFD700">SUPERCOCO</strong></td><td class="mono">290</td><td class="mono" style="color:#ef4444">798</td><td class="mono">20,687</td><td><span class="pill pg">3.86%</span></td><td class="mono">5.0</td></tr><tr><td><strong style="color:#3b82f6">BIANCHI</strong></td><td class="mono">45</td><td class="mono" style="color:#ef4444">125</td><td class="mono">3,685</td><td><span class="pill pg">3.39%</span></td><td class="mono">5.4</td></tr><tr><td><strong style="color:#ec4899">TRULULU</strong></td><td class="mono">78</td><td class="mono" style="color:#ef4444">152</td><td class="mono">5,342</td><td><span class="pill pg">2.85%</span></td><td class="mono">4.1</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PÁGINA: PROC-BOMBOS ══ -->
+<div id="page-proc-BOMBOS" class="page">
+  <div class="page-header">
+    <div class="page-eyebrow" style="color:#10b981">Ausentismo por Proceso</div>
+    <div class="page-title">🥁 Bombos</div>
+    <div class="page-sub">Período Ene 2025–Feb 2026 · Índice de ausentismo, causas principales y comportamiento mensual</div>
+    <div id="proc-filter-BOMBOS" style="margin-top:10px;font-size:12px;color:#5a6a85;font-style:italic;">💡 Clic en una línea del gráfico mensual para resaltar ese centro en todos los gráficos</div>
+  </div>
+
+  <div class="kpi-grid g4" style="margin-bottom:24px">
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">4.37%</div>
+      <div class="kpi-label">Índice Ausentismo</div>
+      <div class="kpi-sub">✓ Bajo promedio empresa · 0.67× empresa</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:var(--text);font-size:28px">877</div>
+      <div class="kpi-label">Días Perdidos</div>
+      <div class="kpi-sub">Total período</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#3b82f6"></div>
+      <div class="kpi-val" style="color:#3b82f6;font-size:28px">167</div>
+      <div class="kpi-label">Personas con Ausentismo</div>
+      <div class="kpi-sub">63.7% del proceso</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">5.3</div>
+      <div class="kpi-label">Días Prom / Persona</div>
+      <div class="kpi-sub">Promedio de ausencia individual</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-header">
+        <h3>📈 Índice Mensual de Ausentismo</h3>
+        <div class="sub">Evolución mes a mes por centro · línea = empresa 6.49%</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-ind-BOMBOS"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>🔍 Causas de Ausentismo</h3>
+        <div class="sub">Distribución de 877 días perdidos por motivo</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-causas-BOMBOS"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>📊 Días Perdidos por Mes — por Centro</h3>
+      <div class="sub">Barras apiladas · SUPERCOCO, BIANCHI y TRULULU</div>
+    </div>
+    <div class="chart-wrap" style="height:260px"><canvas id="proc-aus-BOMBOS"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>🏢 Comparativo por Centro</h3>
+      <div class="sub">Indicadores de ausentismo desagregados por centro productivo</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th>Centro</th><th>Colaboradores</th><th>Días Perdidos</th>
+          <th>Días Trabajados</th><th>Índice</th><th>Prom Días/Pers</th>
+        </tr></thead>
+        <tbody><tr><td><strong style="color:#FFD700">SUPERCOCO</strong></td><td class="mono">78</td><td class="mono" style="color:#ef4444">242</td><td class="mono">6,826</td><td><span class="pill pg">3.55%</span></td><td class="mono">4.3</td></tr><tr><td><strong style="color:#3b82f6">BIANCHI</strong></td><td class="mono">0</td><td class="mono" style="color:#ef4444">0</td><td class="mono">0</td><td><span class="pill pg">0.00%</span></td><td class="mono">0</td></tr><tr><td><strong style="color:#ec4899">TRULULU</strong></td><td class="mono">185</td><td class="mono" style="color:#ef4444">635</td><td class="mono">13,227</td><td><span class="pill pg">4.80%</span></td><td class="mono">5.7</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PÁGINA: PROC-LINEAS_MANUALES ══ -->
+<div id="page-proc-LINEAS_MANUALES" class="page">
+  <div class="page-header">
+    <div class="page-eyebrow" style="color:#8b5cf6">Ausentismo por Proceso</div>
+    <div class="page-title">🤲 Líneas Manuales</div>
+    <div class="page-sub">Período Ene 2025–Feb 2026 · Índice de ausentismo, causas principales y comportamiento mensual</div>
+    <div id="proc-filter-LINEAS_MANUALES" style="margin-top:10px;font-size:12px;color:#5a6a85;font-style:italic;">💡 Clic en una línea del gráfico mensual para resaltar ese centro en todos los gráficos</div>
+  </div>
+
+  <div class="kpi-grid g4" style="margin-bottom:24px">
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">6.32%</div>
+      <div class="kpi-label">Índice Ausentismo</div>
+      <div class="kpi-sub">✓ Bajo promedio empresa · 0.97× empresa</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#8b5cf6"></div>
+      <div class="kpi-val" style="color:var(--text);font-size:28px">1,797</div>
+      <div class="kpi-label">Días Perdidos</div>
+      <div class="kpi-sub">Total período</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#3b82f6"></div>
+      <div class="kpi-val" style="color:#3b82f6;font-size:28px">352</div>
+      <div class="kpi-label">Personas con Ausentismo</div>
+      <div class="kpi-sub">56.6% del proceso</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">5.1</div>
+      <div class="kpi-label">Días Prom / Persona</div>
+      <div class="kpi-sub">Promedio de ausencia individual</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-header">
+        <h3>📈 Índice Mensual de Ausentismo</h3>
+        <div class="sub">Evolución mes a mes por centro · línea = empresa 6.49%</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-ind-LINEAS_MANUALES"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>🔍 Causas de Ausentismo</h3>
+        <div class="sub">Distribución de 1,797 días perdidos por motivo</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-causas-LINEAS_MANUALES"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>📊 Días Perdidos por Mes — por Centro</h3>
+      <div class="sub">Barras apiladas · SUPERCOCO, BIANCHI y TRULULU</div>
+    </div>
+    <div class="chart-wrap" style="height:260px"><canvas id="proc-aus-LINEAS_MANUALES"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>🏢 Comparativo por Centro</h3>
+      <div class="sub">Indicadores de ausentismo desagregados por centro productivo</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th>Centro</th><th>Colaboradores</th><th>Días Perdidos</th>
+          <th>Días Trabajados</th><th>Índice</th><th>Prom Días/Pers</th>
+        </tr></thead>
+        <tbody><tr><td><strong style="color:#FFD700">SUPERCOCO</strong></td><td class="mono">0</td><td class="mono" style="color:#ef4444">0</td><td class="mono">0</td><td><span class="pill pg">0.00%</span></td><td class="mono">0</td></tr><tr><td><strong style="color:#3b82f6">BIANCHI</strong></td><td class="mono">622</td><td class="mono" style="color:#ef4444">1,797</td><td class="mono">28,421</td><td><span class="pill pg">6.32%</span></td><td class="mono">5.1</td></tr><tr><td><strong style="color:#ec4899">TRULULU</strong></td><td class="mono">1</td><td class="mono" style="color:#ef4444">0</td><td class="mono">3</td><td><span class="pill pg">0.00%</span></td><td class="mono">0</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PÁGINA: PROC-MASMELOS ══ -->
+<div id="page-proc-MASMELOS" class="page">
+  <div class="page-header">
+    <div class="page-eyebrow" style="color:#ec4899">Ausentismo por Proceso</div>
+    <div class="page-title">🍬 Masmelos</div>
+    <div class="page-sub">Período Ene 2025–Feb 2026 · Índice de ausentismo, causas principales y comportamiento mensual</div>
+    <div id="proc-filter-MASMELOS" style="margin-top:10px;font-size:12px;color:#5a6a85;font-style:italic;">💡 Clic en una línea del gráfico mensual para resaltar ese centro en todos los gráficos</div>
+  </div>
+
+  <div class="kpi-grid g4" style="margin-bottom:24px">
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">5.20%</div>
+      <div class="kpi-label">Índice Ausentismo</div>
+      <div class="kpi-sub">✓ Bajo promedio empresa · 0.8× empresa</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#ec4899"></div>
+      <div class="kpi-val" style="color:var(--text);font-size:28px">852</div>
+      <div class="kpi-label">Días Perdidos</div>
+      <div class="kpi-sub">Total período</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#3b82f6"></div>
+      <div class="kpi-val" style="color:#3b82f6;font-size:28px">153</div>
+      <div class="kpi-label">Personas con Ausentismo</div>
+      <div class="kpi-sub">59.5% del proceso</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">5.6</div>
+      <div class="kpi-label">Días Prom / Persona</div>
+      <div class="kpi-sub">Promedio de ausencia individual</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-header">
+        <h3>📈 Índice Mensual de Ausentismo</h3>
+        <div class="sub">Evolución mes a mes por centro · línea = empresa 6.49%</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-ind-MASMELOS"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>🔍 Causas de Ausentismo</h3>
+        <div class="sub">Distribución de 852 días perdidos por motivo</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-causas-MASMELOS"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>📊 Días Perdidos por Mes — por Centro</h3>
+      <div class="sub">Barras apiladas · SUPERCOCO, BIANCHI y TRULULU</div>
+    </div>
+    <div class="chart-wrap" style="height:260px"><canvas id="proc-aus-MASMELOS"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>🏢 Comparativo por Centro</h3>
+      <div class="sub">Indicadores de ausentismo desagregados por centro productivo</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th>Centro</th><th>Colaboradores</th><th>Días Perdidos</th>
+          <th>Días Trabajados</th><th>Índice</th><th>Prom Días/Pers</th>
+        </tr></thead>
+        <tbody><tr><td><strong style="color:#FFD700">SUPERCOCO</strong></td><td class="mono">0</td><td class="mono" style="color:#ef4444">0</td><td class="mono">0</td><td><span class="pill pg">0.00%</span></td><td class="mono">0</td></tr><tr><td><strong style="color:#3b82f6">BIANCHI</strong></td><td class="mono">168</td><td class="mono" style="color:#ef4444">482</td><td class="mono">8,481</td><td><span class="pill pg">5.68%</span></td><td class="mono">5.7</td></tr><tr><td><strong style="color:#ec4899">TRULULU</strong></td><td class="mono">163</td><td class="mono" style="color:#ef4444">370</td><td class="mono">7,900</td><td><span class="pill pg">4.68%</span></td><td class="mono">4.4</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PÁGINA: PROC-CHUPETAS ══ -->
+<div id="page-proc-CHUPETAS" class="page">
+  <div class="page-header">
+    <div class="page-eyebrow" style="color:#06b6d4">Ausentismo por Proceso</div>
+    <div class="page-title">🍭 Chupetas</div>
+    <div class="page-sub">Período Ene 2025–Feb 2026 · Índice de ausentismo, causas principales y comportamiento mensual</div>
+    <div id="proc-filter-CHUPETAS" style="margin-top:10px;font-size:12px;color:#5a6a85;font-style:italic;">💡 Clic en una línea del gráfico mensual para resaltar ese centro en todos los gráficos</div>
+  </div>
+
+  <div class="kpi-grid g4" style="margin-bottom:24px">
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">4.38%</div>
+      <div class="kpi-label">Índice Ausentismo</div>
+      <div class="kpi-sub">✓ Bajo promedio empresa · 0.67× empresa</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#06b6d4"></div>
+      <div class="kpi-val" style="color:var(--text);font-size:28px">335</div>
+      <div class="kpi-label">Días Perdidos</div>
+      <div class="kpi-sub">Total período</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#3b82f6"></div>
+      <div class="kpi-val" style="color:#3b82f6;font-size:28px">79</div>
+      <div class="kpi-label">Personas con Ausentismo</div>
+      <div class="kpi-sub">54.1% del proceso</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">4.2</div>
+      <div class="kpi-label">Días Prom / Persona</div>
+      <div class="kpi-sub">Promedio de ausencia individual</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-header">
+        <h3>📈 Índice Mensual de Ausentismo</h3>
+        <div class="sub">Evolución mes a mes por centro · línea = empresa 6.49%</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-ind-CHUPETAS"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>🔍 Causas de Ausentismo</h3>
+        <div class="sub">Distribución de 335 días perdidos por motivo</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-causas-CHUPETAS"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>📊 Días Perdidos por Mes — por Centro</h3>
+      <div class="sub">Barras apiladas · SUPERCOCO, BIANCHI y TRULULU</div>
+    </div>
+    <div class="chart-wrap" style="height:260px"><canvas id="proc-aus-CHUPETAS"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>🏢 Comparativo por Centro</h3>
+      <div class="sub">Indicadores de ausentismo desagregados por centro productivo</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th>Centro</th><th>Colaboradores</th><th>Días Perdidos</th>
+          <th>Días Trabajados</th><th>Índice</th><th>Prom Días/Pers</th>
+        </tr></thead>
+        <tbody><tr><td><strong style="color:#FFD700">SUPERCOCO</strong></td><td class="mono">146</td><td class="mono" style="color:#ef4444">335</td><td class="mono">7,647</td><td><span class="pill pg">4.38%</span></td><td class="mono">4.2</td></tr><tr><td><strong style="color:#3b82f6">BIANCHI</strong></td><td class="mono">0</td><td class="mono" style="color:#ef4444">0</td><td class="mono">0</td><td><span class="pill pg">0.00%</span></td><td class="mono">0</td></tr><tr><td><strong style="color:#ec4899">TRULULU</strong></td><td class="mono">0</td><td class="mono" style="color:#ef4444">0</td><td class="mono">0</td><td><span class="pill pg">0.00%</span></td><td class="mono">0</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PÁGINA: PROC-PELADERO ══ -->
+<div id="page-proc-PELADERO" class="page">
+  <div class="page-header">
+    <div class="page-eyebrow" style="color:#84cc16">Ausentismo por Proceso</div>
+    <div class="page-title">🥥 Peladero de Coco</div>
+    <div class="page-sub">Período Ene 2025–Feb 2026 · Índice de ausentismo, causas principales y comportamiento mensual</div>
+    <div id="proc-filter-PELADERO" style="margin-top:10px;font-size:12px;color:#5a6a85;font-style:italic;">💡 Clic en una línea del gráfico mensual para resaltar ese centro en todos los gráficos</div>
+  </div>
+
+  <div class="kpi-grid g4" style="margin-bottom:24px">
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">5.11%</div>
+      <div class="kpi-label">Índice Ausentismo</div>
+      <div class="kpi-sub">✓ Bajo promedio empresa · 0.79× empresa</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#84cc16"></div>
+      <div class="kpi-val" style="color:var(--text);font-size:28px">399</div>
+      <div class="kpi-label">Días Perdidos</div>
+      <div class="kpi-sub">Total período</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#3b82f6"></div>
+      <div class="kpi-val" style="color:#3b82f6;font-size:28px">40</div>
+      <div class="kpi-label">Personas con Ausentismo</div>
+      <div class="kpi-sub">81.6% del proceso</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">10.0</div>
+      <div class="kpi-label">Días Prom / Persona</div>
+      <div class="kpi-sub">Promedio de ausencia individual</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-header">
+        <h3>📈 Índice Mensual de Ausentismo</h3>
+        <div class="sub">Evolución mes a mes por centro · línea = empresa 6.49%</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-ind-PELADERO"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>🔍 Causas de Ausentismo</h3>
+        <div class="sub">Distribución de 399 días perdidos por motivo</div>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="proc-causas-PELADERO"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>📊 Días Perdidos por Mes — por Centro</h3>
+      <div class="sub">Barras apiladas · SUPERCOCO, BIANCHI y TRULULU</div>
+    </div>
+    <div class="chart-wrap" style="height:260px"><canvas id="proc-aus-PELADERO"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header">
+      <h3>🏢 Comparativo por Centro</h3>
+      <div class="sub">Indicadores de ausentismo desagregados por centro productivo</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th>Centro</th><th>Colaboradores</th><th>Días Perdidos</th>
+          <th>Días Trabajados</th><th>Índice</th><th>Prom Días/Pers</th>
+        </tr></thead>
+        <tbody><tr><td><strong style="color:#FFD700">SUPERCOCO</strong></td><td class="mono">30</td><td class="mono" style="color:#ef4444">170</td><td class="mono">2,890</td><td><span class="pill pg">5.88%</span></td><td class="mono">6.1</td></tr><tr><td><strong style="color:#3b82f6">BIANCHI</strong></td><td class="mono">45</td><td class="mono" style="color:#ef4444">229</td><td class="mono">4,922</td><td><span class="pill pg">4.65%</span></td><td class="mono">6.4</td></tr><tr><td><strong style="color:#ec4899">TRULULU</strong></td><td class="mono">0</td><td class="mono" style="color:#ef4444">0</td><td class="mono">0</td><td><span class="pill pg">0.00%</span></td><td class="mono">0</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <!-- ══ PÁGINA: HORAS POR MES ══ -->
 <div id="page-horas-mes" class="page">
   <div class="page-header">
@@ -569,38 +1208,27 @@ aside{
     <div class="page-title">Horas Laboradas por Mes &amp; Día</div>
     <div class="page-sub">Ene 2025 – Feb 2026 · Total horas, promedio por marcación y comportamiento por día de la semana</div>
   </div>
-
-  <!-- Filtro centro -->
+  <div style="display:flex;gap:6px;align-items:center;margin-bottom:12px;"><span id="hm-filter-label" style="font-size:11px;color:#5a6a85;font-style:italic;">Clic en una barra para filtrar por mes</span></div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;align-items:center;">
     <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;">Centro:</span>
-    <button class="hm-btn hm-btn-active" id="hm-btn-TODOS"    onclick="hmSetCentro('TODOS',this)">Todos</button>
-    <button class="hm-btn"              id="hm-btn-SUPER"    onclick="hmSetCentro('SUPER',this)">SUPERCOCO</button>
-    <button class="hm-btn"              id="hm-btn-BIANCHI"  onclick="hmSetCentro('BIANCHI',this)">BIANCHI</button>
-    <button class="hm-btn"              id="hm-btn-TRULULU"  onclick="hmSetCentro('TRULULU',this)">TRULULU</button>
+    <button class="hm-btn hm-btn-active" id="hm-btn-TODOS"   onclick="hmSetCentro('TODOS',this)">Todos</button>
+    <button class="hm-btn" id="hm-btn-SUPER"   onclick="hmSetCentro('SUPER',this)">SUPERCOCO</button>
+    <button class="hm-btn" id="hm-btn-BIANCHI" onclick="hmSetCentro('BIANCHI',this)">BIANCHI</button>
+    <button class="hm-btn" id="hm-btn-TRULULU" onclick="hmSetCentro('TRULULU',this)">TRULULU</button>
   </div>
-
-  <!-- KPIs -->
   <div class="kpi-grid g4" id="hm-kpis" style="margin-bottom:24px"></div>
-
-  <!-- Gráficas 1 y 2 -->
   <div class="g2">
     <div class="card">
-      <div class="card-header">
-        <h3>📊 Total de Horas por Mes</h3>
-        <div class="sub">Horas totales registradas por mes y centro</div>
-      </div>
+      <div class="card-header"><h3>📊 Total de Horas por Mes</h3>
+        <div class="sub">Contribución apilada por centro</div></div>
       <div class="chart-wrap" style="height:260px"><canvas id="hm-chart-total"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-header">
-        <h3>⏱ Tiempo Promedio por Marcación</h3>
-        <div class="sub">Horas promedio por registro de entrada/salida</div>
-      </div>
+      <div class="card-header"><h3>⏱ Tiempo Promedio por Marcación</h3>
+        <div class="sub">Horas promedio por registro de entrada/salida</div></div>
       <div class="chart-wrap" style="height:260px"><canvas id="hm-chart-prom"></canvas></div>
     </div>
   </div>
-
-  <!-- Gráfica 3: por día -->
   <div class="card" style="margin-bottom:20px">
     <div class="card-header" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
       <div>
@@ -620,8 +1248,6 @@ aside{
     </div>
     <div class="chart-wrap" style="height:260px;margin-top:16px"><canvas id="hm-chart-dia"></canvas></div>
   </div>
-
-  <!-- Gráfica 4: comparativa últim mes -->
   <div class="card">
     <div class="card-header">
       <h3>📆 Comparativa por Día de Semana</h3>
@@ -631,13 +1257,12 @@ aside{
   </div>
 </div>
 
-
 <!-- ══ PÁGINA: LÍNEAS MOGUL ══ -->
 <div id="page-mogul" class="page">
   <div class="page-header">
     <div class="page-eyebrow" style="color:#e879f9">Análisis por Proceso</div>
-    <div class="page-title">Líneas MOGUL — Ausentismo & Programación</div>
-    <div class="page-sub">538 colaboradores programados en líneas MOGUL · Período Ene 2025–Feb 2026 · Cruce ausentismo × cumplimiento de programación</div>
+    <div class="page-title">Líneas MOGUL — Ausentismo</div>
+    <div class="page-sub">Período Ene 2025–Feb 2026 · Índice de ausentismo, causas y experticia</div>
   </div>
 
   <div class="kpi-grid g4" style="margin-bottom:24px">
@@ -645,76 +1270,56 @@ aside{
       <div class="kpi-line" style="background:#e879f9"></div>
       <div class="kpi-val" style="color:#ef4444;font-size:28px">15.97%</div>
       <div class="kpi-label">Índice MOGUL</div>
-      <div class="kpi-sub">vs 6.97% empresa (2.29× más alto)</div>
+      <div class="kpi-sub">vs 6.49% empresa (2.46× más alto)</div>
     </div>
     <div class="kpi">
       <div class="kpi-line" style="background:#e879f9"></div>
       <div class="kpi-val" style="color:#f59e0b;font-size:28px">3.435</div>
       <div class="kpi-label">Días Perdidos</div>
-      <div class="kpi-sub">7.4% del total empresa (46.112 días)</div>
+      <div class="kpi-sub">7.4% del total empresa</div>
     </div>
     <div class="kpi">
-      <div class="kpi-line" style="background:#e879f9"></div>
-      <div class="kpi-val" style="color:#3b82f6;font-size:28px">538</div>
-      <div class="kpi-label">Personas Programadas</div>
-      <div class="kpi-sub">79 con ausentismo · 14.7% de la base</div>
+      <div class="kpi-line" style="background:#3b82f6"></div>
+      <div class="kpi-val" style="color:#3b82f6;font-size:28px">79</div>
+      <div class="kpi-label">Personas con Ausentismo</div>
+      <div class="kpi-sub">14.7% de los programados MOGUL</div>
     </div>
     <div class="kpi">
-      <div class="kpi-line" style="background:#f97316"></div>
-      <div class="kpi-val" style="color:#f97316;font-size:28px">268</div>
-      <div class="kpi-label">No Cumple Programación</div>
-      <div class="kpi-sub">202 personas con restricciones activas</div>
-    </div>
-  </div>
-
-  <div class="g2">
-    <div class="card">
-      <div class="card-header"><h3>Índice de Ausentismo por Proceso MOGUL</h3>
-        <div class="sub">Línea = promedio empresa 6.97%</div></div>
-      <div class="chart-wrap" style="height:260px"><canvas id="mogul-proc-ind"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-header"><h3>Top Líneas — Días Perdidos</h3>
-        <div class="sub">Todas las líneas con nombre MOGUL, ordenadas por impacto</div></div>
-      <div class="chart-wrap" style="height:260px"><canvas id="mogul-lineas-aus"></canvas></div>
+      <div class="kpi-line" style="background:#10b981"></div>
+      <div class="kpi-val" style="color:#10b981;font-size:28px">43.5</div>
+      <div class="kpi-label">Días Prom / Persona</div>
+      <div class="kpi-sub">Alta concentración individual</div>
     </div>
   </div>
 
   <div class="g2">
     <div class="card">
       <div class="card-header"><h3>Índice % por Línea MOGUL</h3>
-        <div class="sub">Rojo = sobre promedio empresa · Línea = 6.97%</div></div>
+        <div class="sub">Rojo = sobre promedio empresa · Línea = 6.49%</div></div>
       <div class="chart-wrap" style="height:320px"><canvas id="mogul-lineas-ind"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-header"><h3>Cumplimiento vs No Cumple — por Proceso</h3>
-        <div class="sub">OK + CUMPLE vs NO CUMPLE + REUBICAR en programación</div></div>
-      <div class="chart-wrap" style="height:320px"><canvas id="mogul-cumplimiento"></canvas></div>
-    </div>
-  </div>
-
-  <div class="g2">
-    <div class="card">
       <div class="card-header"><h3>Causas de Ausentismo — MOGUL</h3>
         <div class="sub">Distribución de los 3.435 días perdidos por tipo de causa</div></div>
-      <div class="chart-wrap" style="height:260px"><canvas id="mogul-causas"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-header"><h3>Índice por Nivel de Experticia</h3>
-        <div class="sub">Los APRENDIZ tienen el mayor índice — ¿brecha de experiencia?</div></div>
-      <div class="chart-wrap" style="height:260px"><canvas id="mogul-exp"></canvas></div>
+      <div class="chart-wrap" style="height:320px"><canvas id="mogul-causas"></canvas></div>
     </div>
   </div>
 
   <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><h3>Índice por Nivel de Experticia</h3>
+      <div class="sub">Los APRENDIZ tienen el mayor índice — brecha de experiencia</div></div>
+    <div class="chart-wrap" style="height:260px"><canvas id="mogul-exp"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
     <div class="card-header"><h3>Resumen por Proceso MOGUL</h3>
-      <div class="sub">Indicadores de ausentismo y cumplimiento de programación</div></div>
+      <div class="sub">Indicadores de ausentismo por proceso</div></div>
     <div style="overflow-x:auto"><table class="tbl" id="mogul-proc-tabla"></table></div>
   </div>
 
   <div class="card" style="margin-bottom:20px">
     <div class="card-header"><h3>Detalle por Línea MOGUL</h3>
-      <div class="sub">Cada línea con proceso, índice y causa principal — ordenado de mayor a menor índice</div></div>
+      <div class="sub">Cada línea con índice y causa principal — ordenado de mayor a menor</div></div>
     <div style="overflow-x:auto"><table class="tbl" id="mogul-lineas-tabla"></table></div>
   </div>
 
@@ -725,7 +1330,7 @@ aside{
   </div>
 </div>
 
-<div id="page-accidentes-transito" class="page">
+<div id="page-accidentes-transito"<div id="page-accidentes-transito" class="page">
   <div class="page-header">
     <div class="page-eyebrow" style="color:#f97316">Análisis Especial</div>
     <div class="page-title">Accidentes de Tránsito</div>
@@ -996,18 +1601,7 @@ aside{
   <div style="margin-top:32px;padding:20px 24px;background:var(--s2);border:1px solid var(--border);border-radius:12px;border-left:3px solid #94a3b8;">
     <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:10px;">NOTA METODOLÓGICA</div>
     <div style="font-size:12px;color:var(--light);line-height:1.7;">
-      Todos los cálculos se realizaron sobre el consolidado de <strong>4.615 colaboradores</strong> que registraron actividad en el período analizado. 
-      El <strong>período de observación</strong> es el tiempo en que cada persona estuvo vinculada a la compañía (activos e inactivos incluidos), 
-      no un año calendario fijo. Los días de ausentismo y los días trabajados son acumulados del período reportado por planta.
-      La suma de activos (2.181) e inactivos (2.373) es mayor al número de personas que terminaron el período, porque se incluyen todos los que 
-      tuvieron registro de marcación en algún momento del período, independientemente de si finalizaron contrato.
-    </div>
-  </div>
-</div>
-</div><!-- .content -->
-</div><!-- .shell -->
-
-<script>
+      Todos los cálculos se realizaron sobre el consolidado de <strong>4.6<script>
 // ════════════════════════════════════════════════════
 // DATOS
 // ════════════════════════════════════════════════════
@@ -1015,7 +1609,7 @@ const D = {
   global: { ind:6.49, aus:46095, n:4477, horas:6122218 },
   centros: {
     "BIANCHI": {
-      color:"#f59e0b", colorAlpha:"rgba(245,158,11,", ind:6.69, aus:15302,
+      color:"#3b82f6", colorAlpha:"rgba(59,130,246,", ind:6.69, aus:15302,
       trab:213556, n:1525, activos:716, horas:1981923,
       rotacion:{"INACTIVOS": 809, "ACTIVOS": 716},
       genero:{FEM:{n:917,ind:7.76},MASC:{n:607,ind:5.28}},
@@ -1025,7 +1619,7 @@ const D = {
       edad:[{r:"18-25",aus:5057,ind:5.68,n:629,prom:10.2},{r:"26-35",aus:5260,ind:6.68,n:489,prom:13.5},{r:"36-45",aus:2727,ind:8.06,n:192,prom:17.9},{r:"46-55",aus:1564,ind:10.28,n:57,prom:30.7},{r:"56+",aus:503,ind:7.29,n:19,prom:26.5}]
     },
     "SUPER": {
-      color:"#3b82f6", colorAlpha:"rgba(59,130,246,", ind:5.94, aus:17344,
+      color:"#FFD700", colorAlpha:"rgba(255,215,0,", ind:5.94, aus:17344,
       trab:274467, n:1749, activos:817, horas:2395240,
       rotacion:{"INACTIVOS": 932, "ACTIVOS": 817},
       genero:{FEM:{n:484,ind:7.23},MASC:{n:1264,ind:5.31}},
@@ -1035,7 +1629,7 @@ const D = {
       edad:[{r:"18-25",aus:4859,ind:5.01,n:660,prom:9.8},{r:"26-35",aus:6943,ind:6.11,n:605,prom:14.3},{r:"36-45",aus:2804,ind:5.94,n:249,prom:14.7},{r:"46-55",aus:2049,ind:9.48,n:75,prom:30.6},{r:"56+",aus:426,ind:6.42,n:20,prom:21.3}]
     },
     "TRULULU": {
-      color:"#10b981", colorAlpha:"rgba(16,185,129,", ind:7.11, aus:13449,
+      color:"#EC4899", colorAlpha:"rgba(236,72,153,", ind:7.11, aus:13449,
       trab:175641, n:1203, activos:593, horas:1745055,
       rotacion:{"INACTIVOS": 610, "ACTIVOS": 593},
       genero:{FEM:{n:618,ind:8.37},MASC:{n:585,ind:5.71}},
@@ -1117,26 +1711,51 @@ function goPage(pageId, btn){
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+pageId).classList.add('active');
   if(btn) btn.classList.add('active');
-  // breadcrumb
   const bc = document.getElementById('breadcrumb');
   if(pageId==='overview'){
     bc.innerHTML='<span class="current">Comparar Centros</span>';
   } else if(pageId.startsWith('centro-')){
     const c=pageId.replace('centro-','');
-    bc.innerHTML=`<span class="link" onclick="goPage('overview',document.querySelector('.nav-item'))">Centros</span>
-      <span class="sep">›</span><span class="current" style="color:${D.centros[c].color}">${CENTRO_DISPLAY[c]||c}</span>`;
-  } else if(pageId==='horas-mes'){
-    bc.innerHTML='<span class="current" style="color:#06b6d4">Horas por Mes</span>';
-    setTimeout(hmBuild, 50);
+    bc.innerHTML=`<span class="link" onclick="goPage('overview',document.querySelector('.nav-item'))">Centros</span> <span class="sep">›</span><span class="current" style="color:${D.centros[c].color}">${CENTRO_DISPLAY[c]||c}</span>`;
   } else if(pageId==='mogul'){
     bc.innerHTML='<span class="current" style="color:#e879f9">Líneas MOGUL</span>';
+  } else if(pageId==='accidentes-transito'){
+    bc.innerHTML='<span class="current" style="color:#f97316">Acc. de Tránsito</span>';
+  } else if(pageId==='edad-antiguedad'){
+    bc.innerHTML='<span class="current" style="color:#8b5cf6">Edad & Antigüedad</span>';
+  } else if(pageId==='glosario'){
+    bc.innerHTML='<span class="current" style="color:#94a3b8">Glosario</span>';
+  } else if(pageId==='horas-mes'){
+    bc.innerHTML='<span class="current" style="color:#06b6d4">Horas por Mes</span>';
+    setTimeout(hmBuild,50);
+  } else if(pageId==='proc-PERIFERICOS'){
+    bc.innerHTML='<span class="current" style="color:#f97316">🔩 Periféricos</span>';
+    setTimeout(function(){procAusBuild('PERIFERICOS');},50);
+  } else if(pageId==='proc-UNIPLAST'){
+    bc.innerHTML='<span class="current" style="color:#3b82f6">⚙️ Uniplast</span>';
+    setTimeout(function(){procAusBuild('UNIPLAST');},50);
+  } else if(pageId==='proc-BARRAS'){
+    bc.innerHTML='<span class="current" style="color:#f59e0b">🍫 Barras</span>';
+    setTimeout(function(){procAusBuild('BARRAS');},50);
+  } else if(pageId==='proc-BOMBOS'){
+    bc.innerHTML='<span class="current" style="color:#10b981">🥁 Bombos</span>';
+    setTimeout(function(){procAusBuild('BOMBOS');},50);
+  } else if(pageId==='proc-LINEAS_MANUALES'){
+    bc.innerHTML='<span class="current" style="color:#8b5cf6">🤲 Líneas Manuales</span>';
+    setTimeout(function(){procAusBuild('LINEAS_MANUALES');},50);
+  } else if(pageId==='proc-MASMELOS'){
+    bc.innerHTML='<span class="current" style="color:#ec4899">🍬 Masmelos</span>';
+    setTimeout(function(){procAusBuild('MASMELOS');},50);
+  } else if(pageId==='proc-CHUPETAS'){
+    bc.innerHTML='<span class="current" style="color:#06b6d4">🍭 Chupetas</span>';
+    setTimeout(function(){procAusBuild('CHUPETAS');},50);
+  } else if(pageId==='proc-PELADERO'){
+    bc.innerHTML='<span class="current" style="color:#84cc16">🥥 Peladero de Coco</span>';
+    setTimeout(function(){procAusBuild('PELADERO');},50);
   } else if(pageId.startsWith('planta-')){
     const parts=pageId.split('-');const c=parts[1];const idx=parseInt(parts[2]);
     const p=D.centros[c].plantas[idx];
-    bc.innerHTML=`<span class="link" onclick="goPage('overview',null)">Centros</span>
-      <span class="sep">›</span>
-      <span class="link" style="color:${D.centros[c].color}" onclick="goPage('centro-${c}',document.getElementById('nav-centro-${c}'))">${CENTRO_DISPLAY[c]||c}</span>
-      <span class="sep">›</span><span class="current">${p.nombre}</span>`;
+    bc.innerHTML=`<span class="link" onclick="goPage('overview',null)">Centros</span> <span class="sep">›</span> <span class="link" style="color:${D.centros[c].color}" onclick="goPage('centro-${c}',document.getElementById('nav-centro-${c}'))">${CENTRO_DISPLAY[c]||c}</span> <span class="sep">›</span><span class="current">${p.nombre}</span>`;
   }
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -1144,6 +1763,281 @@ function goPage(pageId, btn){
 // ════════════════════════════════════════════════════
 // RENDER OVERVIEW
 // ════════════════════════════════════════════════════
+// ── Índice mensual compañía + centros ──
+const IND_MENSUAL = {"meses": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic", "Ene '26", "Feb '26"], "SUPER": [2.84, 2.42, 3.13, 7.69, 3.67, 4.87, 4.9, 4.3, 4.47, 4.78, 6.27, 14.11, 7.22, 6.43], "BIANCHI": [3.73, 3.14, 2.97, 7.07, 3.33, 4.47, 5.32, 4.92, 7.07, 6.18, 8.0, 13.77, 7.16, 8.2], "TRULULU": [2.61, 2.27, 2.85, 7.17, 4.0, 6.19, 7.51, 6.51, 6.85, 7.7, 7.71, 15.98, 8.5, 8.27], "EMPRESA": [3.06, 2.6, 3.0, 7.35, 3.66, 5.08, 5.68, 5.08, 5.95, 6.01, 7.24, 14.53, 7.48, 7.5]};
+
+function renderIndMensual(){
+  var meses  = IND_MENSUAL.meses;
+  var colors = {SUPER:'#FFD700', BIANCHI:'#3b82f6', TRULULU:'#EC4899', EMPRESA:'#dde4f0'};
+  var labels = {SUPER:'SUPERCOCO', BIANCHI:'BIANCHI', TRULULU:'TRULULU', EMPRESA:'Empresa'};
+  var widths = {SUPER:2, BIANCHI:2, TRULULU:2, EMPRESA:2.5};
+  var dashes = {SUPER:[], BIANCHI:[], TRULULU:[], EMPRESA:[6,4]};
+  var fills  = {SUPER:false, BIANCHI:false, TRULULU:false, EMPRESA:false};
+  var radii  = {SUPER:4, BIANCHI:4, TRULULU:4, EMPRESA:4};
+
+  var datasets = ['SUPER','BIANCHI','TRULULU','EMPRESA'].map(function(k){
+    return {
+      label: labels[k],
+      data:  IND_MENSUAL[k],
+      borderColor:     colors[k],
+      backgroundColor: colors[k]+'22',
+      borderWidth:     widths[k],
+      borderDash:      dashes[k],
+      tension: .4, fill: fills[k],
+      pointRadius: radii[k], pointHoverRadius: 6,
+      segment:{
+        borderDash: function(){ return dashes[k]; }
+      }
+    };
+  });
+
+  var allVals = IND_MENSUAL.EMPRESA.concat(IND_MENSUAL.SUPER, IND_MENSUAL.BIANCHI, IND_MENSUAL.TRULULU);
+  var yMax    = Math.ceil(Math.max.apply(null,allVals)) + 2;
+
+  if(window._chartIndMensual) window._chartIndMensual.destroy();
+  window._chartIndMensual = new Chart(document.getElementById('ov-ind-mensual'),{
+    type:'line',
+    data:{ labels:meses, datasets:datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{ display:true, labels:{ color:'#dde4f0', font:{size:11}, boxWidth:12, padding:14 } },
+        datalabels:{
+          display: function(ctx){
+            // Solo mostrar etiquetas en la línea EMPRESA
+            return ctx.dataset.label==='Empresa';
+          },
+          color:'#dde4f0', font:{size:9, weight:'bold'},
+          formatter:function(v){ return v.toFixed(1)+'%'; },
+          anchor:'end', align:'top'
+        },
+        tooltip:{
+          callbacks:{
+            label: function(c){ return ' '+c.dataset.label+': '+c.raw.toFixed(2)+'%'; }
+          }
+        }
+      },
+      scales:{
+        x:{ grid:{display:false}, ticks:{color:'#8899b4', font:{size:11}} },
+        y:{
+          grid:{ color:'rgba(255,255,255,.08)', drawBorder:false },
+          min: 0, max: yMax,
+          ticks:{ color:'#8899b4', font:{size:11}, callback:function(v){ return v.toFixed(0)+'%'; } }
+        }
+      }
+    }
+  },{
+    // Inline plugin: línea de referencia global 6.49%
+    id:'refLine',
+    afterDraw:function(ch){
+      var ctx=ch.ctx, ca=ch.chartArea, sy=ch.scales.y;
+      if(!sy) return;
+      var y=sy.getPixelForValue(6.49);
+      ctx.save(); ctx.beginPath();
+      ctx.moveTo(ca.left,y); ctx.lineTo(ca.right,y);
+      ctx.strokeStyle='rgba(239,68,68,.5)'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+      ctx.stroke();
+      ctx.fillStyle='#ef4444'; ctx.font='bold 10px Figtree';
+      ctx.fillText('6.49% Global', ca.right-78, y-5);
+      ctx.restore();
+    }
+  });
+}
+
+// ════════════════════════════════════════════════════════
+// CROSS-FILTER ENGINE
+// ════════════════════════════════════════════════════════
+var CF = {
+  ov:   { active: null },   // overview active center
+  proc: {},                  // {pid: active center}
+  cent: {}                   // {centroKey: active planta idx}
+};
+
+// ── Color helpers ──
+function cfAlpha(color, factor){
+  // Darken a hex color by mixing with background
+  return color + Math.round(factor*255).toString(16).padStart(2,'0');
+}
+function cfDim(color){ return color.replace(/[0-9a-fA-F]{2}$/, '') + '33'; }
+
+// ── OVERVIEW cross-filter ──
+function ovSetFilter(centroKey){
+  CF.ov.active = (CF.ov.active === centroKey) ? null : centroKey;
+  ovApplyFilter();
+}
+function ovClearFilter(){
+  CF.ov.active = null;
+  ovApplyFilter();
+}
+function ovApplyFilter(){
+  var active = CF.ov.active;
+  var CENT   = ['BIANCHI','SUPER','TRULULU'];
+  var COLORS = {BIANCHI:'#3b82f6', SUPER:'#FFD700', TRULULU:'#EC4899'};
+  var LABELS = {BIANCHI:'BIANCHI', SUPER:'SUPERCOCO', TRULULU:'TRULULU'};
+
+  // Update filter bar
+  var bar = document.getElementById('ov-filter-bar');
+  var txt = document.getElementById('ov-filter-txt');
+  if(active){
+    bar.style.display='flex';
+    bar.style.borderColor = COLORS[active]+'66';
+    bar.style.background  = COLORS[active]+'11';
+    txt.innerHTML = '🔍 Filtrando: <strong style="color:'+COLORS[active]+'">'+(LABELS[active]||active)+'</strong> — clic en la misma barra para quitar';
+  } else {
+    bar.style.display='none';
+  }
+
+  // Highlight centro cards
+  document.querySelectorAll('.centro-card').forEach(function(card){
+    if(!active){ card.style.opacity='1'; card.style.transform=''; return; }
+    var isActive = card.getAttribute('onclick') && card.getAttribute('onclick').indexOf("'centro-"+active+"'")>=0;
+    card.style.opacity    = isActive ? '1' : '0.35';
+    card.style.transform  = isActive ? 'translateY(-2px) scale(1.01)' : 'scale(0.97)';
+  });
+
+  // Update charts
+  ['ov-ind','ov-dias','ov-ret'].forEach(function(id){
+    var ch = chartInstances[id];
+    if(!ch) return;
+    ch.data.datasets.forEach(function(ds, di){
+      var label = ds.label || '';
+      var centroOfDs = CENT[di] || null;
+      if(!active){
+        ch.data.datasets[di].backgroundColor = (typeof ds._origBg !== 'undefined') ? ds._origBg : ds.backgroundColor;
+      } else {
+        if(typeof ds._origBg === 'undefined') ds._origBg = Array.isArray(ds.backgroundColor) ? ds.backgroundColor.slice() : ds.backgroundColor;
+        var isActive = (centroOfDs === active);
+        if(Array.isArray(ds._origBg)){
+          ch.data.datasets[di].backgroundColor = ds._origBg.map(function(c){ return isActive ? c : cfDim(typeof c==='string'?c:'#888'); });
+        } else {
+          ch.data.datasets[di].backgroundColor = isActive ? ds._origBg : cfDim(typeof ds._origBg==='string'?ds._origBg:'#888');
+        }
+      }
+    });
+    ch.update('none');
+  });
+
+  // ov-causas-comp: datasets are by cause, not centro — highlight via x labels
+  var chCausas = chartInstances['ov-causas-comp'];
+  if(chCausas){
+    var CENT_IDX = {BIANCHI:0, SUPER:1, TRULULU:2};
+    chCausas.data.datasets.forEach(function(ds){
+      if(typeof ds._origBg === 'undefined') ds._origBg = ds.backgroundColor;
+      ds.backgroundColor = active ? (CENT_IDX[active]!==undefined ? ds._origBg : cfDim(ds._origBg)) : ds._origBg;
+    });
+    // Highlight x-axis labels
+    chCausas.data.labels = chCausas.data.labels; // already set
+    if(active){
+      chCausas.options.scales.x.ticks.color = function(ctx){
+        return CENT.indexOf(active) === ctx.index ? '#dde4f0' : '#4a5568';
+      };
+    } else {
+      chCausas.options.scales.x.ticks.color = '#8899b4';
+    }
+    chCausas.update('none');
+  }
+
+  // ov-genero
+  var chGen = chartInstances['ov-genero'];
+  if(chGen){
+    chGen.data.datasets.forEach(function(ds){
+      if(typeof ds._origBg === 'undefined') ds._origBg = Array.isArray(ds.backgroundColor) ? ds.backgroundColor.slice() : ds.backgroundColor;
+      if(!active){
+        ds.backgroundColor = ds._origBg;
+      } else {
+        if(Array.isArray(ds._origBg)){
+          ds.backgroundColor = ds._origBg.map(function(c,i){ return CENT[i]===active ? c : cfDim(typeof c==='string'?c:'#888'); });
+        }
+      }
+    });
+    chGen.update('none');
+  }
+
+  // ov-ind-mensual
+  if(window._chartIndMensual){
+    var ch = window._chartIndMensual;
+    ch.data.datasets.forEach(function(ds){
+      if(typeof ds._origBW === 'undefined') ds._origBW = ds.borderWidth;
+      if(typeof ds._origOp === 'undefined') ds._origOp = 1;
+      var key = ds.label==='SUPERCOCO'?'SUPER': ds.label==='Empresa'?null: ds.label;
+      if(!active){
+        ds.borderWidth  = ds._origBW;
+        ds.borderColor  = ds._origBC || ds.borderColor;
+        ds.pointRadius  = 4;
+      } else {
+        if(typeof ds._origBC === 'undefined') ds._origBC = ds.borderColor;
+        var isMatch = (key === active);
+        ds.borderWidth = isMatch ? 3 : 1;
+        ds.borderColor = isMatch ? ds._origBC : cfDim(typeof ds._origBC==='string'?ds._origBC:'#888');
+        ds.pointRadius = isMatch ? 5 : 2;
+      }
+    });
+    ch.update('none');
+  }
+}
+
+// ── PROCESO cross-filter (click center in index → highlight in aus chart) ──
+function procCFSet(pid, centroKey){
+  CF.proc[pid] = (CF.proc[pid] === centroKey) ? null : centroKey;
+  procCFApply(pid);
+}
+function procCFApply(pid){
+  var active = CF.proc[pid];
+  var CENT_CLR2 = {SUPER:'#FFD700', BIANCHI:'#3b82f6', TRULULU:'#EC4899'};
+  var CENT_ORD2 = ['SUPER','BIANCHI','TRULULU'];
+
+  // aus chart: dim non-active stacked bars
+  if(procAusCharts[pid] && procAusCharts[pid].aus){
+    var ch = procAusCharts[pid].aus;
+    ch.data.datasets.forEach(function(ds, di){
+      var c = CENT_ORD2[di];
+      if(typeof ds._origBg === 'undefined') ds._origBg = ds.backgroundColor;
+      if(!active){
+        ds.backgroundColor = CENT_CLR2[c]+'cc';
+        ds.borderColor     = CENT_CLR2[c];
+        ds.borderWidth     = 1;
+      } else {
+        var isActive = (c === active);
+        ds.backgroundColor = isActive ? CENT_CLR2[c]+'cc' : 'rgba(80,80,80,0.12)';
+        ds.borderColor     = isActive ? CENT_CLR2[c]       : 'rgba(80,80,80,0.2)';
+        ds.borderWidth     = isActive ? 2 : 1;
+      }
+    });
+    ch.update('none');
+  }
+
+  // ind chart: emphasize active line
+  if(procAusCharts[pid] && procAusCharts[pid].ind){
+    var ch2 = procAusCharts[pid].ind;
+    ch2.data.datasets.forEach(function(ds, di){
+      var c = CENT_ORD2[di];
+      if(typeof ds._origBW === 'undefined') ds._origBW = ds.borderWidth;
+      if(typeof ds._origBC === 'undefined') ds._origBC = ds.borderColor;
+      if(!active){
+        ds.borderWidth  = ds._origBW;
+        ds.borderColor  = ds._origBC;
+        ds.pointRadius  = 4;
+      } else {
+        var isActive = (c === active);
+        ds.borderWidth  = isActive ? 3.5 : 1;
+        ds.borderColor  = isActive ? ds._origBC : cfDim(ds._origBC);
+        ds.pointRadius  = isActive ? 5 : 2;
+      }
+    });
+    ch2.update('none');
+  }
+
+  // Update filter label
+  var lbl = document.getElementById('proc-filter-'+pid);
+  if(lbl){
+    var LMAP = {SUPER:'SUPERCOCO', BIANCHI:'BIANCHI', TRULULU:'TRULULU'};
+    lbl.textContent = active
+      ? '🔍 Filtrando: '+(LMAP[active]||active)+' — clic de nuevo para quitar'
+      : 'Clic en una línea para filtrar todos los gráficos';
+    lbl.style.color = active ? '#06b6d4' : '#5a6a85';
+  }
+}
+
 function renderOverview(){
   const centrosKeys = ['BIANCHI','SUPER','TRULULU'];
 
@@ -1189,7 +2083,8 @@ function renderOverview(){
       borderRadius:8,borderSkipped:false,
       datalabels:{anchor:'end',align:'top',color:CC.text,font:{size:11,weight:'bold'},formatter:v=>v.toFixed(2)+'%'}
     }]},
-    options:{responsive:true,maintainAspectRatio:false,
+    options:{responsive:true,
+      onClick:function(evt,els){if(els&&els.length>0){ovSetFilter(['BIANCHI','SUPER','TRULULU'][els[0].datasetIndex||els[0].index]||null);}else{ovClearFilter();}},maintainAspectRatio:false,
       plugins:{legend:{display:false},
         tooltip:{callbacks:{label:c=>` ${c.raw.toFixed(2)}%`}},
         datalabels:{anchor:'end',align:'top',color:CC.text,font:{size:11,weight:'bold'},formatter:v=>parseFloat(v).toFixed(2)+'%'}
@@ -1205,7 +2100,8 @@ function renderOverview(){
       backgroundColor:centrosKeys.map(k=>D.centros[k].color),
       borderRadius:8,borderSkipped:false
     }]},
-    options:{responsive:true,maintainAspectRatio:false,
+    options:{responsive:true,
+      onClick:function(evt,els){if(els&&els.length>0){ovSetFilter(['BIANCHI','SUPER','TRULULU'][els[0].datasetIndex||els[0].index]||null);}else{ovClearFilter();}},maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${fmt(c.raw)} días`}}},
       scales:{x:{grid:{display:false},ticks:ticks()},y:{grid:grid(),ticks:ticks()}}}
   });
@@ -1217,7 +2113,8 @@ function renderOverview(){
       {label:'Activos %',data:centrosKeys.map(k=>(D.centros[k].activos/D.centros[k].n*100).toFixed(1)),
        backgroundColor:centrosKeys.map(k=>D.centros[k].color),borderRadius:8,borderSkipped:false},
     ]},
-    options:{responsive:true,maintainAspectRatio:false,
+    options:{responsive:true,
+      onClick:function(evt,els){if(els&&els.length>0){ovSetFilter(['BIANCHI','SUPER','TRULULU'][els[0].datasetIndex||els[0].index]||null);}else{ovClearFilter();}},maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw}% retención`}}},
       scales:{x:{grid:{display:false},ticks:ticks()},y:{grid:grid(),ticks:{...ticks(),callback:v=>v+'%'},max:70}}}
   },[avgLinePlug(48,'48% prom',CC.amber)]);
@@ -1257,7 +2154,8 @@ function renderOverview(){
          backgroundColor:'rgba(59,130,246,.65)',borderRadius:4},
       ]
     },
-    options:{responsive:true,maintainAspectRatio:false,
+    options:{responsive:true,
+      onClick:function(evt,els){if(els&&els.length>0){ovSetFilter(['BIANCHI','SUPER','TRULULU'][els[0].index]||null);}else{ovClearFilter();}},maintainAspectRatio:false,
       plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>` ${c.raw.toFixed(2)}%`}}},
       scales:{x:{grid:{display:false},ticks:ticks()},
               y:{grid:grid(),ticks:{...ticks(),callback:v=>v+'%'},max:12}}}
@@ -1291,7 +2189,7 @@ function renderCentro(k){
     <div class="kpi"><div class="kpi-line" style="background:${c.ind>D.global.ind?CC.red:CC.green}"></div>
       <div class="kpi-val" style="color:${c.ind>D.global.ind?CC.red:CC.green}">${pct(c.ind,2)}</div>
       <div class="kpi-label">Índice Ausentismo</div>
-      <div class="kpi-sub">${c.ind>D.global.ind?'⚠ Sobre promedio empresa':'✓ Bajo promedio empresa'}</div>
+      
     </div>
     <div class="kpi"><div class="kpi-line" style="background:${c.color}"></div>
       <div class="kpi-val">${fmt(c.aus)}</div>
@@ -1307,11 +2205,6 @@ function renderCentro(k){
       <div class="kpi-val" style="color:${CC.green}">${pctAct}%</div>
       <div class="kpi-label">Tasa Retención</div>
       <div class="kpi-sub">${fmt(c.activos)} activos</div>
-    </div>
-    <div class="kpi"><div class="kpi-line" style="background:${CC.red}"></div>
-      <div class="kpi-val" style="color:${CC.red}">${pctRen}%</div>
-      <div class="kpi-label">% Renuncias s/inact.</div>
-      <div class="kpi-sub">${fmt(renuncias)} renuncias voluntarias</div>
     </div>
   </div>
 
@@ -1575,14 +2468,6 @@ function renderPlanta(k, i){
           <div class="ph-val">${p.prom.toFixed(1)}</div>
           <div class="ph-lbl">Días/persona</div>
         </div>
-        <div class="ph-stat">
-          <div class="ph-val" style="color:${nivelColor}">${difVsEmpresa>0?'+':''}${difVsEmpresa}%</div>
-          <div class="ph-lbl">vs empresa</div>
-        </div>
-        <div class="ph-stat">
-          <div class="ph-val" style="color:${nivelColor}">${difVsCentro>0?'+':''}${difVsCentro}%</div>
-          <div class="ph-lbl">vs centro ${k}</div>
-        </div>
       </div>
     </div>
     <div class="ph-side">
@@ -1610,12 +2495,7 @@ function renderPlanta(k, i){
     </div>
   </div>
 
-  <!-- Gráfica barras causas -->
-  <div class="card" style="margin-bottom:20px">
-    <div class="card-header"><h3>Comparación de Causas vs Centro ${k} y Empresa</h3>
-      <div class="sub">¿En qué causas esta planta supera el promedio de su centro?</div></div>
-    <div class="chart-wrap" style="height:200px"><canvas id="${pf}-vs-centro"></canvas></div>
-  </div>
+
 
   <!-- Hallazgo -->
   <div class="hallazgo ${nivel}">
@@ -1665,17 +2545,6 @@ function renderPlanta(k, i){
   const topCausas5 = p.causas.slice(0,5).map(([n])=>n);
   const plantaPct  = topCausas5.map(n=>{const f=p.causas.find(([cn])=>cn===n);return f?(f[1]/p.aus*100):0;});
   const centroPct  = topCausas5.map(n=>{const f=c.causas.find(([cn])=>cn===n);return f?(f[1]/c.aus*100):0;});
-  makeChart(`${pf}-vs-centro`,{
-    type:'bar',
-    data:{labels:topCausas5,
-      datasets:[
-        {label:p.nombre,data:plantaPct.map(v=>v.toFixed(1)),backgroundColor:nivelColor+'99',borderRadius:4},
-        {label:'Promedio '+k,data:centroPct.map(v=>v.toFixed(1)),backgroundColor:c.colorAlpha+'.4)',borderRadius:4},
-      ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:x=>` ${x.raw}% del ausentismo`}}},
-      scales:{x:{grid:{display:false},ticks:ticks(10)},y:{grid:grid(),ticks:{...ticks(),callback:v=>v+'%'}}}}
-  });
 }
 
 // ════════════════════════════════════════════════════
@@ -1684,7 +2553,7 @@ function renderPlanta(k, i){
 // ════════════ DATOS ACCIDENTES TRÁNSITO ════════════
 const AT_DATA = {
   total_dias:1818,total_pers:184,prom:9.9,gt15:32,gt30:11,
-  centros:[{nombre:"BIANCHI",dias:840,pers:74,color:"#f59e0b",prom:11.4,ind:0.39,trab:213556,causas:[["ENFERMEDAD GEN",6406],["VACACIONES",3381],["INCAPACIDAD",1728],["DÍA FAMILIA",1352],["ACC TRÁNSITO",840]]},{nombre:"SUPER",dias:443,pers:64,color:"#3b82f6",prom:6.9,ind:0.16,trab:274467,causas:[["ENFERMEDAD GEN",7274],["VACACIONES",4709],["INCAPACIDAD",1664],["DÍA FAMILIA",1560],["ACC LABORAL",648]]},{nombre:"TRULULU",dias:535,pers:46,color:"#10b981",prom:11.6,ind:0.3,trab:175641,causas:[["ENFERMEDAD GEN",6531],["VACACIONES",2896],["DÍA FAMILIA",1141],["INCAPACIDAD",867],["LIC MATERNIDAD",695]]}],
+  centros:[{nombre:"BIANCHI",dias:840,pers:74,color:"#3b82f6",prom:11.4,ind:0.39,trab:213556,causas:[["ENFERMEDAD GEN",6406],["VACACIONES",3381],["INCAPACIDAD",1728],["DÍA FAMILIA",1352],["ACC TRÁNSITO",840]]},{nombre:"SUPER",dias:443,pers:64,color:"#FFD700",prom:6.9,ind:0.16,trab:274467,causas:[["ENFERMEDAD GEN",7274],["VACACIONES",4709],["INCAPACIDAD",1664],["DÍA FAMILIA",1560],["ACC LABORAL",648]]},{nombre:"TRULULU",dias:535,pers:46,color:"#EC4899",prom:11.6,ind:0.3,trab:175641,causas:[["ENFERMEDAD GEN",6531],["VACACIONES",2896],["DÍA FAMILIA",1141],["INCAPACIDAD",867],["LIC MATERNIDAD",695]]}],
   genero:[{nombre:"Femenino",dias:934,pers:82,color:"#8b5cf6"},{nombre:"Masculino",dias:884,pers:102,color:"#3b82f6"}],
   edad:[{rango:"18-25",nombre:"18-25",dias:1005,pers:95},{rango:"26-35",nombre:"26-35",dias:449,pers:61},{rango:"36-45",nombre:"36-45",dias:183,pers:14},{rango:"46-55",nombre:"46-55",dias:125,pers:4},{rango:"56+",nombre:"56+",dias:6,pers:2}],
   plantas:[{nombre:"EMBOLSADO MANUAL BIANCHI",centro:"BIANCHI",n:632,dias:388,trab:68678,prom:11.8,ind:0.56,causas:[["ENFERMEDAD GEN",2181],["INCAPACIDAD",484],["DÍA FAMILIA",464],["VACACIONES",443],["ACC TRÁNSITO",388]]},{nombre:"EMBOLSADO TRULULU I",centro:"TRULULU",n:273,dias:247,trab:40382,prom:24.7,ind:0.61,causas:[["ENFERMEDAD GEN",2077],["VACACIONES",835],["DÍA FAMILIA",260],["INCAPACIDAD",253],["ACC TRÁNSITO",247]]},{nombre:"PLANTA SUPER I",centro:"SUPER",n:394,dias:158,trab:63844,prom:8.3,ind:0.25,causas:[["ENFERMEDAD GEN",1457],["VACACIONES",1003],["INCAPACIDAD",347],["DÍA FAMILIA",325],["ACC LABORAL",301]]},{nombre:"EMBOLSADO BIANCHI III",centro:"BIANCHI",n:297,dias:141,trab:41369,prom:11.8,ind:0.34,causas:[["ENFERMEDAD GEN",1609],["INCAPACIDAD",529],["VACACIONES",495],["LIC MATERNIDAD",407],["DÍA FAMILIA",261]]},{nombre:"EMBOLSADO BIANCHI I",centro:"BIANCHI",n:166,dias:139,trab:29564,prom:17.4,ind:0.47,causas:[["ENFERMEDAD GEN",1389],["VACACIONES",711],["INCAPACIDAD",299],["DÍA FAMILIA",175],["ACC TRÁNSITO",139]]},{nombre:"PLANTA TRULULU I",centro:"TRULULU",n:224,dias:89,trab:26788,prom:9.9,ind:0.33,causas:[["ENFERMEDAD GEN",790],["VACACIONES",551],["DÍA FAMILIA",160],["INCAPACIDAD",107],["ACC TRÁNSITO",89]]},{nombre:"EMBOLSADO TRULULU II",centro:"TRULULU",n:266,dias:88,trab:37292,prom:8.8,ind:0.24,causas:[["ENFERMEDAD GEN",2262],["VACACIONES",368],["DÍA FAMILIA",257],["LIC MATERNIDAD",214],["INCAPACIDAD",204]]},{nombre:"PLANTA PMPS",centro:"SUPER",n:138,dias:88,trab:22921,prom:14.7,ind:0.38,causas:[["VACACIONES",347],["ENFERMEDAD GEN",337],["DÍA FAMILIA",129],["INCAPACIDAD",97],["ACC TRÁNSITO",88]]},{nombre:"PLANTA BIANCHI I",centro:"BIANCHI",n:207,dias:83,trab:37092,prom:6.4,ind:0.22,causas:[["VACACIONES",931],["ENFERMEDAD GEN",352],["ACC LABORAL",238],["DÍA FAMILIA",219],["INCAPACIDAD",168]]},{nombre:"EMBOLSADO SUPER",centro:"SUPER",n:443,dias:70,trab:71549,prom:5.0,ind:0.1,causas:[["ENFERMEDAD GEN",1998],["VACACIONES",1152],["INCAPACIDAD",516],["DÍA FAMILIA",440],["LIC MATERNIDAD",417]]},{nombre:"PLANTA BIANCHI III",centro:"BIANCHI",n:99,dias:55,trab:15246,prom:18.3,ind:0.36,causas:[["ENFERMEDAD GEN",303],["VACACIONES",277],["DÍA FAMILIA",105],["INCAPACIDAD",56],["ACC TRÁNSITO",55]]},{nombre:"PLANTA SUPER III",centro:"SUPER",n:333,dias:44,trab:51363,prom:4.0,ind:0.09,causas:[["ENFERMEDAD GEN",1661],["VACACIONES",912],["INCAPACIDAD",310],["DÍA FAMILIA",307],["ACC LABORAL",161]]}],
@@ -1750,7 +2619,7 @@ function renderAT(){
 
   // 4. Plantas bar horizontal
   const plSort=[...AT_DATA.plantas].sort((a,b)=>b.dias-a.dias);
-  const centroColor={BIANCHI:'#f59e0b',SUPER:'#3b82f6',TRULULU:'#10b981'};
+  const centroColor={BIANCHI:'#3b82f6',SUPER:'#FFD700',TRULULU:'#EC4899'};
   makeChart('at-plantas',{
     type:'bar',
     data:{labels:plSort.map(p=>`[${p.centro}] ${p.nombre}`),
@@ -2469,6 +3338,7 @@ function renderMOGUL(){
 }
 
 renderOverview();
+renderIndMensual();
 ['BIANCHI','SUPER','TRULULU'].forEach(k=>{
   renderCentro(k);
   D.centros[k].plantas.forEach((p,i)=>renderPlanta(k,i));
@@ -2857,41 +3727,202 @@ renderGlosario();
 
 
 // ══════════════════════════════════════════════════════
+// AUSENTISMO POR PROCESO
 // ══════════════════════════════════════════════════════
-// HORAS POR MES — datos y lógica
-// ══════════════════════════════════════════════════════
-const HM = {"meses": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic", "Ene '26", "Feb '26"], "centros": {"SUPER": {"total_horas": [164400.6, 162296.6, 184350.7, 166849.6, 104107.9, 131810.0, 183913.7, 157602.3, 102957.9, 156043.5, 95241.2, 130466.3, 91118.1, 130896.1], "prom_laborado": [8.696, 8.574, 8.744, 8.523, 8.541, 8.796, 9.13, 9.03, 9.056, 8.561, 8.119, 8.471, 8.584, 8.587], "por_dia": {"0": [6343.7, 6758.5, 6930.4, 6943.8, 7114.7, 6764.7, 6700.5, 5798.7, 5672.6, 6145.7, 6208.2, 5472.4, 5908.9, 5464.7], "1": [6412.3, 6713.5, 6983.1, 7051.8, 7184.6, 6584.7, 6907.4, 6071.6, 6000.2, 6253.0, 5644.6, 6470.3, 6191.8, 6054.4], "2": [6380.0, 6780.3, 7143.5, 6916.3, 7201.2, 6759.9, 6852.1, 6176.9, 5870.2, 6205.1, 6017.7, 5665.3, 6407.5, 6450.6], "3": [6255.9, 6666.8, 7110.9, 5294.7, 6950.3, 6742.4, 6873.4, 6074.5, 5861.0, 6264.8, 6067.5, 4931.0, 6499.0, 6449.7], "4": [5928.3, 6313.7, 6635.5, 5033.4, 6898.7, 6472.5, 6404.4, 5900.4, 5360.2, 5759.9, 5284.8, 5853.6, 5608.3, 5730.7], "5": [4172.2, 4397.3, 4480.3, 4571.9, 4214.7, 4123.6, 4424.4, 3907.0, 3282.2, 3407.7, 2777.1, 3047.4, 3250.6, 2990.3], "6": [2561.6, 2944.1, 3161.0, 2408.6, 2305.3, 2224.3, 2658.1, 2415.6, 2163.7, 1953.7, 131.9, 1176.5, 810.2, 331.3]}}, "BIANCHI": {"total_horas": [125512.2, 117745.4, 137913.5, 132157.4, 72457.3, 90027.1, 134847.1, 131778.1, 91259.2, 125482.9, 92293.9, 114466.6, 73904.5, 109855.4], "prom_laborado": [9.172, 9.028, 8.718, 9.242, 9.161, 9.09, 9.274, 9.555, 10.308, 9.839, 9.557, 9.373, 8.338, 8.761], "por_dia": {"0": [4762.5, 4794.0, 5149.7, 5112.1, 4839.3, 3200.7, 4930.4, 4809.5, 4930.1, 4701.9, 4981.0, 4619.7, 5045.9, 4830.3], "1": [4665.2, 4814.3, 5191.4, 5170.5, 4865.5, 4352.4, 4911.2, 4916.4, 4834.5, 4779.3, 4963.3, 4974.6, 5000.5, 4961.5], "2": [3720.9, 4829.3, 5201.0, 5169.0, 4701.2, 4580.7, 4879.8, 5015.0, 4906.5, 4717.2, 4910.7, 4328.3, 4878.4, 4966.6], "3": [4608.3, 4768.6, 5148.8, 4373.6, 4695.2, 4537.4, 4849.0, 4731.4, 4786.4, 4604.8, 4994.4, 4993.2, 4832.6, 4985.1], "4": [4435.2, 4727.3, 5043.7, 3859.6, 4749.4, 4581.6, 4773.6, 4660.0, 4356.1, 4315.1, 4800.9, 4705.3, 4565.1, 4640.0], "5": [3584.6, 3622.0, 3868.7, 3997.1, 3238.1, 2976.3, 3426.2, 3400.6, 3399.5, 3273.3, 3369.6, 3448.3, 2813.5, 2692.6], "6": [2410.3, 1880.8, 2096.5, 2772.5, 1865.8, 1766.2, 2281.6, 2717.2, 3238.5, 2745.2, 1325.0, 2795.6, 1271.6, 1060.9]}}, "TRULULU": {"total_horas": [105783.8, 108242.8, 121548.5, 118910.5, 68293.1, 90701.6, 124857.5, 117756.4, 80877.8, 123103.0, 89260.6, 107590.7, 57954.0, 102601.1], "prom_laborado": [9.445, 9.247, 8.853, 8.855, 9.167, 10.813, 10.872, 10.78, 10.457, 10.298, 10.473, 9.977, 10.597, 10.603], "por_dia": {"0": [3887.3, 4460.3, 4520.8, 4587.1, 4621.6, 4404.9, 4410.2, 4088.8, 4527.3, 4504.3, 4762.6, 4366.2, 3577.3, 4185.6], "1": [3943.2, 4408.5, 4510.3, 4625.1, 4626.3, 4297.6, 4428.1, 4435.7, 4573.3, 4683.9, 4653.3, 4550.3, 3332.3, 4447.0], "2": [3930.6, 4327.7, 4485.9, 4574.2, 4534.4, 4275.1, 4357.2, 4490.7, 4336.9, 4788.9, 4789.2, 3961.3, 3683.5, 4572.2], "3": [3937.5, 4385.9, 4546.6, 4410.2, 4347.6, 4255.3, 4393.2, 4355.3, 4409.5, 4678.5, 4724.4, 4657.3, 3753.9, 4390.7], "4": [3926.4, 4356.4, 4520.9, 3586.0, 4276.9, 4099.7, 4096.0, 4084.1, 4075.6, 4365.2, 4410.1, 4500.5, 3477.3, 4013.7], "5": [2963.1, 3217.9, 3336.0, 3545.1, 3036.0, 3597.0, 3701.2, 3438.7, 3112.4, 3522.0, 3766.6, 3431.3, 3082.1, 3537.0], "6": [1891.9, 1904.1, 2001.9, 2099.9, 1915.6, 2123.9, 2534.0, 2132.1, 1909.0, 1900.8, 1090.5, 2595.1, 1072.2, 1388.2]}}}, "global": {"total_horas": [395696.5, 388284.8, 443812.6, 417917.5, 244858.3, 312538.7, 443618.4, 407136.8, 275094.9, 404629.4, 276795.7, 352523.6, 222976.6, 343352.6], "prom_laborado": [9.036, 8.89, 8.766, 8.835, 8.888, 9.392, 9.609, 9.655, 9.84, 9.424, 9.254, 9.181, 8.938, 9.166], "por_dia": {"0": [14993.5, 16012.9, 16600.9, 16643.1, 16575.5, 14370.3, 16041.0, 14697.0, 15130.0, 15352.0, 15951.9, 14458.4, 14532.1, 14480.6], "1": [15020.8, 15936.3, 16684.8, 16847.4, 16676.4, 15234.7, 16246.6, 15423.8, 15408.0, 15716.1, 15261.3, 15995.3, 14524.7, 15462.9], "2": [11969.4, 15937.3, 16830.5, 16659.5, 16436.9, 15615.8, 16089.1, 15682.5, 15113.6, 15711.2, 15717.6, 13954.9, 14969.3, 15989.4], "3": [14801.7, 15821.2, 16806.2, 14078.5, 15993.1, 15535.1, 16115.6, 15161.2, 15056.9, 15548.1, 15786.3, 12168.8, 15085.4, 15825.5], "4": [14289.9, 15397.4, 16200.1, 12479.0, 15925.0, 15153.9, 15274.0, 14644.5, 13791.9, 14440.2, 14495.8, 15059.4, 13650.7, 14384.4], "5": [10719.8, 11237.2, 11685.0, 12114.1, 10488.8, 10696.8, 11551.9, 10746.3, 9794.1, 10203.1, 9913.3, 9927.0, 9146.2, 9220.0], "6": [6863.8, 6728.9, 7259.4, 7281.1, 6086.7, 6114.4, 7473.7, 7265.0, 7311.1, 6599.6, 2494.6, 6567.2, 3153.9, 2780.4]}}};
+const AUS_PROC = {"meses": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic", "Ene '26", "Feb '26"], "grupos": {"PERIFERICOS": {"ind_global": 4.7, "total_dias_aus": 2117, "total_colab": 541, "colab_aus": 325, "causas": [["ENFERMEDAD GEN", 808], ["VACACIONES", 533], ["DÍA FAMILIA", 309], ["INCAPACIDAD", 209], ["ACC TRÁNSITO", 73], ["ACC LABORAL", 65], ["LIC PATERNIDAD", 43], ["LIC DEFUNCIÓN", 35]], "por_centro": {"SUPER": {"dias_trab": 18115, "dias_aus": 685, "ind": 3.78, "prom_dias": 5.5, "colab": 214, "colab_aus": 124, "causas": [["ENFERMEDAD GEN", 271], ["VACACIONES", 218], ["DÍA FAMILIA", 119], ["INCAPACIDAD", 59], ["ACC LABORAL", 6], ["CALAMIDAD", 4]], "ind_mes": [1.96, 1.26, 1.69, 4.68, 1.48, 2.04, 2.57, 3.83, 4.09, 3.27, 3.91, 13.06, 5.52, 2.21], "aus_mes": [23, 15, 22, 58, 11, 23, 46, 61, 37, 57, 44, 192, 60, 36], "trab_mes": [1174, 1187, 1299, 1240, 741, 1129, 1792, 1594, 905, 1744, 1126, 1470, 1087, 1627]}, "BIANCHI": {"dias_trab": 12830, "dias_aus": 606, "ind": 4.72, "prom_dias": 6.7, "colab": 168, "colab_aus": 90, "causas": [["ENFERMEDAD GEN", 197], ["VACACIONES", 120], ["DÍA FAMILIA", 86], ["INCAPACIDAD", 77], ["LIC PATERNIDAD", 43], ["ACC LABORAL", 39]], "ind_mes": [2.85, 4.15, 2.18, 6.44, 2.95, 3.28, 4.53, 2.88, 4.0, 2.61, 6.35, 13.92, 7.11, 6.07], "aus_mes": [32, 42, 24, 66, 17, 30, 54, 33, 32, 26, 41, 113, 41, 55], "trab_mes": [1122, 1013, 1103, 1025, 576, 916, 1191, 1147, 801, 995, 646, 812, 577, 906]}, "TRULULU": {"dias_trab": 14117, "dias_aus": 826, "ind": 5.85, "prom_dias": 7.4, "colab": 170, "colab_aus": 112, "causas": [["ENFERMEDAD GEN", 340], ["VACACIONES", 195], ["DÍA FAMILIA", 104], ["INCAPACIDAD", 73], ["ACC TRÁNSITO", 65], ["LIC DEFUNCIÓN", 21]], "ind_mes": [2.08, 2.99, 1.93, 7.08, 1.27, 7.36, 12.65, 7.85, 4.79, 7.48, 2.42, 12.31, 3.15, 5.25], "aus_mes": [23, 35, 28, 103, 10, 61, 163, 80, 37, 84, 19, 122, 14, 47], "trab_mes": [1107, 1169, 1452, 1455, 785, 829, 1289, 1019, 772, 1123, 786, 991, 445, 895]}}, "ind_mes": [2.29, 2.73, 1.92, 6.1, 1.81, 3.97, 6.16, 4.63, 4.28, 4.32, 4.07, 13.05, 5.45, 4.03], "aus_mes": [78, 92, 74, 227, 38, 114, 263, 174, 106, 167, 104, 427, 115, 138]}, "UNIPLAST": {"ind_global": 4.81, "total_dias_aus": 1930, "total_colab": 501, "colab_aus": 292, "causas": [["ENFERMEDAD GEN", 663], ["VACACIONES", 459], ["INCAPACIDAD", 304], ["DÍA FAMILIA", 270], ["ACC LABORAL", 119], ["LIC DEFUNCIÓN", 40], ["ACC TRÁNSITO", 37], ["CALAMIDAD", 24]], "por_centro": {"SUPER": {"dias_trab": 31367, "dias_aus": 1571, "ind": 5.01, "prom_dias": 6.5, "colab": 424, "colab_aus": 242, "causas": [["ENFERMEDAD GEN", 574], ["VACACIONES", 353], ["INCAPACIDAD", 260], ["DÍA FAMILIA", 213], ["ACC LABORAL", 78], ["LIC DEFUNCIÓN", 34]], "ind_mes": [3.73, 3.53, 3.58, 7.85, 5.39, 2.9, 3.98, 4.21, 3.74, 3.77, 5.51, 13.29, 5.28, 3.94], "aus_mes": [93, 86, 96, 198, 80, 55, 114, 112, 68, 109, 87, 304, 81, 88], "trab_mes": [2490, 2438, 2678, 2522, 1483, 1894, 2862, 2662, 1817, 2888, 1578, 2288, 1535, 2232]}, "BIANCHI": {"dias_trab": 8751, "dias_aus": 359, "ind": 4.1, "prom_dias": 6.6, "colab": 81, "colab_aus": 54, "causas": [["VACACIONES", 106], ["ENFERMEDAD GEN", 89], ["DÍA FAMILIA", 57], ["INCAPACIDAD", 44], ["ACC LABORAL", 41], ["LICENCIA", 7]], "ind_mes": [1.82, 2.53, 1.6, 5.88, 1.22, 2.89, 5.7, 3.72, 3.38, 5.85, 3.64, 12.42, 2.87, 5.47], "aus_mes": [15, 19, 14, 48, 6, 19, 44, 27, 15, 42, 14, 60, 9, 27], "trab_mes": [825, 751, 876, 816, 490, 657, 772, 726, 444, 718, 385, 483, 314, 494]}, "TRULULU": {"dias_trab": 0, "dias_aus": 0, "ind": 0, "prom_dias": 0, "colab": 0, "colab_aus": 0, "causas": [], "ind_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "aus_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "trab_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}}, "ind_mes": [3.26, 3.29, 3.1, 7.37, 4.36, 2.9, 4.35, 4.1, 3.67, 4.19, 5.15, 13.14, 4.87, 4.22], "aus_mes": [108, 105, 110, 246, 86, 74, 158, 139, 83, 151, 101, 364, 90, 115]}, "BOMBOS": {"ind_global": 4.37, "total_dias_aus": 877, "total_colab": 262, "colab_aus": 167, "causas": [["ENFERMEDAD GEN", 310], ["VACACIONES", 222], ["DÍA FAMILIA", 145], ["INCAPACIDAD", 97], ["ACC TRÁNSITO", 51], ["ACC LABORAL", 21], ["LIC PATERNIDAD", 17], ["LICENCIA", 6]], "por_centro": {"SUPER": {"dias_trab": 6826, "dias_aus": 242, "ind": 3.55, "prom_dias": 4.3, "colab": 78, "colab_aus": 56, "causas": [["VACACIONES", 84], ["ENFERMEDAD GEN", 69], ["DÍA FAMILIA", 44], ["INCAPACIDAD", 34], ["ACC LABORAL", 6], ["ACC TRÁNSITO", 3]], "ind_mes": [2.25, 1.52, 2.98, 5.73, 1.96, 4.38, 4.32, 1.62, 3.56, 2.37, 1.44, 13.01, 0.77, 2.87], "aus_mes": [15, 10, 21, 32, 7, 14, 26, 8, 14, 14, 6, 64, 2, 9], "trab_mes": [667, 659, 705, 558, 357, 320, 602, 493, 393, 590, 417, 492, 259, 314]}, "BIANCHI": {"dias_trab": 0, "dias_aus": 0, "ind": 0, "prom_dias": 0, "colab": 0, "colab_aus": 0, "causas": [], "ind_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "aus_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "trab_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "TRULULU": {"dias_trab": 13227, "dias_aus": 635, "ind": 4.8, "prom_dias": 5.7, "colab": 185, "colab_aus": 112, "causas": [["ENFERMEDAD GEN", 241], ["VACACIONES", 138], ["DÍA FAMILIA", 101], ["INCAPACIDAD", 63], ["ACC TRÁNSITO", 48], ["LIC PATERNIDAD", 17]], "ind_mes": [2.25, 4.12, 3.59, 8.02, 3.4, 3.97, 3.97, 4.77, 7.28, 3.67, 3.22, 10.11, 4.02, 4.51], "aus_mes": [24, 43, 41, 87, 22, 30, 47, 49, 49, 43, 28, 107, 23, 42], "trab_mes": [1066, 1044, 1141, 1085, 648, 755, 1185, 1027, 673, 1171, 870, 1058, 572, 932]}}, "ind_mes": [2.25, 3.11, 3.36, 7.24, 2.89, 4.09, 4.09, 3.75, 5.91, 3.24, 2.64, 11.03, 3.01, 4.09], "aus_mes": [39, 53, 62, 119, 29, 44, 73, 57, 63, 57, 34, 171, 25, 51]}, "BARRAS": {"ind_global": 3.62, "total_dias_aus": 1075, "total_colab": 413, "colab_aus": 221, "causas": [["ENFERMEDAD GEN", 416], ["DÍA FAMILIA", 189], ["INCAPACIDAD", 171], ["VACACIONES", 161], ["ACC LABORAL", 50], ["LIC DEFUNCIÓN", 29], ["ACC TRÁNSITO", 20], ["CALAMIDAD", 15]], "por_centro": {"SUPER": {"dias_trab": 20687, "dias_aus": 798, "ind": 3.86, "prom_dias": 5.0, "colab": 290, "colab_aus": 161, "causas": [["ENFERMEDAD GEN", 297], ["DÍA FAMILIA", 154], ["INCAPACIDAD", 135], ["VACACIONES", 98], ["ACC LABORAL", 36], ["LIC DEFUNCIÓN", 25]], "ind_mes": [2.44, 3.65, 1.93, 7.51, 3.05, 4.02, 3.44, 2.07, 3.84, 4.32, 3.25, 8.93, 2.93, 1.91], "aus_mes": [39, 59, 42, 160, 40, 65, 60, 27, 41, 63, 33, 114, 28, 27], "trab_mes": [1600, 1618, 2176, 2130, 1311, 1618, 1742, 1306, 1067, 1457, 1014, 1277, 957, 1414]}, "BIANCHI": {"dias_trab": 3685, "dias_aus": 125, "ind": 3.39, "prom_dias": 5.4, "colab": 45, "colab_aus": 23, "causas": [["ENFERMEDAD GEN", 41], ["VACACIONES", 27], ["INCAPACIDAD", 19], ["DÍA FAMILIA", 19], ["ACC LABORAL", 14], ["ACC TRÁNSITO", 5]], "ind_mes": [3.59, 5.09, 0.0, 3.83, 1.59, 0.0, 2.85, 1.6, 10.15, 1.37, 4.83, 10.7, 1.13, 3.69], "aus_mes": [8, 11, 0, 8, 2, 0, 18, 6, 20, 4, 10, 26, 2, 10], "trab_mes": [223, 216, 243, 209, 126, 276, 631, 374, 197, 292, 207, 243, 177, 271]}, "TRULULU": {"dias_trab": 5342, "dias_aus": 152, "ind": 2.85, "prom_dias": 4.1, "colab": 78, "colab_aus": 37, "causas": [["ENFERMEDAD GEN", 78], ["VACACIONES", 36], ["INCAPACIDAD", 17], ["DÍA FAMILIA", 16], ["LIC DEFUNCIÓN", 4], ["ACC TRÁNSITO", 1]], "ind_mes": [1.82, 0.73, 1.53, 1.48, 3.09, 2.4, 3.4, 2.91, 3.03, 2.91, 3.55, 11.74, 7.87, 0.94], "aus_mes": [3, 3, 11, 10, 13, 8, 16, 13, 8, 13, 10, 31, 10, 3], "trab_mes": [165, 409, 720, 675, 421, 333, 470, 447, 264, 446, 282, 264, 127, 319]}}, "ind_mes": [2.52, 3.25, 1.69, 5.91, 2.96, 3.28, 3.31, 2.16, 4.52, 3.64, 3.53, 9.59, 3.17, 2.0], "aus_mes": [50, 73, 53, 178, 55, 73, 94, 46, 69, 80, 53, 171, 40, 40]}, "PELADERO": {"ind_global": 5.11, "total_dias_aus": 399, "total_colab": 49, "colab_aus": 40, "causas": [["VACACIONES", 181], ["ENFERMEDAD GEN", 98], ["DÍA FAMILIA", 57], ["INCAPACIDAD", 34], ["CALAMIDAD", 11], ["ACC TRÁNSITO", 9], ["LIC DEFUNCIÓN", 5], ["LICENCIA", 2]], "por_centro": {"SUPER": {"dias_trab": 2890, "dias_aus": 170, "ind": 5.88, "prom_dias": 6.1, "colab": 30, "colab_aus": 28, "causas": [["ENFERMEDAD GEN", 57], ["VACACIONES", 47], ["INCAPACIDAD", 34], ["DÍA FAMILIA", 22], ["CALAMIDAD", 6], ["LICENCIA", 2]], "ind_mes": [2.42, 1.72, 5.25, 12.64, 8.51, 0, 0, 0, 0, 0, 0, 0, 0, 0], "aus_mes": [15, 11, 33, 79, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0], "trab_mes": [619, 641, 629, 625, 376, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "BIANCHI": {"dias_trab": 4922, "dias_aus": 229, "ind": 4.65, "prom_dias": 6.4, "colab": 45, "colab_aus": 36, "causas": [["VACACIONES", 134], ["ENFERMEDAD GEN", 41], ["DÍA FAMILIA", 35], ["ACC TRÁNSITO", 9], ["CALAMIDAD", 5], ["LIC DEFUNCIÓN", 5]], "ind_mes": [0, 0, 0, 0, 0, 2.7, 6.1, 3.13, 6.49, 0.85, 1.3, 11.06, 4.57, 3.59], "aus_mes": [0, 0, 0, 0, 0, 14, 43, 18, 25, 4, 6, 73, 23, 23], "trab_mes": [0, 0, 0, 0, 0, 518, 705, 575, 385, 472, 463, 660, 503, 641]}, "TRULULU": {"dias_trab": 0, "dias_aus": 0, "ind": 0, "prom_dias": 0, "colab": 0, "colab_aus": 0, "causas": [], "ind_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "aus_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "trab_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}}, "ind_mes": [2.42, 1.72, 5.25, 12.64, 8.51, 2.7, 6.1, 3.13, 6.49, 0.85, 1.3, 11.06, 4.57, 3.59], "aus_mes": [15, 11, 33, 79, 32, 14, 43, 18, 25, 4, 6, 73, 23, 23]}, "MASMELOS": {"ind_global": 5.2, "total_dias_aus": 852, "total_colab": 257, "colab_aus": 153, "causas": [["ENFERMEDAD GEN", 409], ["VACACIONES", 138], ["DÍA FAMILIA", 136], ["INCAPACIDAD", 78], ["ACC TRÁNSITO", 42], ["LIC DEFUNCIÓN", 16], ["ACC LABORAL", 16], ["CALAMIDAD", 14]], "por_centro": {"SUPER": {"dias_trab": 0, "dias_aus": 0, "ind": 0, "prom_dias": 0, "colab": 0, "colab_aus": 0, "causas": [], "ind_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "aus_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "trab_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "BIANCHI": {"dias_trab": 8481, "dias_aus": 482, "ind": 5.68, "prom_dias": 5.7, "colab": 168, "colab_aus": 85, "causas": [["ENFERMEDAD GEN", 269], ["DÍA FAMILIA", 70], ["VACACIONES", 49], ["INCAPACIDAD", 41], ["ACC TRÁNSITO", 28], ["LIC DEFUNCIÓN", 13]], "ind_mes": [0, 0, 3.04, 5.92, 5.12, 3.73, 4.58, 5.93, 12.02, 6.17, 4.0, 8.08, 7.35, 4.81], "aus_mes": [0, 0, 35, 54, 23, 20, 55, 65, 72, 46, 18, 60, 15, 19], "trab_mes": [0, 0, 1151, 912, 449, 536, 1201, 1096, 599, 745, 450, 743, 204, 395]}, "TRULULU": {"dias_trab": 7900, "dias_aus": 370, "ind": 4.68, "prom_dias": 4.4, "colab": 163, "colab_aus": 85, "causas": [["ENFERMEDAD GEN", 140], ["VACACIONES", 89], ["DÍA FAMILIA", 66], ["INCAPACIDAD", 37], ["ACC TRÁNSITO", 14], ["ACC LABORAL", 10]], "ind_mes": [1.65, 3.68, 2.78, 6.11, 7.32, 1.57, 4.76, 11.69, 0.97, 2.45, 2.5, 13.36, 3.81, 3.17], "aus_mes": [12, 26, 1, 11, 6, 4, 15, 38, 4, 32, 23, 145, 23, 30], "trab_mes": [727, 706, 36, 180, 82, 254, 315, 325, 413, 1308, 919, 1085, 604, 946]}}, "ind_mes": [1.65, 3.68, 3.03, 5.95, 5.46, 3.04, 4.62, 7.25, 7.51, 3.8, 2.99, 11.21, 4.7, 3.65], "aus_mes": [12, 26, 36, 65, 29, 24, 70, 103, 76, 78, 41, 205, 38, 49]}, "CHUPETAS": {"ind_global": 4.38, "total_dias_aus": 335, "total_colab": 146, "colab_aus": 79, "causas": [["ENFERMEDAD GEN", 123], ["VACACIONES", 69], ["DÍA FAMILIA", 66], ["INCAPACIDAD", 36], ["LIC DEFUNCIÓN", 13], ["LICENCIA", 8], ["CALAMIDAD", 8], ["ACC TRÁNSITO", 4]], "por_centro": {"SUPER": {"dias_trab": 7647, "dias_aus": 335, "ind": 4.38, "prom_dias": 4.2, "colab": 146, "colab_aus": 79, "causas": [["ENFERMEDAD GEN", 123], ["VACACIONES", 69], ["DÍA FAMILIA", 66], ["INCAPACIDAD", 36], ["LIC DEFUNCIÓN", 13], ["LICENCIA", 8]], "ind_mes": [3.15, 2.38, 3.01, 8.86, 2.51, 2.03, 2.07, 7.6, 6.49, 2.5, 10.99, 8.96, 2.05, 2.0], "aus_mes": [15, 12, 16, 52, 12, 11, 24, 61, 29, 13, 30, 43, 7, 10], "trab_mes": [476, 504, 532, 587, 478, 543, 1162, 803, 447, 520, 273, 480, 341, 501]}, "BIANCHI": {"dias_trab": 0, "dias_aus": 0, "ind": 0, "prom_dias": 0, "colab": 0, "colab_aus": 0, "causas": [], "ind_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "aus_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "trab_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "TRULULU": {"dias_trab": 0, "dias_aus": 0, "ind": 0, "prom_dias": 0, "colab": 0, "colab_aus": 0, "causas": [], "ind_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "aus_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "trab_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}}, "ind_mes": [3.15, 2.38, 3.01, 8.86, 2.51, 2.03, 2.07, 7.6, 6.49, 2.5, 10.99, 8.96, 2.05, 2.0], "aus_mes": [15, 12, 16, 52, 12, 11, 24, 61, 29, 13, 30, 43, 7, 10]}, "LINEAS_MANUALES": {"ind_global": 6.32, "total_dias_aus": 1797, "total_colab": 622, "colab_aus": 352, "causas": [["ENFERMEDAD GEN", 1264], ["DÍA FAMILIA", 212], ["ACC TRÁNSITO", 103], ["VACACIONES", 75], ["ACC LABORAL", 62], ["INCAPACIDAD", 26], ["CALAMIDAD", 24], ["LIC DEFUNCIÓN", 18]], "por_centro": {"SUPER": {"dias_trab": 0, "dias_aus": 0, "ind": 0, "prom_dias": 0, "colab": 0, "colab_aus": 0, "causas": [], "ind_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "aus_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "trab_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, "BIANCHI": {"dias_trab": 28421, "dias_aus": 1797, "ind": 6.32, "prom_dias": 5.1, "colab": 622, "colab_aus": 352, "causas": [["ENFERMEDAD GEN", 1264], ["DÍA FAMILIA", 212], ["ACC TRÁNSITO", 103], ["VACACIONES", 75], ["ACC LABORAL", 62], ["INCAPACIDAD", 26]], "ind_mes": [2.61, 1.52, 1.21, 4.91, 1.11, 4.8, 0, 4.91, 7.43, 6.87, 6.51, 11.75, 4.92, 5.3], "aus_mes": [14, 8, 8, 28, 4, 98, 0, 140, 190, 271, 205, 453, 161, 217], "trab_mes": [536, 526, 662, 570, 360, 2040, 0, 2853, 2556, 3947, 3147, 3854, 3272, 4098]}, "TRULULU": {"dias_trab": 3, "dias_aus": 0, "ind": 0.0, "prom_dias": 0, "colab": 1, "colab_aus": 0, "causas": [], "ind_mes": [0, 0, 0, 0, 0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0], "aus_mes": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "trab_mes": [0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0]}}, "ind_mes": [2.61, 1.52, 1.21, 4.91, 1.11, 4.8, 0, 4.91, 7.43, 6.87, 6.51, 11.75, 4.92, 5.3], "aus_mes": [14, 8, 8, 28, 4, 98, 0, 140, 190, 271, 205, 453, 161, 217]}}};
+const PROC_COLOR = {"PERIFERICOS":"#f97316","UNIPLAST":"#3b82f6","BARRAS":"#f59e0b",
+  "BOMBOS":"#10b981","LINEAS_MANUALES":"#8b5cf6","MASMELOS":"#ec4899",
+  "CHUPETAS":"#06b6d4","PELADERO":"#84cc16"};
+const CAUSA_CLR = ['#ef4444','#3b82f6','#f97316','#8b5cf6','#ec4899','#f59e0b','#06b6d4','#10b981'];
+const CENT_CLR  = {SUPER:'#FFD700',BIANCHI:'#3b82f6',TRULULU:'#EC4899'};
+const CENT_ORD  = ['SUPER','BIANCHI','TRULULU'];
+const IND_EMP   = 6.49;
 
-const HM_COLORS = {SUPER:'#FFD700',BIANCHI:'#9333EA',TRULULU:'#ec4899',TODOS:'#06b6d4'};
-const HM_DIAS_NOM = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
-let hmCentro = 'TODOS', hmDia = 6, hmCharts = {};
+var procAusCharts = {};
 
-function hmGetSrc(c){ return c==='TODOS' ? HM.global : HM.centros[c]; }
-function hmDestroyAll(){ Object.values(hmCharts).forEach(function(c){if(c)c.destroy();}); hmCharts={}; }
-function hmG(){ return {color:'rgba(255,255,255,.08)',drawBorder:false}; }
-function hmT(){ return {color:'#8899b4',font:{size:11}}; }
-function hmLabel(c){ return c==='SUPER'?'SUPERCOCO':c; }
-function hmFmt(n){
-  if(n==null) return '—';
-  if(n>=1000000) return (n/1000000).toFixed(1)+'M';
-  if(n>=1000) return (n/1000).toFixed(0)+'K';
-  return n.toLocaleString('es-CO',{maximumFractionDigits:1});
+function pG(){ return {color:'rgba(255,255,255,.08)',drawBorder:false}; }
+function pT(){ return {color:'#8899b4',font:{size:11}}; }
+function pLC(c){ return c==='SUPER'?'SUPERCOCO':c; }
+function avgLn(val,lbl,clr){
+  return {id:'avg_'+Math.random().toString(36).slice(2),
+    afterDraw:function(ch){
+      var ctx=ch.ctx,ca=ch.chartArea,sy=ch.scales.y;
+      if(!sy) return;
+      var y=sy.getPixelForValue(val);
+      ctx.save();ctx.beginPath();ctx.moveTo(ca.left,y);ctx.lineTo(ca.right,y);
+      ctx.strokeStyle=clr;ctx.lineWidth=1.5;ctx.setLineDash([5,3]);ctx.stroke();
+      ctx.fillStyle=clr;ctx.font='bold 10px Figtree';ctx.fillText(lbl,ca.left+4,y-5);
+      ctx.restore();
+    }};
 }
 
-function hmBuild(){
-  hmDestroyAll();
-  var src=hmGetSrc(hmCentro), color=HM_COLORS[hmCentro], meses=HM.meses;
-  var totalH=src.total_horas.reduce(function(a,b){return a+b;},0);
-  var maxH=Math.max.apply(null,src.total_horas);
-  var maxMes=meses[src.total_horas.indexOf(maxH)];
-  var minH=Math.min.apply(null,src.total_horas);
-  var minMes=meses[src.total_horas.indexOf(minH)];
-  var promH=(src.prom_laborado.reduce(function(a,b){return a+b;},0)/src.prom_laborado.length).toFixed(2);
+function procAusBuild(pid){
+  CF.proc[pid]=null;
+  var gd=AUS_PROC.grupos[pid], meses=AUS_PROC.meses;
+  if(procAusCharts[pid]) Object.values(procAusCharts[pid]).forEach(function(c){if(c)c.destroy();});
+  procAusCharts[pid]={};
 
-  document.getElementById('hm-kpis').innerHTML=
+  // Chart 1: índice mensual por centro (líneas)
+  var ds1=CENT_ORD.map(function(c){
+    return {label:pLC(c),data:gd.por_centro[c].ind_mes,
+      borderColor:CENT_CLR[c],backgroundColor:CENT_CLR[c]+'22',
+      borderWidth:2.5,tension:.4,fill:false,pointRadius:4,pointHoverRadius:6};
+  });
+  var allI=[]; CENT_ORD.forEach(function(c){allI=allI.concat(gd.por_centro[c].ind_mes.filter(function(v){return v>0;}));});
+  var iMax=allI.length?Math.ceil(Math.max.apply(null,allI)*10)/10+2:12;
+  procAusCharts[pid].ind=new Chart(document.getElementById('proc-ind-'+pid),{
+    type:'line',data:{labels:meses,datasets:ds1},
+    options:{responsive:true,maintainAspectRatio:false,
+      onClick:function(evt,els){
+        if(els&&els.length>0){
+          procCFSet(pid,CENT_ORD[els[0].datasetIndex]||null);
+        } else { CF.proc[pid]=null; procCFApply(pid); }
+      },
+      plugins:{legend:{display:true,labels:{color:'#dde4f0',font:{size:11},boxWidth:12,padding:12}},
+        datalabels:{display:true,color:'#dde4f0',font:{size:9,weight:'bold'},
+          formatter:function(v){return v>0?v.toFixed(1)+'%':'';},anchor:'end',align:'top'},
+        tooltip:{callbacks:{label:function(c){return ' '+c.dataset.label+': '+c.raw.toFixed(2)+'%';}}}
+      },
+      scales:{x:{grid:{display:false},ticks:pT()},
+        y:{grid:pG(),min:0,max:iMax,ticks:{color:'#8899b4',font:{size:11},
+          callback:function(v){return v.toFixed(1)+'%';}}}}
+    }
+  },[avgLn(IND_EMP,'Empresa '+IND_EMP+'%','rgba(148,163,184,.6)')]);
+
+  // Chart 2: causas donut
+  var cs=gd.causas;
+  procAusCharts[pid].causas=new Chart(document.getElementById('proc-causas-'+pid),{
+    type:'doughnut',
+    data:{labels:cs.map(function(c){return c[0];}),
+      datasets:[{data:cs.map(function(c){return c[1];}),
+        backgroundColor:CAUSA_CLR,borderColor:'#0e1422',borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+      plugins:{legend:{position:'right',labels:{color:'#dde4f0',font:{size:11},padding:10,boxWidth:12}},
+        datalabels:{display:true,color:'#fff',font:{size:11,weight:'bold'},
+          formatter:function(v,ctx){
+            var tot=ctx.chart.data.datasets[0].data.reduce(function(a,b){return a+b;},0);
+            return tot>0?(v/tot*100).toFixed(0)+'%':'';
+          }},
+        tooltip:{callbacks:{label:function(c){
+          var tot=c.dataset.data.reduce(function(a,b){return a+b;},0);
+          return ' '+c.label+': '+c.raw+' días ('+(tot>0?(c.raw/tot*100).toFixed(1):0)+'%)';
+        }}}
+      }
+    }
+  });
+
+  // Chart 3: días perdidos apilado
+  var ds3=CENT_ORD.map(function(c){
+    return {label:pLC(c),data:gd.por_centro[c].aus_mes,
+      backgroundColor:CENT_CLR[c]+'cc',borderColor:CENT_CLR[c],
+      borderWidth:1,borderRadius:3,stack:'a'};
+  });
+  var mxA=0;
+  for(var mi=0;mi<meses.length;mi++){
+    var s=0; CENT_ORD.forEach(function(c){s+=gd.por_centro[c].aus_mes[mi]||0;});
+    if(s>mxA) mxA=s;
+  }
+  procAusCharts[pid].aus=new Chart(document.getElementById('proc-aus-'+pid),{
+    type:'bar',data:{labels:meses,datasets:ds3},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,labels:{color:'#dde4f0',font:{size:11},boxWidth:12,padding:12}},
+        datalabels:{display:function(ctx){return ctx.dataset.data[ctx.dataIndex]>15;},
+          color:'#fff',font:{size:9,weight:'bold'},
+          formatter:function(v){return v;},anchor:'center',align:'center'},
+        tooltip:{callbacks:{
+          label:function(c){return ' '+c.dataset.label+': '+c.raw+' días';},
+          footer:function(it){return 'Total: '+it.reduce(function(a,i){return a+(i.raw||0);},0)+' días';}
+        }}
+      },
+      scales:{x:{stacked:true,grid:{display:false},ticks:pT()},
+        y:{stacked:true,grid:pG(),min:0,max:Math.ceil(mxA/50)*50+50,
+          ticks:{color:'#8899b4',font:{size:11}}}}
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// HORAS POR MES
+// ══════════════════════════════════════════════════════
+const HM = {"meses": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic", "Ene '26", "Feb '26"], "centros": {"SUPER": {"total_horas": [239428.4, 224229.7, 248457.8, 220859.4, 239571.8, 225650.8, 238473.4, 211708.1, 209886.9, 202154.4, 165434.9, 137352.9, 140900.0, 130896.1], "prom_laborado": [8.696, 8.574, 8.744, 8.523, 8.541, 8.796, 9.13, 9.03, 9.056, 8.561, 8.119, 8.471, 8.584, 8.587], "por_dia": {"0": [9238.8, 9337.6, 9340.5, 9191.5, 16372.2, 11580.8, 8688.2, 7789.4, 11564.0, 7961.8, 10783.7, 5761.3, 9137.2, 5464.7], "1": [9338.7, 9275.4, 9411.5, 9334.4, 16533.2, 11272.7, 8956.5, 8156.0, 12231.9, 8100.8, 9804.8, 6811.9, 9574.7, 6054.4], "2": [9291.7, 9367.7, 9627.6, 9155.1, 16571.4, 11572.6, 8884.8, 8297.5, 11966.9, 8038.7, 10452.8, 5964.3, 9908.1, 6450.6], "3": [9110.9, 9210.8, 9583.6, 7008.6, 15993.9, 11542.6, 8912.5, 8159.9, 11948.0, 8116.0, 10539.4, 5191.2, 10049.7, 6449.7], "4": [8633.9, 8723.0, 8943.0, 6662.7, 15875.1, 11080.6, 8304.3, 7926.0, 10927.1, 7462.0, 9179.8, 6162.6, 8672.4, 5730.7], "5": [6076.3, 6075.3, 6038.3, 6051.8, 9698.9, 7059.3, 5736.9, 5248.4, 6691.0, 4414.7, 4823.8, 3208.3, 5026.5, 2990.3], "6": [3730.7, 4067.5, 4260.2, 3188.3, 5304.9, 3807.8, 3446.7, 3244.9, 4410.8, 2531.0, 229.2, 1238.6, 1252.9, 331.3]}}, "BIANCHI": {"total_horas": [80107.7, 75678.1, 82478.0, 78308.4, 78723.3, 71737.2, 80246.3, 86478.4, 88206.6, 97314.7, 90274.7, 77209.2, 130373.4, 109855.4], "prom_laborado": [9.172, 9.028, 8.718, 9.242, 9.161, 9.09, 9.274, 9.555, 10.308, 9.839, 9.557, 9.373, 8.338, 8.761], "por_dia": {"0": [3039.6, 3081.3, 3079.7, 3029.1, 5257.8, 2550.4, 2934.0, 3156.2, 4765.2, 3646.5, 4872.1, 3116.1, 8901.3, 4830.3], "1": [2977.6, 3094.3, 3104.7, 3063.7, 5286.3, 3468.2, 2922.6, 3226.4, 4672.8, 3706.5, 4854.7, 3355.5, 8821.3, 4961.5], "2": [2374.9, 3103.9, 3110.4, 3062.8, 5107.8, 3650.1, 2903.9, 3291.0, 4742.4, 3658.3, 4803.2, 2919.5, 8605.8, 4966.6], "3": [2941.2, 3064.9, 3079.2, 2591.5, 5101.2, 3615.6, 2885.6, 3104.9, 4626.3, 3571.2, 4885.1, 3368.0, 8525.1, 4985.1], "4": [2830.8, 3038.4, 3016.3, 2286.9, 5160.1, 3650.8, 2840.7, 3058.1, 4210.4, 3346.5, 4695.9, 3173.8, 8053.1, 4640.0], "5": [2287.9, 2328.0, 2313.6, 2368.5, 3518.1, 2371.6, 2038.9, 2231.6, 3285.8, 2538.5, 3295.9, 2325.9, 4963.3, 2692.6], "6": [1538.3, 1208.8, 1253.8, 1642.8, 2027.1, 1407.4, 1357.8, 1783.1, 3130.2, 2128.9, 1296.0, 1885.7, 2243.1, 1060.9]}}, "TRULULU": {"total_horas": [114099.1, 110796.9, 124960.3, 114817.4, 125282.5, 116280.4, 125099.4, 119816.6, 116328.3, 119261.2, 109513.9, 79965.6, 111425.0, 102601.1], "prom_laborado": [9.445, 9.247, 8.853, 8.855, 9.167, 10.813, 10.872, 10.78, 10.457, 10.298, 10.473, 9.977, 10.597, 10.603], "por_dia": {"0": [4192.8, 4565.6, 4647.7, 4429.2, 8478.2, 5647.1, 4418.7, 4160.3, 6511.7, 4363.8, 5843.2, 3245.1, 6877.9, 4185.6], "1": [4253.1, 4512.5, 4636.9, 4465.9, 8486.8, 5509.5, 4436.6, 4513.3, 6577.8, 4537.7, 5709.2, 3382.0, 6406.9, 4447.0], "2": [4239.6, 4429.8, 4611.9, 4416.8, 8318.3, 5480.7, 4365.6, 4569.2, 6237.8, 4639.5, 5875.9, 2944.2, 7082.1, 4572.2], "3": [4247.0, 4489.4, 4674.2, 4258.4, 7975.6, 5455.3, 4401.7, 4431.5, 6342.3, 4532.5, 5796.3, 3461.5, 7217.3, 4390.7], "4": [4235.0, 4459.2, 4647.8, 3462.6, 7846.0, 5255.9, 4103.9, 4155.5, 5862.0, 4229.0, 5410.8, 3344.9, 6685.7, 4013.7], "5": [3196.0, 3293.8, 3429.7, 3423.1, 5569.5, 4611.4, 3708.4, 3498.9, 4476.6, 3412.1, 4621.3, 2550.3, 5925.8, 3537.0], "6": [2040.6, 1949.0, 2058.1, 2027.6, 3514.2, 2722.8, 2538.9, 2169.4, 2745.7, 1841.5, 1337.9, 1928.8, 2061.4, 1388.2]}}}, "global": {"total_horas": [434259.1, 411314.9, 456396.2, 414457.2, 444070.2, 414110.7, 443870.8, 418003.0, 414784.0, 419986.4, 366256.4, 295435.0, 382698.4, 343352.6], "prom_laborado": [9.036, 8.89, 8.766, 8.835, 8.888, 9.392, 9.609, 9.655, 9.84, 9.424, 9.254, 9.181, 8.938, 9.166], "por_dia": {"0": [16454.7, 16962.7, 17071.6, 16505.3, 30061.0, 19040.5, 16050.1, 15089.2, 22812.9, 15934.7, 21107.5, 12117.0, 24941.6, 14480.6], "1": [16484.6, 16881.5, 17157.9, 16707.9, 30244.0, 20185.8, 16255.8, 15835.4, 23231.9, 16312.6, 20193.7, 13405.0, 24929.0, 15462.9], "2": [13135.9, 16882.6, 17307.7, 16521.6, 29809.6, 20690.8, 16098.3, 16101.1, 22788.1, 16307.5, 20797.6, 11695.0, 25692.1, 15989.4], "3": [16244.2, 16759.6, 17282.7, 13961.9, 29004.7, 20583.9, 16124.7, 15565.8, 22702.6, 16138.2, 20888.5, 10198.2, 25891.4, 15825.5], "4": [15682.5, 16310.6, 16659.5, 12375.6, 28881.2, 20078.7, 15282.7, 15035.3, 20795.2, 14988.3, 19180.9, 12620.6, 23429.0, 14384.4], "5": [11764.5, 11903.7, 12016.3, 12013.8, 19022.4, 14173.2, 11558.4, 11033.1, 14767.4, 10590.3, 13117.3, 8319.4, 15697.8, 9220.0], "6": [7532.7, 7128.0, 7465.2, 7220.8, 11038.7, 8101.5, 7478.0, 7458.9, 11023.6, 6850.1, 3300.9, 5503.7, 5413.2, 2780.4]}}};
+
+const HM_COLORS  = {SUPER:'#FFD700',BIANCHI:'#3b82f6',TRULULU:'#EC4899',TODOS:'#06b6d4'};
+const HM_DIAS    = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+const CENT_HM    = ['SUPER','BIANCHI','TRULULU'];
+
+var hmCentro = 'TODOS';
+var hmDia    = 6;
+var hmCharts = {};
+
+// ── Estado de filtro activo (segmentador cruzado) ──
+var hmFilter = {
+  mes: null,   // índice del mes seleccionado (null = todos)
+  dia: null    // índice del día seleccionado (null = todos)
+};
+
+function hmGetSrc(c){ return c==='TODOS' ? HM.global : HM.centros[c]; }
+function hmDestroy(){ Object.values(hmCharts).forEach(function(c){if(c)c.destroy();}); hmCharts={}; }
+function hmG(){ return {color:'rgba(255,255,255,.08)',drawBorder:false}; }
+function hmT(){ return {color:'#8899b4',font:{size:11}}; }
+function hmFmt(n){
+  if(!n && n!==0) return '0';
+  if(n>=1000000) return (n/1000000).toFixed(2)+'M';
+  if(n>=1000)    return (n/1000).toFixed(0)+'K';
+  return n.toLocaleString('es-CO',{maximumFractionDigits:1});
+}
+function hmLC(c){ return c==='SUPER'?'SUPERCOCO':c; }
+
+// Highlight alpha: cuando hay filtro activo, atenuar los no seleccionados
+function hmAlpha(idx, alpha){
+  return hmFilter.mes !== null && hmFilter.mes !== idx ? alpha : 1;
+}
+
+function hmSetFilter(type, idx){
+  // Toggle: si ya está activo el mismo, desactivar
+  if(type === 'mes'){
+    hmFilter.mes = (hmFilter.mes === idx) ? null : idx;
+  } else if(type === 'dia'){
+    hmFilter.dia = (hmFilter.dia === idx) ? null : idx;
+  }
+  // Actualizar KPIs con datos del filtro
+  hmUpdateKpis();
+  // Redibujar todas las gráficas
+  hmBuildTotal();
+  hmBuildProm();
+  hmBuildDia();
+  hmBuildComp();
+}
+
+function hmUpdateKpis(){
+  var src     = hmGetSrc(hmCentro);
+  var meses   = HM.meses;
+  var color   = HM_COLORS[hmCentro];
+
+  var horas_arr, label_periodo;
+  if(hmFilter.mes !== null){
+    horas_arr      = [src.total_horas[hmFilter.mes]];
+    label_periodo  = meses[hmFilter.mes];
+  } else {
+    horas_arr      = src.total_horas;
+    label_periodo  = 'Ene 2025 – Feb 2026';
+  }
+
+  var totalH = horas_arr.reduce(function(a,b){return a+b;},0);
+  var maxH   = Math.max.apply(null, src.total_horas);
+  var maxMes = meses[src.total_horas.indexOf(maxH)];
+  var minH   = Math.min.apply(null, src.total_horas);
+  var minMes = meses[src.total_horas.indexOf(minH)];
+  var prom_arr = hmFilter.mes !== null
+    ? [src.prom_laborado[hmFilter.mes]]
+    : src.prom_laborado;
+  var promH  = (prom_arr.reduce(function(a,b){return a+b;},0)/prom_arr.length).toFixed(2);
+
+  document.getElementById('hm-kpis').innerHTML =
     '<div class="kpi"><div class="kpi-line" style="background:'+color+'"></div>'+
     '<div class="kpi-val" style="color:'+color+';font-size:22px">'+hmFmt(Math.round(totalH))+'</div>'+
-    '<div class="kpi-label">Total Horas Período</div><div class="kpi-sub">Ene 2025 – Feb 2026</div></div>'+
+    '<div class="kpi-label">Total Horas'+(hmFilter.mes!==null?' ('+meses[hmFilter.mes]+')':' Período')+'</div>'+
+    '<div class="kpi-sub">'+label_periodo+'</div></div>'+
     '<div class="kpi"><div class="kpi-line" style="background:#10b981"></div>'+
     '<div class="kpi-val" style="color:#10b981;font-size:22px">'+hmFmt(maxH)+'</div>'+
     '<div class="kpi-label">Mes Pico</div><div class="kpi-sub">'+maxMes+'</div></div>'+
@@ -2900,214 +3931,308 @@ function hmBuild(){
     '<div class="kpi-label">Mes Mínimo</div><div class="kpi-sub">'+minMes+'</div></div>'+
     '<div class="kpi"><div class="kpi-line" style="background:#8b5cf6"></div>'+
     '<div class="kpi-val" style="color:#8b5cf6;font-size:22px">'+promH+'h</div>'+
-    '<div class="kpi-label">Prom. h/Marcación</div><div class="kpi-sub">Promedio del período</div></div>';
+    '<div class="kpi-label">Prom. h/Marcación</div>'+
+    '<div class="kpi-sub">'+(hmFilter.mes!==null?meses[hmFilter.mes]:'Promedio del período')+'</div></div>';
+}
 
-  // ── Chart 1: Total Horas — SIEMPRE APILADO por los 3 centros ──
-  var centrosOrder = ['SUPER','BIANCHI','TRULULU'];
-  var ds1 = centrosOrder.map(function(c){
-    var active = (hmCentro==='TODOS' || hmCentro===c);
+function hmBuild(){
+  hmDestroy();
+  hmFilter = {mes:null, dia:null};
+  hmUpdateKpis();
+  hmBuildTotal();
+  hmBuildProm();
+  hmBuildDia();
+  hmBuildComp();
+}
+
+function hmBuildTotal(){
+  if(hmCharts.total){ hmCharts.total.destroy(); }
+  var meses = HM.meses;
+
+  // Barras apiladas por centro + línea total en eje secundario
+  var ds = CENT_HM.map(function(c){
+    var act = (hmCentro==='TODOS' || hmCentro===c);
     return {
-      label: hmLabel(c),
+      label: hmLC(c),
       data: HM.centros[c].total_horas,
-      backgroundColor: active ? HM_COLORS[c]+'cc' : 'rgba(80,80,80,0.25)',
-      borderColor:     active ? HM_COLORS[c]       : 'rgba(80,80,80,0.4)',
-      borderWidth:1, borderRadius:3, stack:'total'
+      backgroundColor: HM.centros[c].total_horas.map(function(_,i){
+        var base = act ? HM_COLORS[c]+'cc' : 'rgba(80,80,80,0.2)';
+        if(hmFilter.mes !== null && hmFilter.mes !== i) return act ? HM_COLORS[c]+'44' : 'rgba(80,80,80,0.08)';
+        return base;
+      }),
+      borderColor: act ? HM_COLORS[c] : 'rgba(80,80,80,0.3)',
+      borderWidth:1, borderRadius:3, stack:'t', yAxisID:'y'
     };
   });
 
-  // Max stacked value for y-axis
-  var maxStack = 0;
-  for(var mi=0; mi<meses.length; mi++){
-    var s=0;
-    centrosOrder.forEach(function(c){ s+=HM.centros[c].total_horas[mi]||0; });
-    if(s>maxStack) maxStack=s;
-  }
-  var yMax1 = Math.ceil(maxStack/50000)*50000 + 50000;
+  // Línea total global
+  var totalesMes = meses.map(function(_,i){
+    return CENT_HM.reduce(function(a,c){return a+(HM.centros[c].total_horas[i]||0);},0);
+  });
+  ds.push({
+    label:'Total', type:'line',
+    data: totalesMes,
+    borderColor:'#dde4f0', backgroundColor:'rgba(221,228,240,.08)',
+    borderWidth:2, tension:.4, fill:false, pointRadius:4, pointHoverRadius:6,
+    yAxisID:'y2', stack: undefined,
+    datalabels:{
+      display:function(ctx){ return hmFilter.mes===null || hmFilter.mes===ctx.dataIndex; },
+      color:'#dde4f0', font:{size:9,weight:'bold'},
+      formatter:function(v){return hmFmt(v);}, anchor:'end', align:'top'
+    }
+  });
+
+  var mxS = Math.max.apply(null, totalesMes);
 
   hmCharts.total = new Chart(document.getElementById('hm-chart-total'),{
-    type:'bar', data:{labels:meses,datasets:ds1},
-    options:{responsive:true,maintainAspectRatio:false,
+    type:'bar', data:{labels:meses, datasets:ds},
+    options:{responsive:true, maintainAspectRatio:false,
+      onClick: function(evt, elements){
+        if(elements && elements.length > 0){
+          var idx = elements[0].index;
+          hmSetFilter('mes', idx);
+        } else {
+          hmSetFilter('mes', null);
+        }
+      },
       plugins:{
-        legend:{display:true,labels:{color:'#dde4f0',font:{size:11},
-          boxWidth:12,padding:14}},
-        datalabels:{
-          display:function(ctx){ return ctx.dataset.data[ctx.dataIndex]>15000; },
-          color:'#fff',font:{size:9,weight:'bold'},
-          formatter:function(v){ return hmFmt(v); },
-          anchor:'center',align:'center'
-        },
+        legend:{display:true, labels:{color:'#dde4f0',font:{size:11},boxWidth:12,padding:14}},
+        datalabels:{display:false},
         tooltip:{callbacks:{
-          label:function(c){ return ' '+c.dataset.label+': '+
-            c.raw.toLocaleString('es-CO',{maximumFractionDigits:0})+'h'; },
-          footer:function(items){
-            var tot=items.reduce(function(a,i){return a+(i.raw||0);},0);
-            return 'Total: '+tot.toLocaleString('es-CO',{maximumFractionDigits:0})+'h';
+          label:function(c){return ' '+c.dataset.label+': '+hmFmt(c.raw)+'h';},
+          footer:function(it){
+            var tot=it.filter(function(i){return i.dataset.stack==='t';}).reduce(function(a,i){return a+(i.raw||0);},0);
+            return tot>0?'Apilado: '+hmFmt(tot)+'h':'';
           }
         }}
       },
       scales:{
-        x:{stacked:true,grid:{display:false},ticks:hmT()},
-        y:{stacked:true,grid:hmG(),min:0,max:yMax1,
-          ticks:{color:'#8899b4',font:{size:11},
-            callback:function(v){ return v>=1000?(v/1000).toFixed(0)+'K':v; }}}
+        x:{stacked:true, grid:{display:false}, ticks:hmT()},
+        y:{stacked:true, grid:hmG(), position:'left', min:0,
+          max:Math.ceil(mxS/50000)*50000+50000,
+          title:{display:true, text:'Horas por Centro', color:'#8899b4', font:{size:10}},
+          ticks:{color:'#8899b4',font:{size:10},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}}},
+        y2:{stacked:false, grid:{display:false}, position:'right', min:0,
+          max:Math.ceil(mxS/50000)*50000+50000,
+          title:{display:true, text:'Total Horas', color:'#dde4f0', font:{size:10}},
+          ticks:{color:'#dde4f0',font:{size:10},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}}}
       }
     }
   });
 
-  // ── Chart 2: Prom Laborado — dinámico según centro ──
-  var ds2 = hmCentro==='TODOS'
-    ? centrosOrder.map(function(c){
-        return {label:hmLabel(c),data:HM.centros[c].prom_laborado,
-          borderColor:HM_COLORS[c],backgroundColor:HM_COLORS[c]+'22',
-          borderWidth:2.5,tension:.4,fill:false,pointRadius:4,pointHoverRadius:6};
-      })
-    : [{label:hmLabel(hmCentro),data:src.prom_laborado,
-        borderColor:color,backgroundColor:color+'22',
-        borderWidth:2.5,tension:.4,fill:true,pointRadius:4,pointHoverRadius:6}];
-
-  var allProm = [];
-  centrosOrder.forEach(function(c){ allProm=allProm.concat(HM.centros[c].prom_laborado); });
-  var promMin = Math.floor(Math.min.apply(null,allProm)*10)/10;
-  var promMax = Math.ceil(Math.max.apply(null,allProm)*10)/10 + 0.5;
-
-  hmCharts.prom = new Chart(document.getElementById('hm-chart-prom'),{
-    type:'line', data:{labels:meses,datasets:ds2},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{
-        legend:{display:hmCentro==='TODOS',labels:{color:'#dde4f0',font:{size:11},boxWidth:12,padding:14}},
-        datalabels:{display:true,color:'#dde4f0',font:{size:9,weight:'bold'},
-          formatter:function(v){return v.toFixed(1)+'h';},anchor:'end',align:'top'},
-        tooltip:{callbacks:{label:function(c){
-          return ' '+c.dataset.label+': '+c.raw.toFixed(2)+'h/marcación';
-        }}}
-      },
-      scales:{
-        x:{grid:{display:false},ticks:hmT()},
-        y:{grid:hmG(),min:promMin,max:promMax,
-          ticks:{color:'#8899b4',font:{size:11},
-            callback:function(v){return v.toFixed(1)+'h';}}}
-      }
-    }
-  });
-
-  hmBuildDiaChart();
-  hmBuildCompChart();
+  // Indicador visual de filtro activo
+  var lbl = document.getElementById('hm-filter-label');
+  if(lbl){
+    lbl.textContent = hmFilter.mes !== null
+      ? '🔍 Filtrando: '+HM.meses[hmFilter.mes]+' — clic en barra para quitar filtro'
+      : 'Clic en una barra para filtrar por mes';
+    lbl.style.color = hmFilter.mes !== null ? '#06b6d4' : '#5a6a85';
+  }
 }
 
-function hmBuildDiaChart(){
-  if(hmCharts.dia){hmCharts.dia.destroy();}
-  var src=hmGetSrc(hmCentro), color=HM_COLORS[hmCentro], meses=HM.meses;
-  document.getElementById('hm-dia-title').textContent = '📅 Total de Horas — '+HM_DIAS_NOM[hmDia];
+function hmBuildProm(){
+  if(hmCharts.prom){ hmCharts.prom.destroy(); }
+  var meses = HM.meses;
 
-  var centrosOrder = ['SUPER','BIANCHI','TRULULU'];
-
-  // Siempre apilado por los 3 centros, resaltando el seleccionado
-  var ds = centrosOrder.map(function(c){
-    var active = (hmCentro==='TODOS' || hmCentro===c);
+  // Barras apiladas de prom h/marcación por centro
+  var ds = CENT_HM.map(function(c){
+    var act = (hmCentro==='TODOS' || hmCentro===c);
     return {
-      label: hmLabel(c),
-      data: HM.centros[c].por_dia[hmDia],
-      borderColor:     active ? HM_COLORS[c]       : 'rgba(80,80,80,0.4)',
-      backgroundColor: active ? HM_COLORS[c]+'44'  : 'rgba(80,80,80,0.1)',
-      borderWidth: active ? 2.5 : 1,
-      tension:.4, fill:true, pointRadius: active ? 4 : 2,
-      pointHoverRadius:6
+      label: hmLC(c),
+      data: HM.centros[c].prom_laborado,
+      backgroundColor: HM.centros[c].prom_laborado.map(function(_,i){
+        var base = act ? HM_COLORS[c]+'cc' : 'rgba(80,80,80,0.2)';
+        if(hmFilter.mes !== null && hmFilter.mes !== i) return act ? HM_COLORS[c]+'44' : 'rgba(80,80,80,0.08)';
+        return base;
+      }),
+      borderColor: act ? HM_COLORS[c] : 'rgba(80,80,80,0.3)',
+      borderWidth:1, borderRadius:3, stack:'p', yAxisID:'y'
     };
   });
 
-  var allVals=[];
-  centrosOrder.forEach(function(c){ allVals=allVals.concat(HM.centros[c].por_dia[hmDia]); });
-  var yMax = Math.ceil(Math.max.apply(null,allVals)/500)*500 + 500;
+  // Línea promedio global
+  var promsGlobal = meses.map(function(_,i){
+    return hmGetSrc(hmCentro).prom_laborado[i];
+  });
+  ds.push({
+    label:'Promedio', type:'line',
+    data: promsGlobal,
+    borderColor:'#dde4f0', backgroundColor:'rgba(221,228,240,.08)',
+    borderWidth:2, tension:.4, fill:false, pointRadius:4, pointHoverRadius:6,
+    yAxisID:'y2', stack:undefined,
+    datalabels:{
+      display:function(ctx){ return hmFilter.mes===null || hmFilter.mes===ctx.dataIndex; },
+      color:'#dde4f0', font:{size:9,weight:'bold'},
+      formatter:function(v){return v.toFixed(1)+'h';}, anchor:'end', align:'top'
+    }
+  });
+
+  var allP = [];
+  CENT_HM.forEach(function(c){allP=allP.concat(HM.centros[c].prom_laborado.filter(function(v){return v>0;}));});
+  var pMax = Math.ceil(Math.max.apply(null,allP)*10)/10+0.5;
+  var pMin = Math.floor(Math.min.apply(null,allP)*10)/10;
+
+  hmCharts.prom = new Chart(document.getElementById('hm-chart-prom'),{
+    type:'bar', data:{labels:meses, datasets:ds},
+    options:{responsive:true, maintainAspectRatio:false,
+      onClick: function(evt, elements){
+        if(elements && elements.length > 0) hmSetFilter('mes', elements[0].index);
+        else hmSetFilter('mes', null);
+      },
+      plugins:{
+        legend:{display:true, labels:{color:'#dde4f0',font:{size:11},boxWidth:12,padding:14}},
+        datalabels:{display:false},
+        tooltip:{callbacks:{label:function(c){return ' '+c.dataset.label+': '+c.raw.toFixed(2)+'h';}}}
+      },
+      scales:{
+        x:{stacked:true, grid:{display:false}, ticks:hmT()},
+        y:{stacked:true, grid:hmG(), position:'left', min:0,
+          title:{display:true, text:'h/marcación por Centro', color:'#8899b4', font:{size:10}},
+          ticks:{color:'#8899b4',font:{size:10},callback:function(v){return v.toFixed(1)+'h';}}},
+        y2:{stacked:false, grid:{display:false}, position:'right', min:pMin, max:pMax,
+          title:{display:true, text:'Promedio Global', color:'#dde4f0', font:{size:10}},
+          ticks:{color:'#dde4f0',font:{size:10},callback:function(v){return v.toFixed(1)+'h';}}}
+      }
+    }
+  });
+}
+
+function hmBuildDia(){
+  if(hmCharts.dia){ hmCharts.dia.destroy(); }
+  var meses  = HM.meses;
+  var color  = HM_COLORS[hmCentro];
+  document.getElementById('hm-dia-title').textContent = '📅 Total de Horas — '+HM_DIAS[hmDia];
+
+  var ds = CENT_HM.map(function(c){
+    var act = (hmCentro==='TODOS' || hmCentro===c);
+    return {
+      label: hmLC(c),
+      data: HM.centros[c].por_dia[hmDia],
+      borderColor:     act ? HM_COLORS[c]       : 'rgba(80,80,80,0.4)',
+      backgroundColor: HM.centros[c].por_dia[hmDia].map(function(_,i){
+        var base = act ? HM_COLORS[c]+'44' : 'rgba(80,80,80,0.1)';
+        if(hmFilter.mes !== null && hmFilter.mes !== i) return act ? HM_COLORS[c]+'18' : 'rgba(80,80,80,0.04)';
+        return base;
+      }),
+      borderWidth: act ? 2.5 : 1, tension:.4,
+      fill: act && hmCentro!=='TODOS',
+      pointRadius: act ? 4 : 2,
+      pointHoverRadius: 6,
+      pointBackgroundColor: HM.centros[c].por_dia[hmDia].map(function(_,i){
+        return hmFilter.mes===i ? HM_COLORS[c] : 'transparent';
+      })
+    };
+  });
+
+  var allV = []; CENT_HM.forEach(function(c){allV=allV.concat(HM.centros[c].por_dia[hmDia]);});
+  var yMax = Math.ceil(Math.max.apply(null,allV)/500)*500+500;
 
   hmCharts.dia = new Chart(document.getElementById('hm-chart-dia'),{
-    type:'line', data:{labels:meses,datasets:ds},
-    options:{responsive:true,maintainAspectRatio:false,
+    type:'line', data:{labels:meses, datasets:ds},
+    options:{responsive:true, maintainAspectRatio:false,
+      onClick: function(evt, elements){
+        if(elements && elements.length > 0) hmSetFilter('mes', elements[0].index);
+        else hmSetFilter('mes', null);
+      },
       plugins:{
-        legend:{display:true,labels:{color:'#dde4f0',font:{size:11},boxWidth:12,padding:14}},
+        legend:{display:true, labels:{color:'#dde4f0',font:{size:11},boxWidth:12,padding:14}},
         datalabels:{
-          display:function(ctx){ return hmCentro!=='TODOS' ? ctx.dataset.label===hmLabel(hmCentro) : true; },
-          color:'#dde4f0',font:{size:9,weight:'bold'},
-          formatter:function(v){return hmFmt(v)+'h';},anchor:'end',align:'top'
+          display:function(ctx){ return hmFilter.mes===null?ctx.datasetIndex===0:hmFilter.mes===ctx.dataIndex; },
+          color:'#dde4f0', font:{size:9,weight:'bold'},
+          formatter:function(v){return hmFmt(v)+'h';}, anchor:'end', align:'top'
         },
-        tooltip:{callbacks:{label:function(c){
-          return ' '+c.dataset.label+': '+hmFmt(c.raw)+'h';
-        }}}
+        tooltip:{callbacks:{label:function(c){return ' '+c.dataset.label+': '+hmFmt(c.raw)+'h';}}}
       },
       scales:{
-        x:{grid:{display:false},ticks:hmT()},
-        y:{grid:hmG(),min:0,max:yMax,
-          ticks:{color:'#8899b4',font:{size:11},
-            callback:function(v){ return v>=1000?(v/1000).toFixed(0)+'K':v; }}}
+        x:{grid:{display:false}, ticks:hmT()},
+        y:{grid:hmG(), min:0, max:yMax,
+          ticks:{color:'#8899b4',font:{size:11},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}}}
       }
     }
   });
 }
 
-function hmBuildCompChart(){
-  if(hmCharts.comp){hmCharts.comp.destroy();}
-  var src=hmGetSrc(hmCentro), color=HM_COLORS[hmCentro];
-  var lastIdx=HM.meses.length-1;
-  var diasColors=['#3b82f6','#06b6d4','#10b981','#f59e0b','#f97316','#8b5cf6','#ec4899'];
+function hmBuildComp(){
+  if(hmCharts.comp){ hmCharts.comp.destroy(); }
+  var color = HM_COLORS[hmCentro];
+  // Usar mes filtrado si existe, si no el último
+  var idx = hmFilter.mes !== null ? hmFilter.mes : HM.meses.length-1;
+  var mesLbl = HM.meses[idx];
   document.getElementById('hm-comp-sub').textContent =
-    'Horas totales por tipo de día en '+HM.meses[lastIdx];
+    'Horas totales por tipo de día en '+mesLbl+(hmFilter.mes!==null?' (filtrado)':'');
 
-  var centrosOrder = ['SUPER','BIANCHI','TRULULU'];
-  var ds;
-  if(hmCentro==='TODOS'){
-    // Barras agrupadas por centro, cada barra = un día de la semana
-    ds = centrosOrder.map(function(c){
-      return {label:hmLabel(c),
-        data:Object.values(HM.centros[c].por_dia).map(function(arr){return arr[lastIdx];}),
-        backgroundColor:HM_COLORS[c]+'cc',borderColor:HM_COLORS[c],
-        borderWidth:1,borderRadius:5};
-    });
-  } else {
-    // Un solo centro — 7 barras con colores por día
-    ds = [{label:hmLabel(hmCentro),
-      data:Object.values(src.por_dia).map(function(arr){return arr[lastIdx];}),
-      backgroundColor:diasColors,borderColor:diasColors,
-      borderWidth:1,borderRadius:5}];
-  }
+  var diasCols = ['#3b82f6','#06b6d4','#10b981','#f59e0b','#f97316','#8b5cf6','#ec4899'];
+  var ds = hmCentro==='TODOS'
+    ? CENT_HM.map(function(c){
+        return {label:hmLC(c),
+          data:Object.values(HM.centros[c].por_dia).map(function(arr){return arr[idx];}),
+          backgroundColor:HM_COLORS[c]+'cc', borderColor:HM_COLORS[c], borderWidth:1, borderRadius:5};
+      })
+    : [{label:hmLC(hmCentro),
+        data:Object.values(hmGetSrc(hmCentro).por_dia).map(function(arr){return arr[idx];}),
+        backgroundColor:diasCols, borderColor:diasCols, borderWidth:1, borderRadius:5}];
 
-  var allComp=[];
-  centrosOrder.forEach(function(c){
-    allComp=allComp.concat(Object.values(HM.centros[c].por_dia).map(function(arr){return arr[lastIdx];}));
-  });
-  var yMaxC = Math.ceil(Math.max.apply(null,allComp)/1000)*1000 + 1000;
+  var allC = []; CENT_HM.forEach(function(c){allC=allC.concat(Object.values(HM.centros[c].por_dia).map(function(arr){return arr[idx];}));});
+  var yMaxC = Math.ceil(Math.max.apply(null,allC)/1000)*1000+1000;
 
   hmCharts.comp = new Chart(document.getElementById('hm-chart-comp-dias'),{
-    type:'bar', data:{labels:HM_DIAS_NOM,datasets:ds},
-    options:{responsive:true,maintainAspectRatio:false,
+    type:'bar', data:{labels:HM_DIAS, datasets:ds},
+    options:{responsive:true, maintainAspectRatio:false,
+      onClick:function(evt, elements){
+        if(elements && elements.length > 0) hmSetFilter('dia', elements[0].index);
+        else hmSetFilter('dia', null);
+      },
       plugins:{
-        legend:{display:hmCentro==='TODOS',labels:{color:'#dde4f0',font:{size:11},boxWidth:12,padding:14}},
-        datalabels:{display:true,color:'#fff',font:{size:10,weight:'bold'},
-          formatter:function(v){return hmFmt(v)+'h';},anchor:'end',align:'top'},
-        tooltip:{callbacks:{label:function(c){
-          return ' '+c.dataset.label+': '+hmFmt(c.raw)+'h';
-        }}}
+        legend:{display:hmCentro==='TODOS', labels:{color:'#dde4f0',font:{size:11},boxWidth:12,padding:14}},
+        datalabels:{display:true, color:'#fff', font:{size:10,weight:'bold'},
+          formatter:function(v){return hmFmt(v)+'h';}, anchor:'end', align:'top'},
+        tooltip:{callbacks:{label:function(c){return ' '+c.dataset.label+': '+hmFmt(c.raw)+'h';}}}
       },
       scales:{
-        x:{grid:{display:false},ticks:hmT()},
-        y:{grid:hmG(),min:0,max:yMaxC,
-          ticks:{color:'#8899b4',font:{size:11},
-            callback:function(v){ return v>=1000?(v/1000).toFixed(0)+'K':v; }}}
+        x:{grid:{display:false}, ticks:hmT()},
+        y:{grid:hmG(), min:0, max:yMaxC,
+          ticks:{color:'#8899b4',font:{size:11},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}}}
       }
     }
   });
 }
 
-function hmSetCentro(centro,btn){
-  hmCentro=centro;
+function hmSetCentro(centro, btn){
+  hmCentro = centro;
+  hmFilter = {mes:null, dia:null};
   document.querySelectorAll('[id^="hm-btn-"]').forEach(function(b){b.classList.remove('hm-btn-active');});
   if(btn) btn.classList.add('hm-btn-active');
   hmBuild();
 }
 
-function hmSetDia(dia,btn){
-  hmDia=dia;
+function hmSetDia(dia, btn){
+  hmDia = dia;
   document.querySelectorAll('[id^="hm-d-"]').forEach(function(b){b.classList.remove('hm-btn-active');});
   if(btn) btn.classList.add('hm-btn-active');
-  hmBuildDiaChart();
+  hmBuildDia();
+}
+
+</script>y:false}, ticks:hmT()},
+        y:{grid:hmG(), min:0, max:yMaxC,
+          ticks:{color:'#8899b4',font:{size:11},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}}}
+      }
+    }
+  });
+}
+
+function hmSetCentro(centro, btn){
+  hmCentro = centro;
+  hmFilter = {mes:null, dia:null};
+  document.querySelectorAll('[id^="hm-btn-"]').forEach(function(b){b.classList.remove('hm-btn-active');});
+  if(btn) btn.classList.add('hm-btn-active');
+  hmBuild();
+}
+
+function hmSetDia(dia, btn){
+  hmDia = dia;
+  document.querySelectorAll('[id^="hm-d-"]').forEach(function(b){b.classList.remove('hm-btn-active');});
+  if(btn) btn.classList.add('hm-btn-active');
+  hmBuildDia();
 }
 
 </script>
