@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Ausentismo — Ene 2025 – Feb 2026</title>
+<title>Mano de Obra 2025-2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -336,8 +336,8 @@ canvas { cursor: pointer; }
 ══════════════════════════════════════ -->
 <aside>
   <div class="aside-logo">
-    <div class="brand">Producción 2025 - 2026</div>
-    <h2>Ausentismo<br>Centros & Plantas</h2>
+    <div class="brand">Mano de Obra 2025 - 2026</div>
+    <h2>Mano de Obra<br>2025 - 2026</h2>
   </div>
 
   <div class="nav-group">
@@ -416,7 +416,6 @@ canvas { cursor: pointer; }
     <div style="font-weight:700;margin-bottom:2px;">Período de Datos</div>
     <div style="color:var(--light);font-size:11px;font-weight:600;">Enero 2025 – Febrero 2026</div>
   </div>
-
 </aside>
 
 <!-- ══════════════════════════════════════
@@ -435,12 +434,7 @@ canvas { cursor: pointer; }
   <div class="page-header">
     <div class="page-eyebrow" style="color:var(--muted)"></div>
     <div class="page-title">Comparación de los 3 Centros Productivos</div>
-    <div id="ov-filter-bar" style="display:none;margin-top:10px;padding:8px 14px;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);border-radius:8px;font-size:12px;color:#dde4f0;display:flex;align-items:center;gap:10px;">
-      <span id="ov-filter-txt">Filtrando por centro</span>
-      <button onclick="ovClearFilter()" style="padding:3px 10px;border-radius:5px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#dde4f0;font-size:11px;cursor:pointer;font-family:Figtree;">✕ Quitar filtro</button>
     </div>
-    
-  </div>
 
 
   <!-- KPI Compañía -->
@@ -562,6 +556,7 @@ canvas { cursor: pointer; }
       <div class="sub">Ordenado de mayor a menor días de ausentismo · Filtrado por centro · 3.504 colaboradores con ausentismo registrado</div>
     </div>
     <div id="tabla-personas-container"></div>
+  <div style="margin-top:12px;font-size:11px;color:#5a6a85;font-family:'Figtree',sans-serif;letter-spacing:.05em;">Fuente: TTA_PORTAL_MARCACION_LIQUIDA</div>
   </div>
 </div>
 
@@ -1876,16 +1871,6 @@ function ovApplyFilter(){
   var LABELS = {BIANCHI:'BIANCHI', SUPER:'SUPERCOCO', TRULULU:'TRULULU'};
 
   // Update filter bar
-  var bar = document.getElementById('ov-filter-bar');
-  var txt = document.getElementById('ov-filter-txt');
-  if(active){
-    bar.style.display='flex';
-    bar.style.borderColor = COLORS[active]+'66';
-    bar.style.background  = COLORS[active]+'11';
-    txt.innerHTML = '🔍 Filtrando: <strong style="color:'+COLORS[active]+'">'+(LABELS[active]||active)+'</strong> — clic en la misma barra para quitar';
-  } else {
-    bar.style.display='none';
-  }
 
   // Highlight centro cards
   document.querySelectorAll('.centro-card').forEach(function(card){
@@ -4236,5 +4221,13 @@ function hmSetDia(dia, btn){
 }
 
 </script>
+
+<!-- Footer fuente -->
+<div style="position:fixed;bottom:14px;left:20px;z-index:500;
+  font-size:10px;color:#dde4f0;font-family:'Figtree',sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+  pointer-events:none;">
+  Fuente: TTA_PORTAL_MARCACION_LIQUIDA
+</div>
 </body>
 </html>
