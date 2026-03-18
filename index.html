@@ -2493,16 +2493,17 @@ function renderCombinado(filtro='TODOS') {
   const rows = (filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro))
     .filter(d => FILTRO_PLANTA_GLOBAL==='TODAS' || d.p===FILTRO_PLANTA_GLOBAL);
   const maxS = Math.max(...sorted.map(d=>Math.abs(d.score)));
+  const scaleOEE = 0.90;
+  const scaleKGH = Math.max(...(calcMejoras()||[]).map(d=>d.meta_kgh||0).filter(Boolean)) * 1.15 || 50;
   document.getElementById('thead-combinado').innerHTML = VISTA_LINEA
-    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>OEE Mes</th><th>% Mej. OEE</th><th>Kg/H Mes</th><th>% Mej. Kg/H</th><th style="width:90px">Score</th><th>% Score</th></tr>'
-    : '<tr><th>#</th><th>Centro</th><th>Planta</th><th>OEE Mes</th><th>% Mej. OEE</th><th>Kg/H Mes</th><th>% Mej. Kg/H</th><th style="width:100px">Score</th><th>% Score</th></tr>';
+    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>OEE</th><th>vs Meta OEE</th><th>Kg/H</th><th>vs Meta Kg/H</th><th style="width:110px">Score Combinado</th></tr>'
+    : '<tr><th>#</th><th>Centro</th><th>Planta</th><th>OEE</th><th>vs Meta OEE</th><th>Kg/H</th><th>vs Meta Kg/H</th><th style="width:110px">Score Combinado</th></tr>';
   document.getElementById('tbody-combinado').innerHTML = rows.map((d,i)=>{
-    const maxS = Math.max(...rows.map(r=>Math.abs(r.score||0)));
-    const bw = maxS>0 ? Math.min(100,(Math.abs(d.score||0)/maxS*100)).toFixed(1) : '0';
-    const bc = (d.score||0)>=0 ? 'rgba(16,185,129,.75)' : 'rgba(239,68,68,.75)';
-    const posOEE = d.mejora_oee !== null && d.mejora_oee >= 0;
-    const posKGH = d.mejora_kgh !== null && d.mejora_kgh >= 0;
     const posScore = (d.score||0) >= 0;
+    const posOEE   = d.mejora_oee !== null && d.mejora_oee >= 0;
+    const posKGH   = d.mejora_kgh !== null && d.mejora_kgh >= 0;
+    const bOEE = miniBar(d.oee_mes, d.lb_oee, d.meta_oee, scaleOEE);
+    const bKGH = miniBar(d.kgh_val, d.lb_kgh, d.meta_kgh, scaleKGH);
     const extraCells = VISTA_LINEA
       ? `<td>${pill(d)}</td><td style="font-size:12px;color:var(--light)">${d.p}</td><td><strong>${d.l??'—'}</strong></td>`
       : `<td>${pill(d)}</td><td><strong>${d.p}</strong></td>`;
@@ -2510,14 +2511,33 @@ function renderCombinado(filtro='TODOS') {
     return `<tr onclick="openPlantaModal(${_idx_c})" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
       ${extraCells}
-      <td class="mono" style="color:${sgn(d.oee_mes-(d.lb_oee||d.oee_mes))};font-weight:700">${fmtP(d.oee_mes)}</td>
-      <td class="mono" style="color:${posOEE?'var(--green)':'var(--red)'}">${posOEE?'↑':'↓'} ${d.mejora_oee!==null?fmtPct(d.mejora_oee):'—'}</td>
-      <td class="mono" style="color:${sgn(d.kgh_val-(d.lb_kgh||d.kgh_val))};font-weight:700">${fmtN(d.kgh_val)}</td>
-      <td class="mono" style="color:${posKGH?'var(--green)':'var(--red)'}">${posKGH?'↑':'↓'} ${d.mejora_kgh!==null?fmtPct(d.mejora_kgh):'—'}</td>
-      <td><div class="mini-track">
-        <div class="mini-fill" style="width:0%;background:${bc}" data-w="${bw}"></div>
-      </div></td>
-      <td><span class="mejora-val ${posScore?'pos':'neg'}">${posScore?'↑':'↓'} ${d.score!==null?fmtPct(d.score):'—'}</span></td>
+      <td>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <span class="mono" style="font-weight:700;color:${sgn(d.oee_mes-(d.lb_oee||d.oee_mes))}">${fmtP(d.oee_mes)}</span>
+          <div class="mini-track" style="width:80px">
+            <div class="mini-fill" style="width:0%;background:${bOEE.bc}" data-w="${bOEE.bw}"></div>
+            ${bOEE.lw?`<div class="mini-base" style="left:${bOEE.lw}%"></div>`:''}
+            <div class="mini-meta" style="left:${bOEE.mw}%"></div>
+          </div>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;color:${posOEE?'var(--green)':'var(--red)'}">${posOEE?'↑':'↓'} ${d.mejora_oee!==null?fmtPct(d.mejora_oee):'—'}</span></td>
+      <td>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <span class="mono" style="font-weight:700;color:${sgn(d.kgh_val-(d.lb_kgh||d.kgh_val))}">${fmtN(d.kgh_val)}</span>
+          <div class="mini-track" style="width:80px">
+            <div class="mini-fill" style="width:0%;background:${bKGH.bc}" data-w="${bKGH.bw}"></div>
+            ${bKGH.lw?`<div class="mini-base" style="left:${bKGH.lw}%"></div>`:''}
+            <div class="mini-meta" style="left:${bKGH.mw}%"></div>
+          </div>
+        </div>
+      </td>
+      <td><span style="font-size:10px;font-weight:700;color:${posKGH?'var(--green)':'var(--red)'}">${posKGH?'↑':'↓'} ${d.mejora_kgh!==null?fmtPct(d.mejora_kgh):'—'}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="mejora-val ${posScore?'pos':'neg'}" style="font-size:13px;min-width:70px">${posScore?'↑':'↓'} ${d.score!==null?fmtPct(d.score):'—'}</span>
+        </div>
+      </td>
     </tr>`;
   }).join('');
   animateBars();
