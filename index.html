@@ -2493,55 +2493,69 @@ function renderCombinado(filtro='TODOS') {
   const rows = (filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro))
     .filter(d => FILTRO_PLANTA_GLOBAL==='TODAS' || d.p===FILTRO_PLANTA_GLOBAL);
   const maxS = Math.max(...sorted.map(d=>Math.abs(d.score)));
-  const scaleOEE = 0.90;
-  const scaleKGH = Math.max(...(calcMejoras()||[]).map(d=>d.meta_kgh||0).filter(Boolean)) * 1.15 || 50;
   document.getElementById('thead-combinado').innerHTML = VISTA_LINEA
-    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>OEE</th><th>vs Meta OEE</th><th>Kg/H</th><th>vs Meta Kg/H</th><th style="width:110px">Score Combinado</th></tr>'
-    : '<tr><th>#</th><th>Centro</th><th>Planta</th><th>OEE</th><th>vs Meta OEE</th><th>Kg/H</th><th>vs Meta Kg/H</th><th style="width:110px">Score Combinado</th></tr>';
-  document.getElementById('tbody-combinado').innerHTML = rows.map((d,i)=>{
+    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>Indicadores</th><th>Score</th></tr>'
+    : '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Indicadores</th><th>Score</th></tr>';
+
+  document.getElementById('tbody-combinado').innerHTML = rows.map((d,i) => {
     const posScore = (d.score||0) >= 0;
     const posOEE   = d.mejora_oee !== null && d.mejora_oee >= 0;
     const posKGH   = d.mejora_kgh !== null && d.mejora_kgh >= 0;
-    const bOEE = miniBar(d.oee_mes, d.lb_oee, d.meta_oee, scaleOEE);
-    const bKGH = miniBar(d.kgh_val, d.lb_kgh, d.meta_kgh, scaleKGH);
+
+    // Porcentaje de cumplimiento vs meta (0–100%)
+    const oeeVsMeta = d.meta_oee > 0 ? Math.min(d.oee_mes / d.meta_oee, 1.5) : 0;
+    const kghVsMeta = d.meta_kgh > 0 ? Math.min(d.kgh_val / d.meta_kgh, 1.5) : 0;
+    const oeeBar = Math.min(oeeVsMeta / 1.5 * 100, 100).toFixed(1);
+    const kghBar = Math.min(kghVsMeta / 1.5 * 100, 100).toFixed(1);
+    const oeeColor = oeeVsMeta >= 1 ? '#10b981' : oeeVsMeta >= 0.9 ? '#f59e0b' : '#ef4444';
+    const kghColor = kghVsMeta >= 1 ? '#10b981' : kghVsMeta >= 0.9 ? '#f59e0b' : '#ef4444';
+
+    const scoreColor = (d.score||0) >= 0.5 ? '#10b981' : (d.score||0) >= 0 ? '#f59e0b' : '#ef4444';
+    const scorePct   = d.score !== null ? (d.score * 100).toFixed(1) : null;
+
     const extraCells = VISTA_LINEA
       ? `<td>${pill(d)}</td><td style="font-size:12px;color:var(--light)">${d.p}</td><td><strong>${d.l??'—'}</strong></td>`
       : `<td>${pill(d)}</td><td><strong>${d.p}</strong></td>`;
+
     const _idx_c = getUnits().indexOf(d) >= 0 ? getUnits().indexOf(d) : getUnits().findIndex(u=>getNombre(u)===getNombre(d));
+
     return `<tr onclick="openPlantaModal(${_idx_c})" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
       ${extraCells}
       <td>
-        <div style="display:flex;flex-direction:column;gap:2px">
-          <span class="mono" style="font-weight:700;color:${sgn(d.oee_mes-(d.lb_oee||d.oee_mes))}">${fmtP(d.oee_mes)}</span>
-          <div class="mini-track" style="width:80px">
-            <div class="mini-fill" style="width:0%;background:${bOEE.bc}" data-w="${bOEE.bw}"></div>
-            ${bOEE.lw?`<div class="mini-base" style="left:${bOEE.lw}%"></div>`:''}
-            <div class="mini-meta" style="left:${bOEE.mw}%"></div>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:2px 0">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.05em;width:28px">OEE</span>
+            <div style="flex:1;height:5px;background:var(--s3);border-radius:3px;overflow:hidden">
+              <div style="width:0%;height:100%;background:${oeeColor};border-radius:3px;transition:width .4s" data-w="${oeeBar}"></div>
+            </div>
+            <span style="font-size:10px;font-weight:800;color:${oeeColor};font-family:'JetBrains Mono',monospace;min-width:42px;text-align:right">${fmtP(d.oee_mes)}</span>
+            <span style="font-size:9px;color:${posOEE?'var(--green)':'var(--red)'};min-width:44px">${posOEE?'↑':'↓'} ${d.mejora_oee!==null?fmtPct(d.mejora_oee):'—'}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.05em;width:28px">KG/H</span>
+            <div style="flex:1;height:5px;background:var(--s3);border-radius:3px;overflow:hidden">
+              <div style="width:0%;height:100%;background:${kghColor};border-radius:3px;transition:width .4s" data-w="${kghBar}"></div>
+            </div>
+            <span style="font-size:10px;font-weight:800;color:${kghColor};font-family:'JetBrains Mono',monospace;min-width:42px;text-align:right">${fmtN(d.kgh_val)}</span>
+            <span style="font-size:9px;color:${posKGH?'var(--green)':'var(--red)'};min-width:44px">${posKGH?'↑':'↓'} ${d.mejora_kgh!==null?fmtPct(d.mejora_kgh):'—'}</span>
           </div>
         </div>
       </td>
-      <td><span style="font-size:10px;font-weight:700;color:${posOEE?'var(--green)':'var(--red)'}">${posOEE?'↑':'↓'} ${d.mejora_oee!==null?fmtPct(d.mejora_oee):'—'}</span></td>
-      <td>
-        <div style="display:flex;flex-direction:column;gap:2px">
-          <span class="mono" style="font-weight:700;color:${sgn(d.kgh_val-(d.lb_kgh||d.kgh_val))}">${fmtN(d.kgh_val)}</span>
-          <div class="mini-track" style="width:80px">
-            <div class="mini-fill" style="width:0%;background:${bKGH.bc}" data-w="${bKGH.bw}"></div>
-            ${bKGH.lw?`<div class="mini-base" style="left:${bKGH.lw}%"></div>`:''}
-            <div class="mini-meta" style="left:${bKGH.mw}%"></div>
-          </div>
-        </div>
-      </td>
-      <td><span style="font-size:10px;font-weight:700;color:${posKGH?'var(--green)':'var(--red)'}">${posKGH?'↑':'↓'} ${d.mejora_kgh!==null?fmtPct(d.mejora_kgh):'—'}</span></td>
-      <td>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="mejora-val ${posScore?'pos':'neg'}" style="font-size:13px;min-width:70px">${posScore?'↑':'↓'} ${d.score!==null?fmtPct(d.score):'—'}</span>
-        </div>
+      <td style="text-align:center">
+        <span style="font-size:18px;font-weight:900;color:${scoreColor};font-family:'JetBrains Mono',monospace;letter-spacing:-.02em">
+          ${scorePct !== null ? (d.score>=0?'+':'')+scorePct+'%' : '—'}
+        </span>
       </td>
     </tr>`;
   }).join('');
+  // Animate inline bars
+  setTimeout(()=>{
+    document.querySelectorAll('#tbody-combinado div[data-w]').forEach(el=>{
+      el.style.width = el.dataset.w + '%';
+    });
+  }, 60);
   animateBars();
-}
 
 function renderOEE(filtro='TODOS') {
   const datos = calcMejoras();
