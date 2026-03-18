@@ -2344,7 +2344,7 @@ const fmtN  = v => v.toFixed(2);
 function calcLineasBase() {
   const idx = MESES_ORDEN.indexOf(MES_ACTIVO);
   const meses_back = MESES_ORDEN.slice(Math.max(0, idx - N_MESES), idx)
-                                 .filter(m => DATOS[m]);
+                                 .filter(m => getDatosMonth(m));
 
   return getUnits().map((_, pi) => {
     const sum_kgp = meses_back.reduce((a,m) => a + getDatosMonth(m).oee[pi][0], 0);
