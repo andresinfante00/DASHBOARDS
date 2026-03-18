@@ -248,7 +248,7 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
 .modal-close:hover{color:var(--text)}
 .modal-title{font-size:18px;font-weight:900;letter-spacing:-.01em;margin-bottom:4px}
 .modal-sub{font-size:11px;color:var(--muted);margin-bottom:20px}
-.modal-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+.modal-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
 .modal-kpi{background:#131b2e;border:1px solid #1e2d45;border-radius:10px;padding:12px 14px}
 .modal-kpi-val{font-size:17px;font-weight:800;font-family:'JetBrains Mono',monospace;margin-bottom:2px}
 .modal-kpi-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
@@ -495,13 +495,14 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
     <button class="modal-close" onclick="document.getElementById('plantaModal').classList.remove('open')">✕</button>
     <div class="modal-title" id="modal-nombre"></div>
     <div class="modal-sub" id="modal-sub"></div>
+    <div class="modal-kpis" id="modal-kpis"></div>
     <div class="modal-chart-wrap">
       <div class="modal-chart-title">OEE Mensual — % Eficiencia Global</div>
-      <svg class="chart-svg" id="chart-oee" height="120"></svg>
+      <svg class="chart-svg" id="chart-oee" height="130"></svg>
     </div>
     <div class="modal-chart-wrap">
       <div class="modal-chart-title">Kg/H Colaborador Mensual</div>
-      <svg class="chart-svg" id="chart-kgh" height="120"></svg>
+      <svg class="chart-svg" id="chart-kgh" height="130"></svg>
     </div>
   </div>
 </div>
@@ -3074,7 +3075,16 @@ function openPlantaModal(unitOrName) {
   const fmtMejora = v => v !== null ? (v>=0?'↑ ':'↓ ') + fmtPct(v) : '—';
   const colorMejora = v => v !== null ? sgn(v) : 'var(--muted)';
 
-  // KPIs removidos — se muestran en las gráficas
+  // ── Tarjetas META OEE y META KG/H del mes activo ────────────────────────
+  document.getElementById('modal-kpis').innerHTML = `
+    <div class="modal-kpi">
+      <div class="modal-kpi-val" style="color:var(--cyan)">${d.meta_oee > 0 ? fmtP(d.meta_oee) : '—'}</div>
+      <div class="modal-kpi-lbl">Meta OEE · ${MES_ACTIVO}</div>
+    </div>
+    <div class="modal-kpi">
+      <div class="modal-kpi-val" style="color:var(--cyan)">${d.meta_kgh > 0 ? fmtN(d.meta_kgh) : '—'}</div>
+      <div class="modal-kpi-lbl">Meta Kg/H · ${MES_ACTIVO}</div>
+    </div>`;
 
   // ── Sparklines ────────────────────────────────────────────────────────────
   const mesesConDatos = MESES_ORDEN.filter(m => DATOS[m]);
@@ -3138,70 +3148,60 @@ function openPlantaModal(unitOrName) {
   document.getElementById('plantaModal').classList.add('open');
 }
 
-// Mapa meses completo → abreviatura + año
 const MES_ABREV = {
   'Enero':'Ene','Febrero':'Feb','Marzo':'Mar','Abril':'Abr','Mayo':'May','Junio':'Jun',
   'Julio':'Jul','Agosto':'Ago','Septiembre':'Sep','Octubre':'Oct','Noviembre':'Nov','Diciembre':'Dic'
 };
 function mesLabel(m) {
-  const parts = m.split(' ');
-  return (MES_ABREV[parts[0]] || parts[0]) + ' ' + (parts[1] || '');
+  const parts = m ? m.split(' ') : [];
+  return parts.length >= 2 ? (MES_ABREV[parts[0]] || parts[0]) + ' ' + parts[1] : m || '';
 }
 
 function drawSparkline(svgId, labels, vals, color, unit, fmt, metaVals) {
   const svg = document.getElementById(svgId);
   if (!vals.length) { svg.innerHTML = '<text x="10" y="60" fill="#5a6a85" font-size="11">Sin datos</text>'; return; }
-  const W = svg.parentElement.clientWidth - 32 || 720;
-  const H = parseInt(svg.getAttribute('height')) || 120;
+  const W = svg.parentElement.clientWidth - 8 || 820;
+  const H = parseInt(svg.getAttribute('height')) || 130;
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
-  const PAD_T = 24, PAD_B = 28, PAD_L = 10, PAD_R = 10;
+  const PAD_T = 22, PAD_B = 30, PAD_L = 14, PAD_R = 14;
   const chartH = H - PAD_T - PAD_B;
   const chartW = W - PAD_L - PAD_R;
   const n = vals.length;
 
-  // Calcular rango incluyendo meta
   const allVals = metaVals ? [...vals, ...metaVals.filter(Boolean)] : vals;
-  const minV = Math.min(...allVals) * 0.90;
-  const maxV = Math.max(...allVals) * 1.10;
+  const minV = Math.min(...allVals) * 0.92;
+  const maxV = Math.max(...allVals) * 1.08;
 
-  const px = i => PAD_L + (i / (n-1||1)) * chartW;
-  const py = v => PAD_T + chartH - ((v - minV) / (maxV - minV || 1)) * chartH;
+  const px = i => PAD_L + (i / (n - 1 || 1)) * chartW;
+  const py = v  => PAD_T + chartH - ((v - minV) / (maxV - minV || 1)) * chartH;
 
-  const pts = vals.map((v,i) => `${px(i)},${py(v)}`).join(' ');
+  const pts     = vals.map((v,i)  => `${px(i)},${py(v)}`).join(' ');
   const fillPts = `${px(0)},${PAD_T+chartH} ` + pts + ` ${px(n-1)},${PAD_T+chartH}`;
-  const gradId = svgId + '-grad';
+  const gradId  = svgId + '-grad';
 
-  // Línea de meta si existe
-  const metaLine = (metaVals && metaVals.some(Boolean))
-    ? metaVals.map((v,i) => v ? `${px(i)},${py(v)}` : null).filter(Boolean).join(' ')
+  const metaLine = metaVals && metaVals.some(Boolean)
+    ? vals.map((_,i) => metaVals[i] ? `${px(i)},${py(metaVals[i])}` : null)
+          .filter(Boolean).join(' ')
     : null;
-
-  // Identificar mejor y peor
-  const maxIdx = vals.indexOf(Math.max(...vals));
-  const minIdx = vals.indexOf(Math.min(...vals));
 
   svg.innerHTML = `
     <defs>
       <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${color}" stop-opacity=".3"/>
+        <stop offset="0%" stop-color="${color}" stop-opacity=".25"/>
         <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
       </linearGradient>
     </defs>
     <polygon points="${fillPts}" fill="url(#${gradId})"/>
-    ${metaLine ? `<polyline points="${metaLine}" fill="none" stroke="#06b6d4" stroke-width="1" stroke-dasharray="4,3" opacity=".6"/>` : ''}
+    ${metaLine ? `<polyline points="${metaLine}" fill="none" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="5,3" opacity=".7"/>` : ''}
     <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-    ${vals.map((v,i) => {
-      const isBest  = i === maxIdx;
-      const isWorst = i === minIdx;
-      const dotColor = isBest ? '#10b981' : isWorst ? '#ef4444' : color;
-      const r = (isBest || isWorst) ? 4 : 2.5;
-      const showVal = isBest || isWorst || i===0 || i===n-1 || n<=6;
-      return `
-        <circle cx="${px(i)}" cy="${py(v)}" r="${r}" fill="${dotColor}" stroke="#0e1422" stroke-width="1"/>
-        ${showVal ? `<text x="${px(i)}" y="${py(v)-8}" text-anchor="middle" font-size="9" font-weight="${isBest||isWorst?'800':'400'}" fill="${dotColor}" font-family="JetBrains Mono,monospace">${fmt(v)}</text>` : ''}
-        <text x="${px(i)}" y="${H-4}" text-anchor="middle" font-size="8" fill="#5a6a85" font-family="Figtree,sans-serif">${mesLabel(labels[i]??'')}</text>`;
-    }).join('')}`;
+    ${vals.map((v,i) => `
+      <circle cx="${px(i)}" cy="${py(v)}" r="3" fill="${color}" stroke="#0e1422" stroke-width="1.2"/>
+      <text x="${px(i)}" y="${py(v)-7}" text-anchor="middle" font-size="8.5" fill="${color}"
+            font-family="JetBrains Mono,monospace" font-weight="600">${fmt(v)}</text>
+      <text x="${px(i)}" y="${H-5}" text-anchor="middle" font-size="8" fill="#5a6a85"
+            font-family="Figtree,sans-serif">${mesLabel(labels[i])}</text>
+    `).join('')}`;
 }
 
 function closePlantaModal(e) {
