@@ -266,6 +266,38 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
 
 .vista-btn{font-family:'Figtree',sans-serif;font-size:11px;font-weight:700;padding:4px 14px;border-radius:6px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
 .vista-btn.active{background:var(--s3);color:var(--cyan);border:1px solid var(--border2)}
+
+/* ── Dropdown planta ─────────────────────────────── */
+.planta-drop-wrap{position:relative;display:none}
+.planta-drop-wrap.visible{display:block}
+.planta-drop-btn{
+  display:flex;align-items:center;gap:7px;
+  font-family:'Figtree',sans-serif;font-size:11px;font-weight:700;
+  padding:5px 11px;border-radius:6px;border:1px solid var(--border2);
+  background:var(--s3);color:var(--text);cursor:pointer;
+  white-space:nowrap;min-width:140px;justify-content:space-between;
+  transition:border-color .15s;
+}
+.planta-drop-btn:hover{border-color:var(--cyan)}
+.planta-drop-btn.open{border-color:var(--cyan);border-bottom-left-radius:0;border-bottom-right-radius:0}
+.planta-drop-btn .pdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.planta-drop-btn .pchev{font-size:9px;color:var(--muted);transition:transform .15s;margin-left:auto}
+.planta-drop-btn.open .pchev{transform:rotate(180deg)}
+.planta-drop-menu{
+  position:absolute;top:100%;left:0;z-index:200;
+  background:var(--s2);border:1px solid var(--cyan);border-top:none;
+  border-radius:0 0 8px 8px;min-width:100%;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);overflow:hidden;
+  display:none;
+}
+.planta-drop-menu.open{display:block}
+.planta-drop-item{
+  font-family:'Figtree',sans-serif;font-size:11px;font-weight:600;
+  padding:7px 13px;cursor:pointer;color:var(--light);
+  transition:background .12s;display:flex;align-items:center;gap:7px;
+}
+.planta-drop-item:hover{background:var(--s3);color:var(--text)}
+.planta-drop-item.active{color:var(--cyan);font-weight:800}
 </style>
 </head>
 <body>
@@ -343,6 +375,14 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
           <button class="filter-btn" onclick="setFiltro('combinado','Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
           <button class="filter-btn" onclick="setFiltro('combinado','Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
         </div>
+        <div class="planta-drop-wrap" id="planta-drop-wrap-combinado">
+          <button class="planta-drop-btn" id="planta-drop-btn-combinado" onclick="togglePlantaDrop('combinado')">
+            <span class="pdot" id="planta-drop-dot-combinado" style="background:var(--muted)"></span>
+            <span id="planta-drop-label-combinado">Todas las plantas</span>
+            <span class="pchev">▼</span>
+          </button>
+          <div class="planta-drop-menu" id="planta-drop-menu-combinado"></div>
+        </div>
         <span class="base-info" id="base-info-combinado">📊 Base: 3 meses</span>
       </div>
       <table class="tbl">
@@ -365,6 +405,14 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
           <button class="filter-btn" onclick="setFiltro('oee','Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
           <button class="filter-btn" onclick="setFiltro('oee','Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
         </div>
+        <div class="planta-drop-wrap" id="planta-drop-wrap-oee">
+          <button class="planta-drop-btn" id="planta-drop-btn-oee" onclick="togglePlantaDrop('oee')">
+            <span class="pdot" id="planta-drop-dot-oee" style="background:var(--muted)"></span>
+            <span id="planta-drop-label-oee">Todas las plantas</span>
+            <span class="pchev">▼</span>
+          </button>
+          <div class="planta-drop-menu" id="planta-drop-menu-oee"></div>
+        </div>
         <span class="base-info" id="base-info-oee">📊 Base: 3 meses</span>
       </div>
       <table class="tbl">
@@ -386,6 +434,14 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
           <button class="filter-btn" onclick="setFiltro('kgh','Supercoco',this)" style="--fc:#eab308;--fb:rgba(234,179,8,.12)">Supercoco</button>
           <button class="filter-btn" onclick="setFiltro('kgh','Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
           <button class="filter-btn" onclick="setFiltro('kgh','Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
+        </div>
+        <div class="planta-drop-wrap" id="planta-drop-wrap-kgh">
+          <button class="planta-drop-btn" id="planta-drop-btn-kgh" onclick="togglePlantaDrop('kgh')">
+            <span class="pdot" id="planta-drop-dot-kgh" style="background:var(--muted)"></span>
+            <span id="planta-drop-label-kgh">Todas las plantas</span>
+            <span class="pchev">▼</span>
+          </button>
+          <div class="planta-drop-menu" id="planta-drop-menu-kgh"></div>
         </div>
         <span class="base-info" id="base-info-kgh">📊 Base: 3 meses</span>
       </div>
@@ -2415,7 +2471,8 @@ function renderCombinado(filtro='TODOS') {
   const sorted = [...datos].filter(d=>d.score!==null).sort((a,b)=>b.score-a.score);
   renderPodio('podio-combinado', sorted);
 
-  const rows = filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro);
+  const rows = (filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro))
+    .filter(d => FILTRO_PLANTA_GLOBAL==='TODAS' || d.p===FILTRO_PLANTA_GLOBAL);
   const maxS = Math.max(...sorted.map(d=>Math.abs(d.score)));
   document.getElementById('thead-combinado').innerHTML = VISTA_LINEA
     ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>% Mej. OEE</th><th>% Mej. Kg/H</th><th style="width:90px">Score</th><th>Score</th></tr>'
@@ -2442,7 +2499,8 @@ function renderOEE(filtro='TODOS') {
   const sorted = [...datos].filter(d=>d.mejora_oee!==null).sort((a,b)=>b.mejora_oee-a.mejora_oee);
   renderPodio('podio-oee', sorted);
 
-  const rows = filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro);
+  const rows = (filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro))
+    .filter(d => FILTRO_PLANTA_GLOBAL==='TODAS' || d.p===FILTRO_PLANTA_GLOBAL);
   const scale = 0.90;
 
   // Actualizar encabezado según vista
@@ -2479,7 +2537,8 @@ function renderKGH(filtro='TODOS') {
   const sorted = [...datos].filter(d=>d.mejora_kgh!==null).sort((a,b)=>b.mejora_kgh-a.mejora_kgh);
   renderPodio('podio-kgh', sorted);
 
-  const rows = filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro);
+  const rows = (filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro))
+    .filter(d => FILTRO_PLANTA_GLOBAL==='TODAS' || d.p===FILTRO_PLANTA_GLOBAL);
   const scale = Math.max(...datos.map(d=>d.meta_kgh)) * 1.15;
   document.getElementById('thead-kgh').innerHTML = VISTA_LINEA
     ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:90px">Progreso</th><th>% Mejora</th></tr>'
@@ -2520,6 +2579,14 @@ function renderAll() {
     });
   });
   FILTRO_DETALLE='TODOS'; FILTRO_PLANTA='TODAS';
+  FILTRO_PLANTA_GLOBAL='TODAS';
+  buildPlantaDrop(FILTRO_GLOBAL);
+  ['combinado','oee','kgh'].forEach(t=>{
+    const lbl=document.getElementById('planta-drop-label-'+t);
+    const dot=document.getElementById('planta-drop-dot-'+t);
+    if(lbl) lbl.textContent='Todas las plantas';
+    if(dot) dot.style.background='var(--muted)';
+  });
   const fd=document.getElementById('filters-detalle');
   if(fd) fd.querySelectorAll('.filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
 }
@@ -2535,6 +2602,85 @@ function setN(n, btn) {
 }
 
 let FILTRO_GLOBAL = 'TODOS';
+
+/* ════ DROPDOWN PLANTA ════ */
+let FILTRO_PLANTA_GLOBAL = 'TODAS';
+
+const CENTRO_PLANTAS = {
+  'Supercoco': ['Planta Fabry','Planta Super 1','Planta Super 2','Planta Super 3'],
+  'Trululu':   ['Trululu 1','Trululu 2','Trululu 3'],
+  'Bianchi':   ['Planta Bianchi 1','Planta Bianchi 3'],
+};
+const CENTRO_COLOR = {
+  'Supercoco':'#eab308','Trululu':'#d946ef','Bianchi':'#3b82f6',
+};
+
+function togglePlantaDrop(tab) {
+  ['combinado','oee','kgh'].forEach(t => {
+    if (t !== tab) {
+      document.getElementById('planta-drop-btn-'+t)?.classList.remove('open');
+      document.getElementById('planta-drop-menu-'+t)?.classList.remove('open');
+    }
+  });
+  document.getElementById('planta-drop-btn-'+tab).classList.toggle('open');
+  document.getElementById('planta-drop-menu-'+tab).classList.toggle('open');
+}
+
+function selectPlantaDrop(planta, tab) {
+  FILTRO_PLANTA_GLOBAL = planta;
+  // Sync all tabs
+  ['combinado','oee','kgh'].forEach(t => {
+    const label = document.getElementById('planta-drop-label-'+t);
+    const dot   = document.getElementById('planta-drop-dot-'+t);
+    const btn   = document.getElementById('planta-drop-btn-'+t);
+    const menu  = document.getElementById('planta-drop-menu-'+t);
+    if (label) label.textContent = planta === 'TODAS' ? 'Todas las plantas' : planta;
+    if (dot)   dot.style.background = planta === 'TODAS' ? 'var(--muted)' : (CENTRO_COLOR[FILTRO_GLOBAL] || 'var(--cyan)');
+    // Mark active item
+    menu?.querySelectorAll('.planta-drop-item').forEach(el => {
+      el.classList.toggle('active', el.dataset.planta === planta);
+    });
+    btn?.classList.remove('open');
+    menu?.classList.remove('open');
+  });
+  renderAll();
+}
+
+function buildPlantaDrop(centro) {
+  const plantas = centro === 'TODOS' ? [] : (CENTRO_PLANTAS[centro] || []);
+  ['combinado','oee','kgh'].forEach(t => {
+    const wrap = document.getElementById('planta-drop-wrap-'+t);
+    const menu = document.getElementById('planta-drop-menu-'+t);
+    if (!wrap || !menu) return;
+    if (!plantas.length) {
+      wrap.classList.remove('visible');
+      return;
+    }
+    wrap.classList.add('visible');
+    const color = CENTRO_COLOR[centro] || 'var(--cyan)';
+    menu.innerHTML =
+      `<div class="planta-drop-item ${FILTRO_PLANTA_GLOBAL==='TODAS'?'active':''}" data-planta="TODAS" onclick="selectPlantaDrop('TODAS','${t}')">
+         <span style="width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block"></span> Todas las plantas
+       </div>` +
+      plantas.map(p =>
+        `<div class="planta-drop-item ${FILTRO_PLANTA_GLOBAL===p?'active':''}" data-planta="${p}" onclick="selectPlantaDrop('${p}','${t}')">
+           <span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block"></span> ${p}
+         </div>`
+      ).join('');
+  });
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', e => {
+  ['combinado','oee','kgh'].forEach(t => {
+    const wrap = document.getElementById('planta-drop-wrap-'+t);
+    if (wrap && !wrap.contains(e.target)) {
+      document.getElementById('planta-drop-btn-'+t)?.classList.remove('open');
+      document.getElementById('planta-drop-menu-'+t)?.classList.remove('open');
+    }
+  });
+});
+
 /* ════ VISTA PLANTA / LÍNEA ════ */
 let VISTA_LINEA = false;
 function getUnits()         { return VISTA_LINEA ? LINEAS : PLANTAS; }
@@ -2561,6 +2707,7 @@ function setVista(v, btn) {
 
 function setFiltro(tab, filtro, btn) {
   FILTRO_GLOBAL = filtro;
+  FILTRO_PLANTA_GLOBAL = 'TODAS';
   // Sync all tab filter buttons
   ['combinado','oee','kgh'].forEach(t => {
     const container = document.getElementById('filters-'+t);
@@ -2569,7 +2716,13 @@ function setFiltro(tab, filtro, btn) {
       const bFiltro = b.getAttribute('onclick').match(/'([^']+)',this/)?.[1] ?? '';
       b.classList.toggle('active', bFiltro === filtro);
     });
+    // Reset planta label
+    const lbl = document.getElementById('planta-drop-label-'+t);
+    const dot = document.getElementById('planta-drop-dot-'+t);
+    if (lbl) lbl.textContent = 'Todas las plantas';
+    if (dot) dot.style.background = 'var(--muted)';
   });
+  buildPlantaDrop(filtro);
   renderCombinado(filtro);
   renderOEE(filtro);
   renderKGH(filtro);
@@ -2994,6 +3147,7 @@ function closePlantaModal(e) {
     document.getElementById('plantaModal').classList.remove('open');
 }
 
+buildPlantaDrop(FILTRO_GLOBAL);
 renderAll();
 </script>
 </body>
