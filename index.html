@@ -298,6 +298,20 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
 }
 .planta-drop-item:hover{background:var(--s3);color:var(--text)}
 .planta-drop-item.active{color:var(--cyan);font-weight:800}
+
+.modal-extremos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.modal-extremo{background:#080b12;border:1px solid #1e2d45;border-radius:10px;padding:12px 14px;position:relative;overflow:hidden}
+.modal-extremo::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.modal-extremo.mejor::before{background:var(--green)}
+.modal-extremo.peor::before{background:var(--red)}
+.modal-extremo-header{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.modal-extremo-icon{font-size:14px}
+.modal-extremo-title{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.modal-extremo-mes{font-size:10px;font-weight:700;color:var(--light);margin-left:auto}
+.modal-extremo-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.modal-extremo-stat{display:flex;flex-direction:column;gap:1px}
+.modal-extremo-stat-val{font-size:14px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.modal-extremo-stat-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 </style>
 </head>
 <body>
@@ -482,6 +496,7 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
     <div class="modal-title" id="modal-nombre"></div>
     <div class="modal-sub" id="modal-sub"></div>
     <div class="modal-kpis" id="modal-kpis"></div>
+    <div class="modal-extremos" id="modal-extremos"></div>
     <div class="modal-chart-wrap">
       <div class="modal-chart-title">OEE mensual — % Eficiencia Global</div>
       <svg class="chart-svg" id="chart-oee" height="80"></svg>
@@ -3095,8 +3110,52 @@ function openPlantaModal(unitOrName) {
       <div class="modal-kpi-lbl">Meta OEE</div>
     </div>`;
 
-  // Build OEE sparkline
-  const mesesConDatos = MESES_ORDEN.filter(m => DATOS[m]);  // check base DATOS for availability
+  // ── Mejor y peor mes OEE + Kg/H ──────────────────────────────────────────
+  const mesesConDatos = MESES_ORDEN.filter(m => DATOS[m]);
+  const histOEE = mesesConDatos
+    .map(m => { const dm=getDatosMonth(m); if(!dm) return null; const [kgp,kge]=dm.oee[pi]; return kge>0?{m,v:kgp/kge}:null; })
+    .filter(Boolean);
+  const histKGH = mesesConDatos
+    .map(m => { const dm=getDatosMonth(m); if(!dm) return null; const v=dm.kgh[pi][0]; return v>0?{m,v}:null; })
+    .filter(Boolean);
+
+  const mejorOEE = histOEE.length ? histOEE.reduce((a,b)=>b.v>a.v?b:a) : null;
+  const peorOEE  = histOEE.length ? histOEE.reduce((a,b)=>b.v<a.v?b:a) : null;
+  const mejorKGH = histKGH.length ? histKGH.reduce((a,b)=>b.v>a.v?b:a) : null;
+  const peorKGH  = histKGH.length ? histKGH.reduce((a,b)=>b.v<a.v?b:a) : null;
+
+  const mesCorto = m => m.replace(' 20',"'");
+  const extremoCard = (tipo, mesOEE, valOEE, mesKGH, valKGH) => {
+    const esMejor = tipo === 'mejor';
+    const icon  = esMejor ? '🏅' : '⚠️';
+    const title = esMejor ? 'Mejor mes histórico' : 'Peor mes histórico';
+    const cls   = esMejor ? 'mejor' : 'peor';
+    const colOEE = esMejor ? 'var(--green)' : 'var(--red)';
+    const colKGH = esMejor ? '#06b6d4' : 'var(--red)';
+    return `
+      <div class="modal-extremo ${cls}">
+        <div class="modal-extremo-header">
+          <span class="modal-extremo-icon">${icon}</span>
+          <span class="modal-extremo-title">${title}</span>
+        </div>
+        <div class="modal-extremo-grid">
+          <div class="modal-extremo-stat">
+            <span class="modal-extremo-stat-val" style="color:${colOEE}">${valOEE!==null?fmtP(valOEE):'—'}</span>
+            <span class="modal-extremo-stat-lbl">OEE ${mesOEE?'· '+mesCorto(mesOEE):''}</span>
+          </div>
+          <div class="modal-extremo-stat">
+            <span class="modal-extremo-stat-val" style="color:${colKGH}">${valKGH!==null?fmtN(valKGH):'—'}</span>
+            <span class="modal-extremo-stat-lbl">Kg/H ${mesKGH?'· '+mesCorto(mesKGH):''}</span>
+          </div>
+        </div>
+      </div>`;
+  };
+
+  document.getElementById('modal-extremos').innerHTML =
+    extremoCard('mejor', mejorOEE?.m, mejorOEE?.v??null, mejorKGH?.m, mejorKGH?.v??null) +
+    extremoCard('peor',  peorOEE?.m,  peorOEE?.v??null,  peorKGH?.m,  peorKGH?.v??null);
+
+  // ── Sparklines ──────────────────────────────────────────────────────────────  // check base DATOS for availability
   const oeeVals = mesesConDatos.map(m => {
     const dm = getDatosMonth(m); if(!dm) return null;
     const [kgp,kge] = dm.oee[pi];
