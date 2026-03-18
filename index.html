@@ -2230,8 +2230,7 @@ function calcMejoras() {
 /* ════ HELPERS VISUALES ════ */
 function pill(d) {
   const cc = CENTRO[d.cc];
-  const label = VISTA_LINEA ? d.p : d.c;
-  return `<span style="font-size:9px;font-weight:800;padding:1px 6px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase;background:${cc.bg};color:${cc.color}">${label}</span>`;
+  return `<span style="font-size:9px;font-weight:800;padding:1px 6px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase;background:${cc.bg};color:${cc.color}">${d.c}</span>`;
 }
 
 function barColor(mes, lb, meta) {
@@ -2367,10 +2366,9 @@ function renderOEE(filtro='TODOS') {
   document.getElementById('tbody-oee').innerHTML = rows.map((d,i)=>{
     const b = miniBar(d.oee_mes, d.lb_oee, d.meta_oee, scale);
     const isPos = d.mejora_oee >= 0;
-    const centroCell = `<td>${pill(d)}</td>`;
     const extraCells = VISTA_LINEA
-      ? `${centroCell}<td style="color:var(--light);font-size:12px">${d.p}</td><td><strong>${d.l}</strong></td>`
-      : `<td><strong>${d.p}</strong></td>${centroCell}`;
+      ? `<td>${pill(d)}</td><td style="font-size:12px;color:var(--light)">${d.p}</td><td><strong>${d.l??'—'}</strong></td>`
+      : `<td><strong>${d.p}</strong></td><td>${pill(d)}</td>`;
     return `<tr onclick="openPlantaModal(d)" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
       ${extraCells}
