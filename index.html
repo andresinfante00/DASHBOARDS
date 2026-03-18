@@ -253,8 +253,8 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
 .modal-kpi-val{font-size:17px;font-weight:800;font-family:'JetBrains Mono',monospace;margin-bottom:2px}
 .modal-kpi-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
 .modal-chart-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
-.modal-chart-wrap{background:#080b12;border:1px solid #1e2d45;border-radius:10px;padding:14px 16px;margin-bottom:14px}
-.chart-svg{width:100%;overflow:visible}
+.modal-chart-wrap{background:#080b12;border:1px solid #1e2d45;border-radius:10px;padding:14px 16px;margin-bottom:14px;overflow-x:auto}
+.chart-svg{width:100%;overflow:visible;display:block}
 /* Filtro sincronizado highlight */
 .filter-btn.synced{box-shadow:0 0 0 1px var(--fc,var(--cyan))}
 /* Fila tabla clicable */
@@ -3178,49 +3178,105 @@ function mesLabel(m) {
 
 function drawSparkline(svgId, labels, vals, color, unit, fmt, metaVals) {
   const svg = document.getElementById(svgId);
-  if (!vals.length) { svg.innerHTML = '<text x="10" y="60" fill="#5a6a85" font-size="11">Sin datos</text>'; return; }
-  const W = svg.parentElement.clientWidth - 8 || 820;
-  const H = parseInt(svg.getAttribute('height')) || 130;
-  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  if (!vals.length) {
+    svg.innerHTML = '<text x="10" y="60" fill="#5a6a85" font-size="11">Sin datos</text>';
+    return;
+  }
 
-  const PAD_T = 22, PAD_B = 30, PAD_L = 14, PAD_R = 14;
+  const n = vals.length;
+  // Altura dinámica según cantidad de puntos
+  const H = Math.max(160, n * 14 + 60);
+  svg.setAttribute('height', H);
+
+  const W = Math.max(svg.parentElement.clientWidth - 8, n * 52 + 30) || 820;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.style.minWidth = (n * 52) + 'px';
+
+  // Paddings: arriba para valores, abajo para etiquetas en 2 líneas
+  const PAD_T = 28, PAD_B = 38, PAD_L = 20, PAD_R = 20;
   const chartH = H - PAD_T - PAD_B;
   const chartW = W - PAD_L - PAD_R;
-  const n = vals.length;
 
   const allVals = metaVals ? [...vals, ...metaVals.filter(Boolean)] : vals;
-  const minV = Math.min(...allVals) * 0.92;
-  const maxV = Math.max(...allVals) * 1.08;
+  const minV = Math.min(...allVals) * 0.90;
+  const maxV = Math.max(...allVals) * 1.10;
+  const range = maxV - minV || 1;
 
   const px = i => PAD_L + (i / (n - 1 || 1)) * chartW;
-  const py = v  => PAD_T + chartH - ((v - minV) / (maxV - minV || 1)) * chartH;
+  const py = v => PAD_T + chartH - ((v - minV) / range) * chartH;
 
-  const pts     = vals.map((v,i)  => `${px(i)},${py(v)}`).join(' ');
-  const fillPts = `${px(0)},${PAD_T+chartH} ` + pts + ` ${px(n-1)},${PAD_T+chartH}`;
+  const pts     = vals.map((v,i) => `${px(i).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
+  const fillPts = `${px(0).toFixed(1)},${(PAD_T+chartH).toFixed(1)} ` + pts + ` ${px(n-1).toFixed(1)},${(PAD_T+chartH).toFixed(1)}`;
   const gradId  = svgId + '-grad';
 
-  const metaLine = metaVals && metaVals.some(Boolean)
-    ? vals.map((_,i) => metaVals[i] ? `${px(i)},${py(metaVals[i])}` : null)
-          .filter(Boolean).join(' ')
-    : null;
+  // Línea de meta (solo puntos con meta)
+  const metaSegments = [];
+  if (metaVals && metaVals.some(Boolean)) {
+    let seg = [];
+    vals.forEach((_,i) => {
+      if (metaVals[i]) { seg.push(`${px(i).toFixed(1)},${py(metaVals[i]).toFixed(1)}`); }
+      else if (seg.length) { metaSegments.push(seg.join(' ')); seg = []; }
+    });
+    if (seg.length) metaSegments.push(seg.join(' '));
+  }
+
+  // Líneas guía horizontales (3)
+  const gridLines = [0.25, 0.5, 0.75].map(t => {
+    const yg = PAD_T + chartH * (1 - t);
+    const vg = minV + range * t;
+    return `<line x1="${PAD_L}" y1="${yg.toFixed(1)}" x2="${W-PAD_R}" y2="${yg.toFixed(1)}"
+      stroke="#1e2d45" stroke-width="0.5" stroke-dasharray="3,3"/>
+      <text x="${PAD_L - 4}" y="${(yg+3).toFixed(1)}" text-anchor="end" font-size="7"
+        fill="#3a4a60" font-family="JetBrains Mono,monospace">${fmt(vg)}</text>`;
+  }).join('');
+
+  // Valores encima de cada punto — alternar arriba/abajo para evitar solapamiento
+  const valLabels = vals.map((v,i) => {
+    const cx = px(i).toFixed(1);
+    const cy = py(v).toFixed(1);
+    const above = i % 2 === 0;
+    const ty = above ? (py(v) - 8).toFixed(1) : (py(v) + 16).toFixed(1);
+    return `<text x="${cx}" y="${ty}" text-anchor="middle" font-size="8" fill="${color}"
+      font-family="JetBrains Mono,monospace" font-weight="700">${fmt(v)}</text>`;
+  }).join('');
+
+  // Etiquetas eje X en 2 líneas: "Ene" y "2025"
+  const xLabels = labels.map((lbl, i) => {
+    const parts = mesLabel(lbl).split(' ');
+    const mes  = parts[0] || '';
+    const año  = parts[1] || '';
+    const cx   = px(i).toFixed(1);
+    const y1   = (H - 22).toFixed(1);
+    const y2   = (H - 10).toFixed(1);
+    return `<text x="${cx}" y="${y1}" text-anchor="middle" font-size="8.5" fill="#8899b4"
+        font-family="Figtree,sans-serif" font-weight="600">${mes}</text>
+      <text x="${cx}" y="${y2}" text-anchor="middle" font-size="7.5" fill="#5a6a85"
+        font-family="Figtree,sans-serif">${año}</text>`;
+  }).join('');
+
+  // Línea base del eje X
+  const xAxis = `<line x1="${PAD_L}" y1="${(PAD_T+chartH).toFixed(1)}"
+    x2="${W-PAD_R}" y2="${(PAD_T+chartH).toFixed(1)}"
+    stroke="#253854" stroke-width="1"/>`;
 
   svg.innerHTML = `
     <defs>
       <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${color}" stop-opacity=".25"/>
+        <stop offset="0%" stop-color="${color}" stop-opacity=".2"/>
         <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
       </linearGradient>
     </defs>
+    ${gridLines}
+    ${xAxis}
     <polygon points="${fillPts}" fill="url(#${gradId})"/>
-    ${metaLine ? `<polyline points="${metaLine}" fill="none" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="5,3" opacity=".7"/>` : ''}
-    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-    ${vals.map((v,i) => `
-      <circle cx="${px(i)}" cy="${py(v)}" r="3" fill="${color}" stroke="#0e1422" stroke-width="1.2"/>
-      <text x="${px(i)}" y="${py(v)-7}" text-anchor="middle" font-size="8.5" fill="${color}"
-            font-family="JetBrains Mono,monospace" font-weight="600">${fmt(v)}</text>
-      <text x="${px(i)}" y="${H-5}" text-anchor="middle" font-size="8" fill="#5a6a85"
-            font-family="Figtree,sans-serif">${mesLabel(labels[i])}</text>
-    `).join('')}`;
+    ${metaSegments.map(s => `<polyline points="${s}" fill="none" stroke="#06b6d4"
+      stroke-width="1.5" stroke-dasharray="5,3" opacity=".8"/>`).join('')}
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2"
+      stroke-linejoin="round" stroke-linecap="round"/>
+    ${vals.map((v,i) => `<circle cx="${px(i).toFixed(1)}" cy="${py(v).toFixed(1)}"
+      r="3.5" fill="${color}" stroke="#0e1422" stroke-width="1.5"/>`).join('')}
+    ${valLabels}
+    ${xLabels}`;
 }
 
 function closePlantaModal(e) {
