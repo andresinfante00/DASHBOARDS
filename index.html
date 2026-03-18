@@ -2502,7 +2502,8 @@ function renderCombinado(filtro='TODOS') {
     const extraCells = VISTA_LINEA
       ? `<td>${pill(d)}</td><td style="font-size:12px;color:var(--light)">${d.p}</td><td><strong>${d.l??'—'}</strong></td>`
       : `<td>${pill(d)}</td><td><strong>${d.p}</strong></td>`;
-    return `<tr onclick="openPlantaModal(d)" style="cursor:pointer">
+    const _idx_c = getUnits().indexOf(d) >= 0 ? getUnits().indexOf(d) : getUnits().findIndex(u=>getNombre(u)===getNombre(d));
+    return `<tr onclick="openPlantaModal(${_idx_c})" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
       ${extraCells}
       <td class="mono" style="color:var(--light)">${d.lb_oee!==null?fmtP(d.lb_oee):'—'}</td>
@@ -2540,7 +2541,8 @@ function renderOEE(filtro='TODOS') {
     const extraCells = VISTA_LINEA
       ? `<td>${pill(d)}</td><td style="font-size:12px;color:var(--light)">${d.p}</td><td><strong>${d.l??'—'}</strong></td>`
       : `<td>${pill(d)}</td><td><strong>${d.p}</strong></td>`;
-    return `<tr onclick="openPlantaModal(d)" style="cursor:pointer">
+    const _idx_o = getUnits().indexOf(d) >= 0 ? getUnits().indexOf(d) : getUnits().findIndex(u=>getNombre(u)===getNombre(d));
+    return `<tr onclick="openPlantaModal(${_idx_o})" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
       ${extraCells}
       <td class="mono" style="color:var(--light)">${d.lb_oee!==null?fmtP(d.lb_oee):'—'}</td>
@@ -2575,7 +2577,8 @@ function renderKGH(filtro='TODOS') {
     const extraCells = VISTA_LINEA
       ? `<td>${pill(d)}</td><td style="font-size:12px;color:var(--light)">${d.p}</td><td><strong>${d.l??'—'}</strong></td>`
       : `<td>${pill(d)}</td><td><strong>${d.p}</strong></td>`;
-    return `<tr onclick="openPlantaModal(d)" style="cursor:pointer">
+    const _idx_k = getUnits().indexOf(d) >= 0 ? getUnits().indexOf(d) : getUnits().findIndex(u=>getNombre(u)===getNombre(d));
+    return `<tr onclick="openPlantaModal(${_idx_k})" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
       ${extraCells}
       <td class="mono" style="color:var(--light)">${d.lb_kgh!==null?fmtN(d.lb_kgh):'—'}</td>
@@ -3071,13 +3074,15 @@ updateBaseInfo(3);
 function openPlantaModal(unitOrName) {
   const units = getUnits();
   let pi, pl;
-  if (typeof unitOrName === 'string') {
-    pi = units.findIndex(u => (u.p ?? u.l) === unitOrName);
+  if (typeof unitOrName === 'number') {
+    pi = unitOrName;
+  } else if (typeof unitOrName === 'string') {
+    pi = units.findIndex(u => (u.p ?? u.l) === unitOrName || u.l === unitOrName);
   } else {
     pi = units.indexOf(unitOrName);
     if (pi < 0) pi = units.findIndex(u => getNombre(u) === getNombre(unitOrName));
   }
-  if (pi < 0) return;
+  if (pi < 0 || pi >= units.length) return;
   pl = units[pi];
   const cc = CENTRO[pl.cc];
   const mejoras = calcMejoras();
