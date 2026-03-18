@@ -346,7 +346,7 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
         <span class="base-info" id="base-info-combinado">📊 Base: 3 meses</span>
       </div>
       <table class="tbl">
-        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>% Mej. OEE</th><th>% Mej. Kg/H</th><th style="width:100px">Score</th><th>Score</th></tr></thead>
+        <thead id="thead-combinado"><tr><th>#</th><th>Planta</th><th>Centro</th><th>% Mej. OEE</th><th>% Mej. Kg/H</th><th style="width:100px">Score</th><th>Score</th></tr></thead>
         <tbody id="tbody-combinado"></tbody>
       </table>
     </div>
@@ -368,7 +368,7 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
         <span class="base-info" id="base-info-oee">📊 Base: 3 meses</span>
       </div>
       <table class="tbl">
-        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>OEE Mes</th><th>Meta</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr></thead>
+        <thead id="thead-oee"><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>OEE Mes</th><th>Meta</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr></thead>
         <tbody id="tbody-oee"></tbody>
       </table>
     </div>
@@ -390,7 +390,7 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
         <span class="base-info" id="base-info-kgh">📊 Base: 3 meses</span>
       </div>
       <table class="tbl">
-        <thead><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr></thead>
+        <thead id="thead-kgh"><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr></thead>
         <tbody id="tbody-kgh"></tbody>
       </table>
     </div>
@@ -2331,6 +2331,9 @@ function renderCombinado(filtro='TODOS') {
 
   const rows = filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro);
   const maxS = Math.max(...sorted.map(d=>Math.abs(d.score)));
+  document.getElementById('thead-combinado').innerHTML = VISTA_LINEA
+    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>% Mej. OEE</th><th>% Mej. Kg/H</th><th style="width:90px">Score</th><th>Score</th></tr>'
+    : '<tr><th>#</th><th>Planta</th><th>Centro</th><th>% Mej. OEE</th><th>% Mej. Kg/H</th><th style="width:100px">Score</th><th>Score</th></tr>';
   document.getElementById('tbody-combinado').innerHTML = rows.map((d,i)=>{
     const bw = maxS>0 ? Math.min(100,(Math.abs(d.score)/maxS*100)).toFixed(1) : '0';
     const bc = d.score>=0?'rgba(16,185,129,.75)':'rgba(239,68,68,.75)';
@@ -2355,13 +2358,22 @@ function renderOEE(filtro='TODOS') {
 
   const rows = filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro);
   const scale = 0.90;
+
+  // Actualizar encabezado según vista
+  document.getElementById('thead-oee').innerHTML = VISTA_LINEA
+    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>Línea Base</th><th>OEE Mes</th><th>Meta</th><th style="width:90px">Progreso</th><th>% Mejora</th></tr>'
+    : '<tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>OEE Mes</th><th>Meta</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr>';
+
   document.getElementById('tbody-oee').innerHTML = rows.map((d,i)=>{
     const b = miniBar(d.oee_mes, d.lb_oee, d.meta_oee, scale);
     const isPos = d.mejora_oee >= 0;
-    return `<tr onclick="openPlantaModal('${d.p}')" style="cursor:pointer">
+    const centroCell = `<td>${pill(d)}</td>`;
+    const extraCells = VISTA_LINEA
+      ? `${centroCell}<td style="color:var(--light);font-size:12px">${d.p}</td><td><strong>${d.l}</strong></td>`
+      : `<td><strong>${d.p}</strong></td>${centroCell}`;
+    return `<tr onclick="openPlantaModal(d)" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
-      <td><strong>${d.p}</strong></td>
-      <td>${pill(d)}</td>
+      ${extraCells}
       <td class="mono" style="color:var(--light)">${d.lb_oee!==null?fmtP(d.lb_oee):'—'}</td>
       <td class="mono" style="color:${sgn(d.oee_mes-(d.lb_oee||d.oee_mes))};font-weight:700">${fmtP(d.oee_mes)}</td>
       <td class="mono" style="color:var(--cyan)">${fmtP(d.meta_oee)}</td>
@@ -2384,6 +2396,9 @@ function renderKGH(filtro='TODOS') {
 
   const rows = filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro);
   const scale = Math.max(...datos.map(d=>d.meta_kgh)) * 1.15;
+  document.getElementById('thead-kgh').innerHTML = VISTA_LINEA
+    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:90px">Progreso</th><th>% Mejora</th></tr>'
+    : '<tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr>';
   document.getElementById('tbody-kgh').innerHTML = rows.map((d,i)=>{
     const b = miniBar(d.kgh_val, d.lb_kgh, d.meta_kgh, scale);
     const isPos = d.mejora_kgh >= 0;
