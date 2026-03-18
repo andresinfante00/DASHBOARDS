@@ -2368,8 +2368,10 @@ function calcLineasBase() {
     const sum_kge = meses_back.reduce((a,m) => a + getDatosMonth(m).oee[pi][1], 0);
     const lb_oee  = meses_back.length > 0 && sum_kge > 0 ? sum_kgp / sum_kge : null;
 
-    const sum_kgh = meses_back.reduce((a,m) => a + getDatosMonth(m).kgh[pi][0], 0);
-    const lb_kgh  = meses_back.length > 0 ? sum_kgh / meses_back.length : null;
+    // Kg/H base = Σ Kg Formados / Σ Horas Marcaciones (igual que OEE)
+    const sum_kgh_h  = meses_back.reduce((a,m) => a + getDatosMonth(m).kgh[pi][0], 0);
+    const sum_kgh_kg = meses_back.reduce((a,m) => a + getDatosMonth(m).kgh[pi][1], 0);
+    const lb_kgh     = sum_kgh_h > 0 ? sum_kgh_kg / sum_kgh_h : null;
 
     return {lb_oee, lb_kgh, n: meses_back.length, meses_back};
   });
