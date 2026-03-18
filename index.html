@@ -478,11 +478,16 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
         <button class="filter-btn" onclick="setFiltroDetalle('Trululu',this)"   style="--fc:#d946ef;--fb:rgba(217,70,239,.12)">Trululu</button>
         <button class="filter-btn" onclick="setFiltroDetalle('Bianchi',this)"   style="--fc:#3b82f6;--fb:rgba(59,130,246,.12)">Bianchi</button>
       </div>
+      <div class="planta-drop-wrap" id="planta-drop-wrap-detalle">
+        <button class="planta-drop-btn" id="planta-drop-btn-detalle" onclick="togglePlantaDrop('detalle')">
+          <span class="pdot" id="planta-drop-dot-detalle" style="background:var(--muted)"></span>
+          <span id="planta-drop-label-detalle">Todas las plantas</span>
+          <span class="pchev">▼</span>
+        </button>
+        <div class="planta-drop-menu" id="planta-drop-menu-detalle"></div>
+      </div>
       <div id="detalle-context" style="display:flex;gap:6px;flex-wrap:wrap"></div>
     </div>
-
-    <!-- Planta selector pills -->
-    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:20px" id="planta-pills"></div>
 
     <!-- Cards de detalle -->
     <div id="detalle-cards"></div>
@@ -2595,7 +2600,7 @@ function renderAll() {
   FILTRO_DETALLE='TODOS'; FILTRO_PLANTA='TODAS';
   FILTRO_PLANTA_GLOBAL='TODAS';
   buildPlantaDrop(FILTRO_GLOBAL);
-  ['combinado','oee','kgh'].forEach(t=>{
+  ['combinado','oee','kgh','detalle'].forEach(t=>{
     const lbl=document.getElementById('planta-drop-label-'+t);
     const dot=document.getElementById('planta-drop-dot-'+t);
     if(lbl) lbl.textContent='Todas las plantas';
@@ -2630,7 +2635,7 @@ const CENTRO_COLOR = {
 };
 
 function togglePlantaDrop(tab) {
-  ['combinado','oee','kgh'].forEach(t => {
+  ['combinado','oee','kgh','detalle'].forEach(t => {
     if (t !== tab) {
       document.getElementById('planta-drop-btn-'+t)?.classList.remove('open');
       document.getElementById('planta-drop-menu-'+t)?.classList.remove('open');
@@ -2643,7 +2648,7 @@ function togglePlantaDrop(tab) {
 function selectPlantaDrop(planta, tab) {
   FILTRO_PLANTA_GLOBAL = planta;
   // Sync all tabs
-  ['combinado','oee','kgh'].forEach(t => {
+  ['combinado','oee','kgh','detalle'].forEach(t => {
     const label = document.getElementById('planta-drop-label-'+t);
     const dot   = document.getElementById('planta-drop-dot-'+t);
     const btn   = document.getElementById('planta-drop-btn-'+t);
@@ -2662,7 +2667,7 @@ function selectPlantaDrop(planta, tab) {
 
 function buildPlantaDrop(centro) {
   const plantas = centro === 'TODOS' ? [] : (CENTRO_PLANTAS[centro] || []);
-  ['combinado','oee','kgh'].forEach(t => {
+  ['combinado','oee','kgh','detalle'].forEach(t => {
     const wrap = document.getElementById('planta-drop-wrap-'+t);
     const menu = document.getElementById('planta-drop-menu-'+t);
     if (!wrap || !menu) return;
@@ -2686,7 +2691,7 @@ function buildPlantaDrop(centro) {
 
 // Close dropdown on outside click
 document.addEventListener('click', e => {
-  ['combinado','oee','kgh'].forEach(t => {
+  ['combinado','oee','kgh','detalle'].forEach(t => {
     const wrap = document.getElementById('planta-drop-wrap-'+t);
     if (wrap && !wrap.contains(e.target)) {
       document.getElementById('planta-drop-btn-'+t)?.classList.remove('open');
@@ -2803,9 +2808,16 @@ let FILTRO_PLANTA   = 'TODAS';
 function setFiltroDetalle(filtro, btn) {
   FILTRO_DETALLE = filtro;
   FILTRO_PLANTA  = 'TODAS';
+  FILTRO_PLANTA_GLOBAL = 'TODAS';
   document.getElementById('filters-detalle')
     .querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  // Reset + rebuild dropdown
+  const lbl = document.getElementById('planta-drop-label-detalle');
+  const dot = document.getElementById('planta-drop-dot-detalle');
+  if (lbl) lbl.textContent = 'Todas las plantas';
+  if (dot) dot.style.background = 'var(--muted)';
+  buildPlantaDrop(filtro);
   renderDetalle();
 }
 
@@ -2848,16 +2860,9 @@ function renderDetalle() {
   if (FILTRO_DETALLE !== 'TODOS')
     plantas_filtradas = plantas_filtradas.filter(pl => pl.c === FILTRO_DETALLE);
 
-  // Planta sub-pills
-  const pill_container = document.getElementById('planta-pills');
-  pill_container.innerHTML =
-    `<button class="planta-pill ${FILTRO_PLANTA==='TODAS'?'active':''}" onclick="setFiltroPlanta('TODAS',this)">Todas las plantas</button>` +
-    plantas_filtradas.map(pl =>
-      `<button class="planta-pill ${FILTRO_PLANTA===getNombre(pl)?'active':''}" onclick="setFiltroPlanta('${getNombre(pl)}',this)">${getNombre(pl)}</button>`
-    ).join('');
-
-  if (FILTRO_PLANTA !== 'TODAS')
-    plantas_filtradas = plantas_filtradas.filter(pl => getNombre(pl) === FILTRO_PLANTA);
+  // Filtro por planta desde el dropdown global
+  if (FILTRO_PLANTA_GLOBAL !== 'TODAS')
+    plantas_filtradas = plantas_filtradas.filter(pl => pl.p === FILTRO_PLANTA_GLOBAL);
 
   // Sort by score desc
   const sorted = [...plantas_filtradas].sort((a,b) =>
@@ -3210,6 +3215,7 @@ function closePlantaModal(e) {
 }
 
 buildPlantaDrop(FILTRO_GLOBAL);
+buildPlantaDrop("TODOS");
 renderAll();
 </script>
 </body>
