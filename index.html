@@ -17,9 +17,11 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
 .wrap{max-width:980px;margin:0 auto;padding:40px 28px 80px}
 
 /* HEADER */
-.header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:32px}
-.page-title{font-size:26px;font-weight:900;letter-spacing:-.02em;line-height:1.1;margin-bottom:5px}
-.page-sub{font-size:12px;color:var(--light);font-weight:300}
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.page-title{font-size:28px;font-weight:900;letter-spacing:-.02em;line-height:1;margin-bottom:0}
+.page-sub{font-size:10px;color:var(--muted);font-weight:400;letter-spacing:.03em}
+.header-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.header-badge{font-size:9px;font-weight:700;padding:3px 9px;border-radius:5px;background:var(--s3);border:1px solid var(--border2);color:var(--muted);letter-spacing:.04em}
 
 /* CONTROLS WRAP */
 .controls-wrap{display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex-shrink:0}
@@ -335,16 +337,20 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
 <div class="wrap">
 
   <div class="header-row">
-    <div style="display:flex;align-items:center;gap:16px">
-      <div>
+    <!-- Izquierda: título + badges de fórmula -->
+    <div style="display:flex;flex-direction:column;gap:0">
       <div class="page-title">RANKING OEE — 2025 / 2026</div>
-      <div class="page-sub">OEE = Kg Producidas / Kg Esperadas · Línea Base = Σ KgP (N meses) / Σ KgE (N meses)</div>
-      <div class="page-sub" style="margin-top:3px">% Mejora = (OEE Mes − Línea Base) / (Meta − Línea Base)</div>
+      <div class="header-badges">
+        <span class="header-badge">OEE = Σ KgP / Σ KgE</span>
+        <span class="header-badge">Kg/H = Σ Kg / Σ Horas</span>
+        <span class="header-badge">% Mejora = (Mes − Base) / (Meta − Base)</span>
+        <span class="header-badge">Score = OEE 50% + Kg/H 50%</span>
       </div>
     </div>
 
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
-      <img src="logo-super.png" alt="Logo Super" style="max-height:70px;width:auto;object-fit:contain">
+    <!-- Derecha: logo + controles -->
+    <div style="display:flex;align-items:center;gap:20px;flex-shrink:0">
+      <img src="logo-super.png" alt="Logo Super" style="max-height:52px;width:auto;object-fit:contain">
     <div class="controls-wrap" style="margin-top:0">
       <!-- Mes selector -->
       <div class="mes-dropdown-wrap" id="dropWrap">
