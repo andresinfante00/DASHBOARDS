@@ -378,7 +378,7 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
   </div>
   <!-- COMBINADO -->
   <div class="tab-panel active" id="tab-combinado">
-    <div class="divider"><h3>🏆 Top 3 · Score Combinado (OEE 60% · Kg/H 40%)</h3></div>
+    <div class="divider"><h3>🏆 Top 3 · Score Combinado (OEE 50% · Kg/H 50%)</h3></div>
     <div class="podio-grid" id="podio-combinado"></div>
     <div class="divider"><h3>Ranking Completo · Score Combinado</h3></div>
     <div class="card">
@@ -2377,7 +2377,7 @@ function calcMejoras() {
       ? (kgh_val - lb_kgh) / (meta_kgh - lb_kgh) : null;
 
     const score = (mejora_oee !== null && mejora_kgh !== null)
-      ? mejora_oee * 0.6 + mejora_kgh * 0.4 : null;
+      ? mejora_oee * 0.5 + mejora_kgh * 0.5 : null;
 
     return {
       ...pl,
@@ -3058,7 +3058,7 @@ function renderDetalle() {
             <div class="detalle-formula-title" style="color:${scoreColor}">⚡ Score Combinado</div>
             <div class="detalle-formula-line">
               Score = % Mej. OEE × 60% + % Mej. Kg/H × 40%<br>
-              = ${pl.mejora_oee!==null?fmtPct(pl.mejora_oee):'—'} × 0.60 + ${pl.mejora_kgh!==null?fmtPct(pl.mejora_kgh):'—'} × 0.40
+              = ${pl.mejora_oee!==null?fmtPct(pl.mejora_oee):'—'} × 0.50 + ${pl.mejora_kgh!==null?fmtPct(pl.mejora_kgh):'—'} × 0.50
             </div>
             <div class="detalle-formula-result" style="color:${scoreColor}">${scoreTxt}</div>
           </div>
