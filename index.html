@@ -400,7 +400,7 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
         <span class="base-info" id="base-info-combinado">📊 Base: 3 meses</span>
       </div>
       <table class="tbl">
-        <thead id="thead-combinado"><tr><th>#</th><th>Planta</th><th>Centro</th><th>% Mej. OEE</th><th>% Mej. Kg/H</th><th style="width:100px">Score</th><th>Score</th></tr></thead>
+        <thead id="thead-combinado"><tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea Base</th><th>Meta</th><th>OEE Mes</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr></thead>
         <tbody id="tbody-combinado"></tbody>
       </table>
     </div>
@@ -460,7 +460,7 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
         <span class="base-info" id="base-info-kgh">📊 Base: 3 meses</span>
       </div>
       <table class="tbl">
-        <thead id="thead-kgh"><tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr></thead>
+        <thead id="thead-kgh"><tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea Base</th><th>Meta</th><th>Kg/H Mes</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr></thead>
         <tbody id="tbody-kgh"></tbody>
       </table>
     </div>
@@ -2494,19 +2494,26 @@ function renderCombinado(filtro='TODOS') {
     .filter(d => FILTRO_PLANTA_GLOBAL==='TODAS' || d.p===FILTRO_PLANTA_GLOBAL);
   const maxS = Math.max(...sorted.map(d=>Math.abs(d.score)));
   document.getElementById('thead-combinado').innerHTML = VISTA_LINEA
-    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>% Mej. OEE</th><th>% Mej. Kg/H</th><th style="width:90px">Score</th><th>Score</th></tr>'
-    : '<tr><th>#</th><th>Planta</th><th>Centro</th><th>% Mej. OEE</th><th>% Mej. Kg/H</th><th style="width:100px">Score</th><th>Score</th></tr>';
+    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>Línea Base</th><th>Meta</th><th>OEE Mes</th><th style="width:90px">Progreso</th><th>% Mejora</th></tr>'
+    : '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea Base</th><th>Meta</th><th>OEE Mes</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr>';
   document.getElementById('tbody-combinado').innerHTML = rows.map((d,i)=>{
-    const bw = maxS>0 ? Math.min(100,(Math.abs(d.score)/maxS*100)).toFixed(1) : '0';
-    const bc = d.score>=0?'rgba(16,185,129,.75)':'rgba(239,68,68,.75)';
-    return `<tr onclick="openPlantaModal('${d.p}')" style="cursor:pointer">
+    const b  = miniBar(d.oee_mes, d.lb_oee, d.meta_oee, 0.90);
+    const isPos = d.mejora_oee !== null && d.mejora_oee >= 0;
+    const extraCells = VISTA_LINEA
+      ? `<td>${pill(d)}</td><td style="font-size:12px;color:var(--light)">${d.p}</td><td><strong>${d.l??'—'}</strong></td>`
+      : `<td>${pill(d)}</td><td><strong>${d.p}</strong></td>`;
+    return `<tr onclick="openPlantaModal(d)" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
-      <td><span class="plant-link" onclick="openPlantaModal('${d.p}')">${d.p}</span></td>
-      <td>${pill(d)}</td>
-      <td class="mono" style="color:${d.mejora_oee!==null?sgn(d.mejora_oee):'var(--muted)'}">${d.mejora_oee!==null?fmtPct(d.mejora_oee):'—'}</td>
-      <td class="mono" style="color:${d.mejora_kgh!==null?sgn(d.mejora_kgh):'var(--muted)'}">${d.mejora_kgh!==null?fmtPct(d.mejora_kgh):'—'}</td>
-      <td><div class="mini-track"><div class="mini-fill" style="width:0%;background:${bc}" data-w="${bw}"></div></div></td>
-      <td><span class="mejora-val ${d.score>=0?'pos':'neg'}">${d.score>=0?'↑':'↓'} ${fmtPct(d.score)}</span></td>
+      ${extraCells}
+      <td class="mono" style="color:var(--light)">${d.lb_oee!==null?fmtP(d.lb_oee):'—'}</td>
+      <td class="mono" style="color:var(--cyan)">${d.meta_oee>0?fmtP(d.meta_oee):'—'}</td>
+      <td class="mono" style="color:${sgn(d.oee_mes-(d.lb_oee||d.oee_mes))};font-weight:700">${fmtP(d.oee_mes)}</td>
+      <td><div class="mini-track">
+        <div class="mini-fill" style="width:0%;background:${b.bc}" data-w="${b.bw}"></div>
+        ${b.lw ? `<div class="mini-base" style="left:${b.lw}%"></div>` : ''}
+        <div class="mini-meta" style="left:${b.mw}%"></div>
+      </div></td>
+      <td><span class="mejora-val ${isPos?'pos':'neg'}">${isPos?'↑':'↓'} ${d.mejora_oee!==null?fmtPct(d.mejora_oee):'—'}</span></td>
     </tr>`;
   }).join('');
   animateBars();
@@ -2560,18 +2567,20 @@ function renderKGH(filtro='TODOS') {
     .filter(d => FILTRO_PLANTA_GLOBAL==='TODAS' || d.p===FILTRO_PLANTA_GLOBAL);
   const scale = Math.max(...datos.map(d=>d.meta_kgh)) * 1.15;
   document.getElementById('thead-kgh').innerHTML = VISTA_LINEA
-    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:90px">Progreso</th><th>% Mejora</th></tr>'
-    : '<tr><th>#</th><th>Planta</th><th>Centro</th><th>Línea Base</th><th>Kg/H Mes</th><th>Meta</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr>';
+    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>Línea Base</th><th>Meta</th><th>Kg/H Mes</th><th style="width:90px">Progreso</th><th>% Mejora</th></tr>'
+    : '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea Base</th><th>Meta</th><th>Kg/H Mes</th><th style="width:100px">Progreso</th><th>% Mejora</th></tr>';
   document.getElementById('tbody-kgh').innerHTML = rows.map((d,i)=>{
     const b = miniBar(d.kgh_val, d.lb_kgh, d.meta_kgh, scale);
     const isPos = d.mejora_kgh >= 0;
-    return `<tr onclick="openPlantaModal('${d.p}')" style="cursor:pointer">
+    const extraCells = VISTA_LINEA
+      ? `<td>${pill(d)}</td><td style="font-size:12px;color:var(--light)">${d.p}</td><td><strong>${d.l??'—'}</strong></td>`
+      : `<td>${pill(d)}</td><td><strong>${d.p}</strong></td>`;
+    return `<tr onclick="openPlantaModal(d)" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
-      <td><strong>${d.p}</strong></td>
-      <td>${pill(d)}</td>
+      ${extraCells}
       <td class="mono" style="color:var(--light)">${d.lb_kgh!==null?fmtN(d.lb_kgh):'—'}</td>
+      <td class="mono" style="color:var(--cyan)">${d.meta_kgh>0?fmtN(d.meta_kgh):'—'}</td>
       <td class="mono" style="color:${sgn(d.kgh_val-(d.lb_kgh||d.kgh_val))};font-weight:700">${fmtN(d.kgh_val)}</td>
-      <td class="mono" style="color:var(--cyan)">${fmtN(d.meta_kgh)}</td>
       <td><div class="mini-track">
         <div class="mini-fill" style="width:0%;background:${b.bc}" data-w="${b.bw}"></div>
         ${b.lw ? `<div class="mini-base" style="left:${b.lw}%"></div>` : ''}
