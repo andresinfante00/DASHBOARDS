@@ -2483,7 +2483,7 @@ function renderPodio(containerId, items) {
 function renderCombinado(filtro='TODOS') {
   const datos = calcMejoras();
   if (!datos) return;
-  const sorted = [...datos].filter(d=>d.score!==null && !isNaN(d.score) && d.kge>0).sort((a,b)=>b.score-a.score);
+  const sorted = [...datos].filter(d=>d.score!==null && !isNaN(d.score) && d.oee_mes>0).sort((a,b)=>b.score-a.score);
   renderPodio('podio-combinado', sorted);
 
   const rows = (filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro))
@@ -2511,7 +2511,7 @@ function renderCombinado(filtro='TODOS') {
 function renderOEE(filtro='TODOS') {
   const datos = calcMejoras();
   if (!datos) return;
-  const sorted = [...datos].filter(d=>d.mejora_oee!==null && !isNaN(d.mejora_oee) && d.kge>0).sort((a,b)=>b.mejora_oee-a.mejora_oee);
+  const sorted = [...datos].filter(d=>d.mejora_oee!==null && !isNaN(d.mejora_oee) && d.oee_mes>0).sort((a,b)=>b.mejora_oee-a.mejora_oee);
   renderPodio('podio-oee', sorted);
 
   const rows = (filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro))
@@ -2549,7 +2549,7 @@ function renderOEE(filtro='TODOS') {
 function renderKGH(filtro='TODOS') {
   const datos = calcMejoras();
   if (!datos) return;
-  const sorted = [...datos].filter(d=>d.mejora_kgh!==null && !isNaN(d.mejora_kgh) && d.kgh_val>0).sort((a,b)=>b.mejora_kgh-a.mejora_kgh);
+  const sorted = [...datos].filter(d=>d.mejora_kgh!==null && !isNaN(d.mejora_kgh)).sort((a,b)=>b.mejora_kgh-a.mejora_kgh);
   renderPodio('podio-kgh', sorted);
 
   const rows = (filtro==='TODOS' ? sorted : sorted.filter(d=>d.c===filtro))
