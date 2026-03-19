@@ -494,7 +494,7 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
         <span class="base-info" id="base-info-combinado">📊 Base: 3 meses</span>
       </div>
       <table class="tbl">
-        <thead id="thead-combinado"><tr><th>#</th><th>Centro</th><th>Planta</th><th>OEE Mes</th><th>OEE Meta</th><th>% Mej. OEE</th><th>Kg/H Mes</th><th>Kg/H Meta</th><th>% Mej. Kg/H</th><th>% Score</th></tr></thead>
+        <thead id="thead-combinado"><tr><th>#</th><th>Centro</th><th>Planta</th><th>LB OEE</th><th>OEE Mes</th><th>OEE Meta</th><th>% Mej. OEE</th><th>LB Kg/H</th><th>Kg/H Mes</th><th>Kg/H Meta</th><th>% Mej. Kg/H</th><th>% Score</th></tr></thead>
         <tbody id="tbody-combinado"></tbody>
       </table>
     </div>
@@ -2591,8 +2591,8 @@ function renderCombinado(filtro='TODOS') {
     .filter(d => FILTRO_PLANTA_GLOBAL==='TODAS' || d.p===FILTRO_PLANTA_GLOBAL);
   const maxS = Math.max(...sorted.map(d=>Math.abs(d.score)));
   document.getElementById('thead-combinado').innerHTML = VISTA_LINEA
-    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>OEE Mes</th><th>OEE Meta</th><th>% Mej. OEE</th><th>Kg/H Mes</th><th>Kg/H Meta</th><th>% Mej. Kg/H</th><th>% Score</th></tr>'
-    : '<tr><th>#</th><th>Centro</th><th>Planta</th><th>OEE Mes</th><th>OEE Meta</th><th>% Mej. OEE</th><th>Kg/H Mes</th><th>Kg/H Meta</th><th>% Mej. Kg/H</th><th>% Score</th></tr>';
+    ? '<tr><th>#</th><th>Centro</th><th>Planta</th><th>Línea</th><th>LB OEE</th><th>OEE Mes</th><th>OEE Meta</th><th>% Mej. OEE</th><th>LB Kg/H</th><th>Kg/H Mes</th><th>Kg/H Meta</th><th>% Mej. Kg/H</th><th>% Score</th></tr>'
+    : '<tr><th>#</th><th>Centro</th><th>Planta</th><th>LB OEE</th><th>OEE Mes</th><th>OEE Meta</th><th>% Mej. OEE</th><th>LB Kg/H</th><th>Kg/H Mes</th><th>Kg/H Meta</th><th>% Mej. Kg/H</th><th>% Score</th></tr>';
   document.getElementById('tbody-combinado').innerHTML = rows.map((d,i)=>{
     const posOEE   = d.mejora_oee !== null && d.mejora_oee >= 0;
     const posKGH   = d.mejora_kgh !== null && d.mejora_kgh >= 0;
@@ -2605,11 +2605,13 @@ function renderCombinado(filtro='TODOS') {
     return `<tr onclick="openPlantaModal(${_idx_c})" style="cursor:pointer">
       <td><span class="rank-num ${RANK_CLS[i]||''}">${i+1}</span></td>
       ${extraCells}
+      <td class="mono" style="color:var(--muted)">${d.lb_oee!==null?fmtP(d.lb_oee):'—'}</td>
       <td class="mono" style="color:${sgn(d.oee_mes-(d.lb_oee||d.oee_mes))};font-weight:700">${fmtP(d.oee_mes)}</td>
-      <td class="mono" style="color:var(--muted)">${d.meta_oee>0?fmtP(d.meta_oee):'—'}</td>
+      <td class="mono" style="color:var(--cyan)">${d.meta_oee>0?fmtP(d.meta_oee):'—'}</td>
       <td class="mono" style="color:${posOEE?'var(--green)':'var(--red)'};font-weight:700">${posOEE?'↑':'↓'} ${d.mejora_oee!==null?fmtPct(d.mejora_oee):'—'}</td>
+      <td class="mono" style="color:var(--muted)">${d.lb_kgh!==null?fmtN(d.lb_kgh):'—'}</td>
       <td class="mono" style="color:${sgn(d.kgh_val-(d.lb_kgh||d.kgh_val))};font-weight:700">${fmtN(d.kgh_val)}</td>
-      <td class="mono" style="color:var(--muted)">${d.meta_kgh>0?fmtN(d.meta_kgh):'—'}</td>
+      <td class="mono" style="color:var(--cyan)">${d.meta_kgh>0?fmtN(d.meta_kgh):'—'}</td>
       <td class="mono" style="color:${posKGH?'var(--green)':'var(--red)'};font-weight:700">${posKGH?'↑':'↓'} ${d.mejora_kgh!==null?fmtPct(d.mejora_kgh):'—'}</td>
       <td style="text-align:right"><span class="mejora-val ${posScore?'pos':'neg'}" style="font-size:13px;font-weight:900">${posScore?'↑':'↓'} ${d.score!==null?fmtPct(d.score):'—'}</span></td>
     </tr>`;
