@@ -3035,7 +3035,7 @@ function renderDetalle() {
 
     // Build base month rows for Kg/H
     const kghBaseRows = back.map(m => {
-      const kgh = getDatosMonth(m).kgh[pi][0];
+      const _kd=getDatosMonth(m).kgh[pi]; const kgh = _kd[0]>0?_kd[1]/_kd[0]:0;
       return `<div class="detalle-mes-row">
         <span class="detalle-mes-name">${m.replace(' 20',"'")}</span>
         <span class="detalle-mes-val" style="color:var(--light)">${kgh.toFixed(2)}</span>
@@ -3225,7 +3225,7 @@ function openPlantaModal(unitOrName) {
     .map(m => { const dm=getDatosMonth(m); if(!dm) return null; const [kgp,kge]=dm.oee[pi]; return kge>0?{m,v:kgp/kge}:null; })
     .filter(Boolean);
   const histKGH = mesesConDatos
-    .map(m => { const dm=getDatosMonth(m); if(!dm) return null; const v=dm.kgh[pi][0]; return v>0?{m,v}:null; })
+    .map(m => { const dm=getDatosMonth(m); if(!dm) return null; const v=dm.kgh[pi][0]>0?dm.kgh[pi][1]/dm.kgh[pi][0]:0; return v>0?{m,v}:null; })
     .filter(Boolean);
 
   const mejorOEE = histOEE.length ? histOEE.reduce((a,b)=>b.v>a.v?b:a) : null;
@@ -3266,7 +3266,7 @@ function openPlantaModal(unitOrName) {
     const [kgp,kge] = dm.oee[pi];
     return kge > 0 ? kgp/kge : null;
   }).filter(v => v !== null);
-  const kghVals = mesesConDatos.map(m => { const dm=getDatosMonth(m); return dm?dm.kgh[pi][0]:0; }).filter(v => v > 0);
+  const kghVals = mesesConDatos.map(m => { const dm=getDatosMonth(m); return (dm&&dm.kgh[pi][0]>0)?dm.kgh[pi][1]/dm.kgh[pi][0]:0; }).filter(v => v > 0);
 
   const oeeLabels = mesesConDatos.filter((_,i) => { const dm=getDatosMonth(mesesConDatos[i]); return dm && dm.oee[pi][1]>0; });
   const oeeValsClean = oeeVals.filter(v=>v!==null);
@@ -3274,8 +3274,8 @@ function openPlantaModal(unitOrName) {
   drawSparkline('chart-oee', oeeLabels, oeeValsClean, cc.color, '%', v => (v*100).toFixed(1)+'%', metaOEEVals);
 
   const kghLabels = mesesConDatos.filter(m => { const dm=getDatosMonth(m); return dm && dm.kgh[pi][0]>0; });
-  const kghValsClean = kghLabels.map(m => { const dm=getDatosMonth(m); return dm?dm.kgh[pi][0]:0; }).filter(v=>v>0);
-  const metaKGHVals = kghLabels.map(m => { const dm=getDatosMonth(m); return dm?.kgh[pi][1]||null; });
+  const kghValsClean = kghLabels.map(m => { const dm=getDatosMonth(m); return dm&&dm.kgh[pi][0]>0?dm.kgh[pi][1]/dm.kgh[pi][0]:0; }).filter(v=>v>0);
+  const metaKGHVals = kghLabels.map(m => { const dm=getDatosMonth(m); return dm?.kgh[pi][2]||null; });
   drawSparkline('chart-kgh', kghLabels, kghValsClean, '#06b6d4', '', v => v.toFixed(1), metaKGHVals);
 
   document.getElementById('plantaModal').classList.add('open');
