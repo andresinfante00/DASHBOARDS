@@ -440,6 +440,8 @@ body{background:var(--bg);color:var(--text);font-family:'Figtree',sans-serif;fon
           <div class="n-menu-item" onclick="setN(1,this)" data-n="1"><span>1 mes</span><span class="n-menu-desc">mes anterior</span></div>
           <div class="n-menu-item" onclick="setN(2,this)" data-n="2"><span>2 meses</span><span class="n-menu-desc">bimestral</span></div>
           <div class="n-menu-item active" onclick="setN(3,this)" data-n="3"><span>3 meses</span><span class="n-menu-desc">trimestral</span></div>
+          <div class="n-menu-item" onclick="setN(4,this)" data-n="4"><span>4 meses</span><span class="n-menu-desc">cuatrimestral</span></div>
+          <div class="n-menu-item" onclick="setN(5,this)" data-n="5"><span>5 meses</span><span class="n-menu-desc">quinquemestral</span></div>
           <div class="n-menu-item" onclick="setN(6,this)" data-n="6"><span>6 meses</span><span class="n-menu-desc">semestral</span></div>
           <div class="n-menu-item" onclick="setN(12,this)" data-n="12"><span>12 meses</span><span class="n-menu-desc">anual</span></div>
         </div>
@@ -2727,7 +2729,7 @@ function setN(n, btn) {
   document.querySelectorAll('.n-pill').forEach(b=>b.classList.remove('active'));
   if (btn?.classList) btn.classList.add('active');
   // Update new dropdown
-  const labels = {1:'Último mes',2:'Últimos 2 meses',3:'Últimos 3 meses',6:'Últimos 6 meses',12:'Últimos 12 meses'};
+  const labels = {1:'Último mes',2:'Últimos 2 meses',3:'Últimos 3 meses',4:'Últimos 4 meses',5:'Últimos 5 meses',6:'Últimos 6 meses',12:'Últimos 12 meses'};
   const lbl = document.getElementById('nDropLabel');
   if (lbl) lbl.textContent = labels[n] || `Últimos ${n} meses`;
   document.querySelectorAll('.n-menu-item').forEach(el => {
