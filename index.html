@@ -2434,6 +2434,12 @@ const fmtPct= v => (v>=0?'+':'')+( v*100).toFixed(1)+'%';
 const sgn   = v => v>=0 ? '#10b981' : '#ef4444';
 const fmtN  = v => v.toFixed(2);
 
+/* ════ LÍNEA BASE Kg/H (valores fijos por planta) ════
+   Orden = PLANTAS: Fabry, Super1, Super2, Super3,
+           Trululu1, Trululu2, Trululu3,
+           Bianchi1, Bianchi3                           */
+const LB_KGH = [24.06, 23.91, 28.01, 33.52, 10.89, 22.48, 24.34, 24.90, 37.08];
+
 /* ════ CÁLCULOS ════ */
 function calcLineasBase() {
   const idx = MESES_ORDEN.indexOf(MES_ACTIVO);
@@ -2445,10 +2451,8 @@ function calcLineasBase() {
     const sum_kge = meses_back.reduce((a,m) => a + getDatosMonth(m).oee[pi][1], 0);
     const lb_oee  = meses_back.length > 0 && sum_kge > 0 ? sum_kgp / sum_kge : null;
 
-    // Kg/H base = Σ Kg Formados / Σ Horas Marcaciones (igual que OEE)
-    const sum_kgh_h  = meses_back.reduce((a,m) => a + getDatosMonth(m).kgh[pi][0], 0);
-    const sum_kgh_kg = meses_back.reduce((a,m) => a + getDatosMonth(m).kgh[pi][1], 0);
-    const lb_kgh     = sum_kgh_h > 0 ? sum_kgh_kg / sum_kgh_h : null;
+    // Kg/H base = valor fijo por planta (LB_KGH)
+    const lb_kgh = LB_KGH[pi] ?? null;
 
     return {lb_oee, lb_kgh, n: meses_back.length, meses_back};
   });
